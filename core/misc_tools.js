@@ -195,15 +195,21 @@ function getBlock(coord, dist) {
 	for (var y = (coord.y - dist); y < (coord.y + dist + 1); y++) {	// Extra 1 is need as list is inclusive
 		for (var x = (coord.x - dist); x < (coord.x + dist + 1); x++) {
 			
-			var searchCoord = {
+			var searchCoord = indexToCoord(getCell({
 				x : x,
 				y : y
-			};
+			}));
 			block.push(boundary(searchCoord, MAP_BOUNDARY));
 		}
-	}
-	
+	}	
 	return block;
+}
+
+function angleTo(coord, target) {
+	var dx = target.x - coord.x;
+	var dy = target.y - coord.y;
+	
+	return Math.atan2(dx, dy);
 }
 
 // Need generlised solution look at https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm

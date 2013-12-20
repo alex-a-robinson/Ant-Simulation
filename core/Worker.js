@@ -18,8 +18,8 @@ function Worker(id, coord) {
 
 // Moves ant towards food and then uses it
 Worker.prototype.getFood = function() {
-	this.direction = pathTo(this.coord, this.target);	// Go to food
-	if (this.direction === DIR.none) {	// If on the food pick it up
+	this.direction = angleTo(this.coord, this.target);	// Go to food
+	if (getCell(this.coord) === coordToIndex(this.target)) {	// If on the food pick it up
 		this.useFood();
 		this.followOwnPheromone = false;
 	}
@@ -102,6 +102,30 @@ Worker.prototype.shuffle = function(o){
 
 Worker.prototype.wonder = function() {
 
+	var best = 0;
+	var bestCoord;
+	
+	for (var i = 0; i < this.pheromonesInRange.length; i++) {
+		if (this.pheromonesInRange[i].concentration > best) {
+			var best = this.pheromonesInRange[i].concentration;
+			var bestCoord = this.pheromonesInRange[i].coord;
+		}
+	}
+
+	var choice = Math.random();
+	if (this.pheromonesInRange.length > 0 && choice < 0.95) {	// 95% of the time go towards best pheromone
+		this.direction = angleTo(this.coord, bestCoord);
+	} else {
+		this.direction = this.prioritizeDirection;
+	}
+	
+	choice = Math.random();
+	if (choice < CHANGE_DIRECTION_THRESHOLD)
+		this.prioritizeDirection = randDir();
+		
+	this.findTarget();		// search for targets
+	
+	/*
 	// All directions start with equal probability of each direction
 	var northPull = 1;
 	var southPull = 1;
@@ -186,8 +210,10 @@ Worker.prototype.wonder = function() {
 	}
 	
 	this.prioritizeDirection = this.direciton;
+	
+	*/
 		
-	this.findTarget();		// search for targets
+	
 };
 
 // Performs the current task
@@ -216,7 +242,8 @@ Worker.prototype.updateGoal = function() {
 			break;
 
 		case GOAL.getFood:
-			//this.prevDirection = [];
+			console.log('Getting food @');
+			console.log(this.target);
 			if (this.carrying >= this.carryingThreshold) {	// If have enough food
 				this.goal = GOAL.dropFood;
 				this.target = void(0);
@@ -243,13 +270,12 @@ Worker.prototype.update = function() {
 		this.move();
 	}
 	
-	//this.scan();
-	//this.smell();
+	this.scan();
+	this.smell();
 		
 	this.doTask();
 	this.updateGoal();
 	
-	/*
 	if (this.goal == GOAL.dropFood)
 		this.secrete();
 	if (this.target != void(0)) {
@@ -258,7 +284,6 @@ Worker.prototype.update = function() {
 		s.addToMap();
 		console.log(this.target);
 	}
-	*/
 
 	this.addToMap();
 };

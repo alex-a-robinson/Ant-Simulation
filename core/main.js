@@ -133,19 +133,17 @@ window.onload = function() {
 	createMap();
 	
 	// Create food system
-	/*
 	FOOD = new FoodSystem(DEBUG_AMOUNT_OF_FOOD);
 	FOOD.ctx = canvasCTX;
-	FOOD.addRandFood({x: 80, y: 80}, 25);
-	*/
+	FOOD.addRandFood({x: 10, y: 10}, 5);
 	
 	// Create a species
 	var testSpecies = new Species(genID());
 	speciesList.push(testSpecies);
 	testSpecies.chars.speed = 1;
-	testSpecies.chars.eyesight = 4;
+	testSpecies.chars.eyesight = 3;
 	testSpecies.chars.pheromoneConcentration = 0.4;
-	testSpecies.chars.antennaSize = 4;
+	testSpecies.chars.antennaSize = 1;
 	testSpecies.colour = {
 		ant : '#222222',
 		pheromone : '#E8E5A3',

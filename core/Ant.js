@@ -42,9 +42,6 @@ var Ant = function(id, coord) {
 
 // Adds the current position of the ant to the map
 Ant.prototype.addToMap = function() {
-	console.log(this.direction);
-	console.log(getCell(this.coord));
-
 	MAP[getCell(this.coord)].ant.push(this);
 };
 
@@ -113,9 +110,10 @@ Ant.prototype.scan = function() {
 	};
 
 	//var block = getBlock(this.coord, this.species.chars.eyesight);
-	var block = getSegment(indexToCoord(getCell(this.coord)), this.species.chars.eyesight, this.direction)
+	var block = getBlock(this.coord, this.species.chars.eyesight);
 
 	for (var i = 0; i < block.length; i++) {
+		
 		var index = getCell(block[i]);
 		if (MAP[index].ant.length > 0) {	// Check for ants
 			this.itemsInView.ants.push(MAP[index].ant);
@@ -156,7 +154,7 @@ Ant.prototype.smell = function() {
 			break;
 	}*/
 	
-	var block = getSegment(this.coord, this.species.chars.antennaSize, this.direction);
+	var block = getBlock(this.coord, this.species.chars.antennaSize);
 	
 	for (var i = 0; i < block.length; i++) {
 		var index = getCell(block[i]);
