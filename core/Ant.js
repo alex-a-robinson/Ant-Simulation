@@ -7,7 +7,7 @@ var Ant = function(id, coord) {
 	// Spatial attributes
 	this.size = CELL_SIZE;			// The size of the ant
 	this.coord = coord;				// The coordinate of the ant
-	this.direction = randDir();		// The direction 0 = NORTH, 1 = EAST, 2 = SOUTH, 3 = WEST
+	this.direction = randDir(); 		// The direction angle
 	
 
 	// Identifiers
@@ -29,7 +29,11 @@ var Ant = function(id, coord) {
 	// Logic attributes (control the ants logic)
 	this.goal = GOAL.findFood;		// The current goal of the ant
 	this.target;					// The coordinate of the ants current target
-	this.itemsInView;				// List of items in view
+	this.itemsInView = {
+		ants : [],
+		food : [],
+		pheromone : []
+	};				// List of items in view
 	this.pheromonesInRange = [];
 	
 	// Test attributes (logic is tested against these)
@@ -38,21 +42,25 @@ var Ant = function(id, coord) {
 
 // Adds the current position of the ant to the map
 Ant.prototype.addToMap = function() {
-	MAP[coordToIndex(this.coord)].ant.push(this);
+	console.log(this.direction);
+	console.log(getCell(this.coord));
+
+	MAP[getCell(this.coord)].ant.push(this);
 };
 
 // Removes the previous position of the ant from the map
 Ant.prototype.removeFromMap = function() {
-	var index = MAP[coordToIndex(this.coord)].ant.indexOf(this);
-	MAP[coordToIndex(this.coord)].ant.splice(index, 1);
+	var index = MAP[getCell(this.coord)].ant.indexOf(this);
+	MAP[getCell(this.coord)].ant.splice(index, 1);
 };
 
 // Update the ants coordinates
 Ant.prototype.move = function() {
-	var speed = this.species.chars.speed;
-	if (this.direction === DIR.east || this.direction === DIR.west) this.coord.x += (this.direction === DIR.east)?speed:-1 * speed;
-	if (this.direction === DIR.north || this.direction === DIR.south) this.coord.y += (this.direction === DIR.south)?speed:-1 * speed;
 
+	var speed = this.species.chars.speed;
+	this.coord.x += Math.sin(this.direction) * this.species.chars.speed;
+	this.coord.y -= Math.cos(this.direction) * this.species.chars.speed;
+	
 	boundary(this.coord, MAP_BOUNDARY);
 };
 
@@ -87,7 +95,7 @@ Ant.prototype.takeFood = function(food) {
 
 // Assumes standing on food
 Ant.prototype.useFood = function() {
-	var index = coordToIndex(this.coord);
+	var index = getCell(this.coord);
 	var food = MAP[index].food;
 	
 	if (this.isHungry())
@@ -105,10 +113,10 @@ Ant.prototype.scan = function() {
 	};
 
 	//var block = getBlock(this.coord, this.species.chars.eyesight);
-	var block = getSegment(this.coord, this.species.chars.eyesight, this.direction)
+	var block = getSegment(indexToCoord(getCell(this.coord)), this.species.chars.eyesight, this.direction)
 
 	for (var i = 0; i < block.length; i++) {
-		var index = coordToIndex(block[i]);
+		var index = getCell(block[i]);
 		if (MAP[index].ant.length > 0) {	// Check for ants
 			this.itemsInView.ants.push(MAP[index].ant);
 		} if (MAP[index].food !== void(0)) {			// Check for food
@@ -151,7 +159,7 @@ Ant.prototype.smell = function() {
 	var block = getSegment(this.coord, this.species.chars.antennaSize, this.direction);
 	
 	for (var i = 0; i < block.length; i++) {
-		var index = coordToIndex(block[i]);
+		var index = getCell(block[i]);
 				
 		for (var k = 0; k < MAP[index].pheromone.length; k++) {
 			this.pheromonesInRange.push(MAP[index].pheromone[k]);
@@ -179,7 +187,7 @@ Ant.prototype.findTarget = function() {
 // secrete pheromone
 Ant.prototype.secrete = function() {		// Do different types of pheromone
 
-	var index = coordToIndex(this.coord);
+	var index = getCell(this.coord);
 	var pheromones = MAP[index].pheromone;
 
 	for (var i = 0; i < pheromones.length; i++) {
@@ -201,7 +209,15 @@ Ant.prototype.secrete = function() {		// Do different types of pheromone
 };
 
 Ant.prototype.draw = function(ctx) {
-	drawRect(ctx, scaleCoord(this.coord), this.size, this.species.colour.ant);
+	var scaledCoord = scaleCoord(this.coord);
+	
+	ctx.save();
+	
+	ctx.translate(scaledCoord.x + this.size.width/2, scaledCoord.y + this.size.height/2);
+	ctx.rotate(this.direction);
+	drawRect(ctx, {x: -this.size.width/2, y:-this.size.height/2}, this.size, this.species.colour.ant);
+	
+	ctx.restore();
 };
 
 Ant.prototype.sayHello = function() {

@@ -133,9 +133,11 @@ window.onload = function() {
 	createMap();
 	
 	// Create food system
+	/*
 	FOOD = new FoodSystem(DEBUG_AMOUNT_OF_FOOD);
 	FOOD.ctx = canvasCTX;
 	FOOD.addRandFood({x: 80, y: 80}, 25);
+	*/
 	
 	// Create a species
 	var testSpecies = new Species(genID());
@@ -149,6 +151,7 @@ window.onload = function() {
 		pheromone : '#E8E5A3',
 		nest : '#555555'
 	};	
+	
 	
 	var coord = {x: 25, y: 25};
 	
@@ -180,15 +183,12 @@ window.onload = function() {
 		var x = randInt(0, GRID_SIZE.x - 1);	// -1 as randInt is inclusive
 		var y = randInt(0, GRID_SIZE.y - 1);
 		var a = new Worker(genID(), {x : x, y : y});
-		a.colour = testSpecies.colour.ant;
 		a.addToMap();
 		a.species = testSpecies;
 		antsList.push(a);
 		a.nest = nest;
 		a.sayHello();
 	}
-	
-	
 	
 	tick();
 };

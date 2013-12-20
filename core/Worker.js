@@ -19,7 +19,7 @@ function Worker(id, coord) {
 // Moves ant towards food and then uses it
 Worker.prototype.getFood = function() {
 	this.direction = pathTo(this.coord, this.target);	// Go to food
-	if (this.direction === 0) {	// If on the food pick it up
+	if (this.direction === DIR.none) {	// If on the food pick it up
 		this.useFood();
 		this.followOwnPheromone = false;
 	}
@@ -34,8 +34,8 @@ Worker.prototype.canCarry = function() {
 
 Worker.prototype.depositeFood = function() {
 	this.direction = pathTo(this.coord, this.nest.coord);
-	for (var i = 0; i < MAP[coordToIndex(this.coord)].ant.length; i++) {
-		if (MAP[coordToIndex(this.coord)].ant[i].type === ANT_TYPE.nest && MAP[coordToIndex(this.coord)].ant[i].nest === this.nest) {
+	for (var i = 0; i < MAP[getCell(this.coord)].ant.length; i++) {
+		if (MAP[getCell(this.coord)].ant[i].type === ANT_TYPE.nest && MAP[getCell(this.coord)].ant[i].nest === this.nest) {
 			this.dropFood(this.nest);
 			this.goal = GOAL.findFood;
 			this.target = void(0);
@@ -54,7 +54,7 @@ Worker.prototype.dropFood = function(nest) {
 };
 
 Ant.prototype.useFood = function() {
-	var index = coordToIndex(this.coord);
+	var index = getCell(this.coord);
 	var food = MAP[index].food;
 	
 	if (this.isHungry() && this.isFood(food))
@@ -243,12 +243,13 @@ Worker.prototype.update = function() {
 		this.move();
 	}
 	
-	this.scan();
-	this.smell();
-	
+	//this.scan();
+	//this.smell();
+		
 	this.doTask();
 	this.updateGoal();
 	
+	/*
 	if (this.goal == GOAL.dropFood)
 		this.secrete();
 	if (this.target != void(0)) {
@@ -257,6 +258,7 @@ Worker.prototype.update = function() {
 		s.addToMap();
 		console.log(this.target);
 	}
+	*/
 
 	this.addToMap();
 };

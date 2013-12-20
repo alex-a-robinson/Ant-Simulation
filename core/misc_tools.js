@@ -8,14 +8,43 @@ function randInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-// Returns a random direction excluding no direction
+// Returns a random direction
 function randDir() {
-	var dirs = [DIR.north, DIR.east, DIR.south, DIR.west];
-	return dirs[randInt(0, 3)]
+	var dir = Math.random() * Math.PI * 2;
+	return dir;
 }
 
+// Reverses the ants dirction i.e. turns it 180 degres
 function reverseDir(dir) {
-	return -1 * dir;
+	var newDir = dir + Math.PI;
+	if (validDirection(newDir)) {
+		return newDir;
+	} else {
+		var newDir = dir - Math.PI;
+		return newDir;
+	}
+}
+
+// Returns a direction in the range 0 to 2 * PI
+function validateDirection(dir) {
+	var newDir = dir;
+	while (newDir >= Math.PI * 2) {	// if over the range
+		newDir -= Math.PI * 2;
+	}
+	
+	while (newDir < 0) {				// if under the range	
+		newDir += Math.PI * 2;
+	}
+	
+	return newDir;
+}
+
+// Checks if an angle is within the range 0 <= theta < 2*PI
+function validDirection(dir) {
+	if (dir >= 0 && dir < Math.PI * 2)
+		return true;
+	else
+		return false;
 }
 
 // Picks a random property of a object literal
@@ -26,7 +55,7 @@ function randProperty(obj) {
 	for (var prop in obj)
 		if (Math.random() < 1/++count)
 			result = prop;
-	return result
+	return result;
 }
 
 // Normalize a list of items
@@ -82,6 +111,12 @@ function indexToCoord(index) {
 function scaleCoord(coord) {
 	// Takes a coord between [0, GRID_SIZE_X] and [0, GRID_SIZE_Y] and translates to acutal position on canvas i.e. with CELL_SIZE_X
 	return {x : coord.x * CELL_SIZE.width, y : coord.y * CELL_SIZE.height};
+}
+
+// Returns the cell index which most closely contains the coord
+function getCell(coord) {
+	var cellCoord = boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
+	return coordToIndex(cellCoord);
 }
 
 
