@@ -110,7 +110,7 @@ Ant.prototype.scan = function() {
 	};
 
 	//var block = getBlock(this.coord, this.species.chars.eyesight);
-	var block = getBlock(this.coord, this.species.chars.eyesight);
+	var block = getBlock2(this.coord, this.direction);
 
 	for (var i = 0; i < block.length; i++) {
 		
@@ -154,7 +154,13 @@ Ant.prototype.smell = function() {
 			break;
 	}*/
 	
-	var block = getBlock(this.coord, this.species.chars.antennaSize);
+	var block = getBlock2(this.coord, this.direction);
+	
+	for (var i = 0; i < block.length; i++) {
+		var s = new show(indexToCoord(getCell(block[i])), genID());
+		s.colour = '#0000FF';
+		s.addToMap();
+	}
 	
 	for (var i = 0; i < block.length; i++) {
 		var index = getCell(block[i]);
@@ -200,7 +206,7 @@ Ant.prototype.secrete = function() {		// Do different types of pheromone
 	}
 	
 	// If pheromone from own species not found, create it!
-	var pheromone = new Pheromone(this.species.chars.pheromoneConcentration, {x : this.coord.x, y : this.coord.y});
+	var pheromone = new Pheromone(this.species.chars.pheromoneConcentration, indexToCoord(getCell(this.coord)));
 	pheromone.species = this.species;
 	pheromone.antID.push(this.id);
 	pheromone.addToMap();
@@ -214,6 +220,7 @@ Ant.prototype.draw = function(ctx) {
 	ctx.translate(scaledCoord.x + this.size.width/2, scaledCoord.y + this.size.height/2);
 	ctx.rotate(this.direction);
 	drawRect(ctx, {x: -this.size.width/2, y:-this.size.height/2}, this.size, this.species.colour.ant);
+	drawRect(ctx, {x: 0, y:0}, {width : 1, height: -10}, '#0000FF');
 	
 	ctx.restore();
 };

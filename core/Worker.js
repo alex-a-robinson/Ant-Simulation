@@ -11,6 +11,7 @@ function Worker(id, coord) {
 	this.prevDirection = [];
 	this.prioritizeDirection = randDir();
 	this.followOwnPheromone = true;
+	this.followingPheromone = false;
 	
 	
 	//this.constructor.call(this);
@@ -33,17 +34,14 @@ Worker.prototype.canCarry = function() {
 };
 
 Worker.prototype.depositeFood = function() {
-	this.direction = pathTo(this.coord, this.nest.coord);
-	for (var i = 0; i < MAP[getCell(this.coord)].ant.length; i++) {
-		if (MAP[getCell(this.coord)].ant[i].type === ANT_TYPE.nest && MAP[getCell(this.coord)].ant[i].nest === this.nest) {
-			this.dropFood(this.nest);
-			this.goal = GOAL.findFood;
-			this.target = void(0);
-			
-			// Reverse prioritised direciotn
-			this.prioritizeDirection = reverseDir(this.dir);
-			this.dir = reverseDir(this.dir);
-		}
+	this.direction = angleTo(this.coord, this.nest.coord);
+	if (this.atNest()) {
+		this.dropFood(this.nest);
+		this.goal = GOAL.findFood;
+		this.target = void(0);
+		
+		// Reverse prioritised direciotn
+		this.prioritizeDirection = this.direction + Math.PI;	// reverse 180 degrees
 	}
 };
 
@@ -113,16 +111,20 @@ Worker.prototype.wonder = function() {
 	}
 
 	var choice = Math.random();
-	if (this.pheromonesInRange.length > 0 && choice < 0.95) {	// 95% of the time go towards best pheromone
-		this.direction = angleTo(this.coord, bestCoord);
-	} else {
-		this.direction = this.prioritizeDirection;
-	}
-	
-	choice = Math.random();
 	if (choice < CHANGE_DIRECTION_THRESHOLD)
 		this.prioritizeDirection = randDir();
-		
+	
+	choice = Math.random();
+	if (this.pheromonesInRange.length > 0 && choice < 0.99) {	// 95% of the time go towards best pheromone
+		this.direction = angleTo(this.coord, bestCoord);
+		this.prioritizeDirection = this.direction;
+		this.followingPheromone = true;
+	} else {
+		this.direction = this.prioritizeDirection;
+		this.followingPheromone = false;
+	}
+	
+
 	this.findTarget();		// search for targets
 	
 	/*
@@ -222,6 +224,11 @@ Worker.prototype.doTask = function() {
 
 		case GOAL.findFood:
 			this.wonder();
+			// Reverse direction
+			/*if (this.followingPheromone && this.atNest()) {
+				console.log('direction changed from' + this.prioritizeDirection + ' to ' + this.direction + 3.14)
+				this.prioritizeDirection = this.direction + Math.PI;	// reverse 180 degrees
+			}*/
 			break;
 
 		case GOAL.getFood:
@@ -233,6 +240,16 @@ Worker.prototype.doTask = function() {
 			break;
 	}
 };
+
+Worker.prototype.atNest = function() {
+	for (var i = 0; i < MAP[getCell(this.coord)].ant.length; i++) {
+		if (MAP[getCell(this.coord)].ant[i].type === ANT_TYPE.nest && MAP[getCell(this.coord)].ant[i].nest === this.nest)
+			return true;
+	
+	}
+	
+	return false;
+}
 
 Worker.prototype.updateGoal = function() {
 	switch (this.goal) {

@@ -11,7 +11,7 @@ var VALUE_TYPE = {
 };
 
 // Main
-var TICK_TIME = 100;
+var TICK_TIME = 10;
 var speciesList = [];
 var antsList = [];
 
@@ -28,12 +28,12 @@ var GRID_COLOUR = '#000000';
 var BACKGROUND_COLOUR = '#5C3700';
 var GRID_LINE_WIDTH = 0.2;
 var CELL_SIZE = {
-	width : 10,
-	height : 10
+	width : 5,
+	height : 5
 };
 var GRID_SIZE = {	// should be width and height! rather then x and y
-	x : 50,
-	y : 50
+	x : 100,
+	y : 100
 };
 var NUM_OF_CELLS = GRID_SIZE.x * GRID_SIZE.y;
 
@@ -82,7 +82,7 @@ var ANT_FOOD_TAKE_SPEED = 1;	// number of ticks it takes for an ant to take one 
 var PHEROMONE_BASE_COLOUR = [
 	['#0000FF', '#3333FF', '6666FF', '9999FF', 'CCCCFF']
 ];	// index is species id, value is colour
-var PHEROMONE_EVAPERATION_RATE = 0.001;
+var PHEROMONE_EVAPERATION_RATE = 0.0001;
 var MAX_PHEROMONE_CONCENTRATION = 1;
 var PHEROMONE_PULL_FACTOR = 500;
 var MOMENTUM_INFLUENCE = 40;	// 0.2

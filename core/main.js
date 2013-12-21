@@ -135,7 +135,7 @@ window.onload = function() {
 	// Create food system
 	FOOD = new FoodSystem(DEBUG_AMOUNT_OF_FOOD);
 	FOOD.ctx = canvasCTX;
-	FOOD.addRandFood({x: 10, y: 10}, 5);
+	FOOD.addRandFood({x: 80, y: 80}, 20);
 	
 	// Create a species
 	var testSpecies = new Species(genID());

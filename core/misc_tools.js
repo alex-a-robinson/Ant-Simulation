@@ -16,13 +16,7 @@ function randDir() {
 
 // Reverses the ants dirction i.e. turns it 180 degres
 function reverseDir(dir) {
-	var newDir = dir + Math.PI;
-	if (validDirection(newDir)) {
-		return newDir;
-	} else {
-		var newDir = dir - Math.PI;
-		return newDir;
-	}
+	return dir + Math.PI;
 }
 
 // Returns a direction in the range 0 to 2 * PI
@@ -205,11 +199,60 @@ function getBlock(coord, dist) {
 	return block;
 }
 
+// Gets 3 blocks infron the ant ant in the direction its looking
+function getBlock2(coord, dir) {
+
+	var block = [];
+	
+	var validDir = validateDirection(dir);
+	
+	var sin = Math.sin(this.direction);
+	var cos = Math.cos(this.direction);
+	
+	var quadrant;
+	
+	if (validDir <= Math.PI/4 || validDir >= Math.PI*2 - Math.PI/4)
+		quadrant = 1;
+	else if (validDir <= 3 * Math.PI/4)
+		quadrant = 2;
+	else if (validDir <= 5 * Math.PI/4)
+		quadrant = 3;
+	else if (validDir <= Math.PI*2 - Math.PI/4)
+		quadrant = 4;
+	else	
+		console.log('Error in getBlock2 no quadrant?' + sin + ':' + cos)
+		
+	switch(quadrant) {
+		case 1:	// topside
+			block.push(boundary({x : coord.x + 1, y : coord.y - 1}, MAP_BOUNDARY));
+			block.push(boundary({x : coord.x, y : coord.y - 1}, MAP_BOUNDARY));
+			block.push(boundary({x : coord.x - 1, y : coord.y - 1}, MAP_BOUNDARY));
+			break;
+		case 2:	// right side
+			block.push(boundary({x : coord.x + 1, y : coord.y + 1}, MAP_BOUNDARY));
+			block.push(boundary({x : coord.x + 1, y : coord.y}, MAP_BOUNDARY));
+			block.push(boundary({x : coord.x + 1, y : coord.y - 1}, MAP_BOUNDARY));
+			break;
+		case 3:	// bottom side
+			block.push(boundary({x : coord.x + 1, y : coord.y + 1}, MAP_BOUNDARY));
+			block.push(boundary({x : coord.x, y : coord.y + 1}, MAP_BOUNDARY));
+			block.push(boundary({x : coord.x - 1, y : coord.y + 1}, MAP_BOUNDARY));
+			break;
+		case 4:	// left side
+			block.push(boundary({x : coord.x - 1, y : coord.y + 1}, MAP_BOUNDARY));
+			block.push(boundary({x : coord.x - 1, y : coord.y}, MAP_BOUNDARY));
+			block.push(boundary({x : coord.x - 1, y : coord.y - 1}, MAP_BOUNDARY));
+			break;
+	}
+	
+	return block;
+}
+
 function angleTo(coord, target) {
 	var dx = target.x - coord.x;
 	var dy = target.y - coord.y;
 	
-	return Math.atan2(dx, dy);
+	return Math.atan2(dy, dx) + Math.PI/2;	// atan2 find the angle from the horizontal however we use from the vertical
 }
 
 // Need generlised solution look at https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
