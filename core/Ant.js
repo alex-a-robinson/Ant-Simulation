@@ -17,10 +17,11 @@ var Ant = function(id, coord) {
 	this.nest;
 	
 	// Computed attributes
-	this.hunger = 10;				// Lower means ant needs to eat more quickly
-	this.hungerThreshold = 3;		// hunger point bellow which ant starts eating food it finds/has on it
-	this.hungerRate;				// The rate at which hunger decreases
-	this.hungerMax = 20;
+	this.health = 10000;
+	this.hungerThreshold = 300;		// hunger point bellow which ant starts eating food it finds/has on it
+	this.healthRate = 1;				// The rate at which hunger decreases
+	this.healthMax = 1000;
+	this.hungry = false;
 
 	this.carrying = 0;				// The amount of food an ant is carrying
 	this.carryingThreshold = 3;	// least amount of food required to return to nest with food
@@ -61,11 +62,16 @@ Ant.prototype.move = function() {
 	boundary(this.coord, MAP_BOUNDARY);
 };
 
+Ant.prototype.die = function() {
+	var index = antsList.indexOf(this);
+	antsList.splice(index, 1);
+};
+
 Ant.prototype.isHungry = function() {
-	if (this.hunger < this.hungerThreshold)
-		return true;
+	if (this.health < this.hungerThreshold)
+		this.hungry = true;
 	else
-		return false
+		this.hungry = false;
 };
 
 Ant.prototype.isFood = function(food) {
@@ -95,8 +101,8 @@ Ant.prototype.useFood = function() {
 	var index = getCell(this.coord);
 	var food = MAP[index].food;
 	
-	if (this.isHungry())
-		this.hunger += this.takeFood(food) * FOOD_HUNGER_RATIO;
+	if (this.hungry)
+		this.health += this.takeFood(food) * FOOD_HEALTH_RATIO;
 	else
 		this.target = void(0);		// Assumes the target is the food
 };
@@ -110,8 +116,8 @@ Ant.prototype.scan = function() {
 	};
 
 	//var block = getBlock(this.coord, this.species.chars.eyesight);
-	var block = getBlock2(this.coord, this.direction);
-
+	//var block = getBlock2(this.coord, this.direction);
+	var block = getSector(this.coord, this.species.chars.eyesight, this.direction, this.species.chars.eyeAngle);
 	for (var i = 0; i < block.length; i++) {
 		
 		var index = getCell(block[i]);
@@ -154,13 +160,15 @@ Ant.prototype.smell = function() {
 			break;
 	}*/
 	
-	var block = getBlock2(this.coord, this.direction);
+	//var block = getBlock2(this.coord, this.direction);
 	
-	for (var i = 0; i < block.length; i++) {
+	var block = getSector(this.coord, this.species.chars.antennaSize, this.direction, this.species.chars.eyeAngle);
+	
+	/*for (var i = 0; i < block.length; i++) {
 		var s = new show(indexToCoord(getCell(block[i])), genID());
 		s.colour = '#0000FF';
 		s.addToMap();
-	}
+	}*/
 	
 	for (var i = 0; i < block.length; i++) {
 		var index = getCell(block[i]);
@@ -215,11 +223,20 @@ Ant.prototype.secrete = function() {		// Do different types of pheromone
 Ant.prototype.draw = function(ctx) {
 	var scaledCoord = scaleCoord(this.coord);
 	
+	
+	var block = getSector(this.coord, this.species.chars.eyesight, this.direction, this.species.chars.eyeAngle);
+	for (var i = 0; i < block.length; i++) {
+		drawRect(ctx, scaleCoord(block[i]), this.size, '#0000FF');
+	}
+	
 	ctx.save();
 	
 	ctx.translate(scaledCoord.x + this.size.width/2, scaledCoord.y + this.size.height/2);
 	ctx.rotate(this.direction);
 	drawRect(ctx, {x: -this.size.width/2, y:-this.size.height/2}, this.size, this.species.colour.ant);
+	
+	drawArc(ctx, {x: 0, y: 0}, this.species.chars.eyesight * CELL_SIZE.width, Math.PI, 0, '#00FF00', 1)
+	
 	drawRect(ctx, {x: 0, y:0}, {width : 1, height: -10}, '#0000FF');
 	
 	ctx.restore();

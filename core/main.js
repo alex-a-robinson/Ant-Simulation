@@ -135,13 +135,14 @@ window.onload = function() {
 	// Create food system
 	FOOD = new FoodSystem(DEBUG_AMOUNT_OF_FOOD);
 	FOOD.ctx = canvasCTX;
-	FOOD.addRandFood({x: 80, y: 80}, 20);
+	FOOD.addRandFood({x: 140, y: 140}, 35);
 	
 	// Create a species
 	var testSpecies = new Species(genID());
 	speciesList.push(testSpecies);
 	testSpecies.chars.speed = 1;
 	testSpecies.chars.eyesight = 3;
+	testSpecies.chars.eyeAngle = Math.PI;	// only seems to work for pi i.e. 180 degs
 	testSpecies.chars.pheromoneConcentration = 0.4;
 	testSpecies.chars.antennaSize = 1;
 	testSpecies.colour = {
@@ -155,6 +156,9 @@ window.onload = function() {
 	
 	var nest = new Nest(genID(), coord);
 	nest.species = testSpecies;
+	
+	antsList.push(nest);
+	
 	// Add some basic peices, this could break if coord is off map e.g. on edge, need more reduntent way of doing this
 	nest.addNestPiece(coord);
 	nest.addNestPiece({x : coord.x - 1, y : coord.y});

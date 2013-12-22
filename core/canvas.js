@@ -42,6 +42,17 @@ function drawLine(ctx, coord1, coord2, strokeColour, lineWidth) {
 	}
 }
 
+function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour, lineWidth) {
+	if (lineWidth > 0) {
+		ctx.strokeStyle = strokeColour;
+		ctx.lineWidth = lineWidth;
+		ctx.beginPath();
+		ctx.arc(coord.x, coord.y, radius, startAngle, endAngle, false);
+		ctx.closePath();
+		ctx.stroke();
+	}
+}
+
 // Shortcut function to clear the entire canvas
 function clearCanvas(ctx) {
 	drawRect(ctx, {x : 0, y : 0}, {width : CANVAS.width, height : CANVAS.height}, BACKGROUND_COLOUR);

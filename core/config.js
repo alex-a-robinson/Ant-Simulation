@@ -28,12 +28,12 @@ var GRID_COLOUR = '#000000';
 var BACKGROUND_COLOUR = '#5C3700';
 var GRID_LINE_WIDTH = 0.2;
 var CELL_SIZE = {
-	width : 5,
-	height : 5
+	width : 2,
+	height : 2
 };
 var GRID_SIZE = {	// should be width and height! rather then x and y
-	x : 100,
-	y : 100
+	x : 200,
+	y : 200
 };
 var NUM_OF_CELLS = GRID_SIZE.x * GRID_SIZE.y;
 
@@ -52,7 +52,7 @@ var MAP_BOUNDARY = {
 
 // Food
 var FOOD;
-var FOOD_HUNGER_RATIO = 1;
+var FOOD_HEALTH_RATIO = 50;
 var DEBUG_AMOUNT_OF_FOOD = 500;
 
 
@@ -82,11 +82,11 @@ var ANT_FOOD_TAKE_SPEED = 1;	// number of ticks it takes for an ant to take one 
 var PHEROMONE_BASE_COLOUR = [
 	['#0000FF', '#3333FF', '6666FF', '9999FF', 'CCCCFF']
 ];	// index is species id, value is colour
-var PHEROMONE_EVAPERATION_RATE = 0.0001;
+var PHEROMONE_EVAPERATION_RATE = 0.001;
 var MAX_PHEROMONE_CONCENTRATION = 1;
 var PHEROMONE_PULL_FACTOR = 500;
 var MOMENTUM_INFLUENCE = 40;	// 0.2
-var CHANGE_DIRECTION_THRESHOLD = 0.1;
+var CHANGE_DIRECTION_THRESHOLD = 0.05;
 
 // Species
 var CHAR_RANGE = {		// <---------------- SOME VALUES ARE INTEGERS AND SOME ARE FLOATS

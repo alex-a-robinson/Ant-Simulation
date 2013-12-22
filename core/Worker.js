@@ -41,12 +41,12 @@ Worker.prototype.depositeFood = function() {
 		this.target = void(0);
 		
 		// Reverse prioritised direciotn
-		this.prioritizeDirection = this.direction + Math.PI;	// reverse 180 degrees
+		//this.prioritizeDirection = this.direction + Math.PI;	// reverse 180 degrees
 	}
 };
 
 Worker.prototype.dropFood = function(nest) {
-	nest.carrying += this.carrying;
+	nest.health += this.carrying * FOOD_HEALTH_RATIO;
 	this.carrying = 0;
 	
 };
@@ -55,8 +55,8 @@ Ant.prototype.useFood = function() {
 	var index = getCell(this.coord);
 	var food = MAP[index].food;
 	
-	if (this.isHungry() && this.isFood(food))
-		this.hunger += this.takeFood(food) * FOOD_HUNGER_RATIO;
+	if (this.hungry && this.isFood(food))
+		this.health += this.takeFood(food) * FOOD_HEALTH_RATIO;
 	else if (this.canCarry() && this.isFood(food))
 		this.carrying += this.takeFood(food);
 	else
@@ -100,32 +100,34 @@ Worker.prototype.shuffle = function(o){
 
 Worker.prototype.wonder = function() {
 
-	var best = 0;
-	var bestCoord;
+	var M = 0;
+	var Mxy = {x  : 0, y : 0};
+	var CoM =  {x  : 0, y : 0};
 	
 	for (var i = 0; i < this.pheromonesInRange.length; i++) {
-		if (this.pheromonesInRange[i].concentration > best) {
-			var best = this.pheromonesInRange[i].concentration;
-			var bestCoord = this.pheromonesInRange[i].coord;
-		}
+		M += this.pheromonesInRange[i].concentration;
+		Mxy.y += this.pheromonesInRange[i].coord.y * this.pheromonesInRange[i].concentration;
+		Mxy.x += this.pheromonesInRange[i].coord.x * this.pheromonesInRange[i].concentration;
 	}
+	
+	CoM = {x : Mxy.x / M, y : Mxy.y / M};
 
 	var choice = Math.random();
 	if (choice < CHANGE_DIRECTION_THRESHOLD)
 		this.prioritizeDirection = randDir();
 	
 	choice = Math.random();
-	if (this.pheromonesInRange.length > 0 && choice < 0.99) {	// 95% of the time go towards best pheromone
-		this.direction = angleTo(this.coord, bestCoord);
-		this.prioritizeDirection = this.direction;
+	
+	if (this.pheromonesInRange.length > 0 && choice < 0.995) {	// 95% of the time go towards best pheromone
+		this.direction = angleTo(this.coord, CoM);
+		this.prioritizeDirection = angleTo(this.coord, CoM);
 		this.followingPheromone = true;
 	} else {
 		this.direction = this.prioritizeDirection;
-		this.followingPheromone = false;
+		this.followingPheromone = false;			// following pheromone is not working!
 	}
-	
 
-	this.findTarget();		// search for targets
+
 	
 	/*
 	// All directions start with equal probability of each direction
@@ -224,11 +226,7 @@ Worker.prototype.doTask = function() {
 
 		case GOAL.findFood:
 			this.wonder();
-			// Reverse direction
-			/*if (this.followingPheromone && this.atNest()) {
-				console.log('direction changed from' + this.prioritizeDirection + ' to ' + this.direction + 3.14)
-				this.prioritizeDirection = this.direction + Math.PI;	// reverse 180 degrees
-			}*/
+			this.findTarget();
 			break;
 
 		case GOAL.getFood:
@@ -285,6 +283,21 @@ Worker.prototype.update = function() {
 		this.sleep -= 1;
 	} else {
 		this.move();
+	}
+	
+	this.isHungry();
+	this.health -= this.healthRate;
+	
+	while (this.hungry && this.carrying > 0) {
+		this.health += FOOD_HEALTH_RATIO;
+		this.carrying -= 1;	// take one piece of food from carrying
+		this.isHungry();	// recalculate this.hungry
+	}
+		
+	
+	if (this.health <= 0) {
+		this.die();
+		return void(0);	// die
 	}
 	
 	this.scan();

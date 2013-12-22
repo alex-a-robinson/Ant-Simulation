@@ -84,6 +84,12 @@ function calcDist(coord1, coord2) {
 	return distX + distY;
 }
 
+function distance(coord1, coord2) {
+	var x = coord1.x - coord2.x;
+	var y = coord1.y - coord2.y;
+	return Math.sqrt(x*x + y*y);
+}
+
 // Calculates the effort required to get a item of a certain value at a certain distance
 function calcEffort(coord1, coord2, value) {
 	var distance = calcDist(coord1, coord2);
@@ -196,6 +202,29 @@ function getBlock(coord, dist) {
 			block.push(boundary(searchCoord, MAP_BOUNDARY));
 		}
 	}	
+	return block;
+}
+
+function getSector(coord, radius, direction, angle) {
+
+	var block = [];
+
+	for (var y = coord.y - radius; y <= coord.y + radius; y++) {	// Extra 1 is need as list is inclusive
+		for (var x = coord.x - radius; x <= coord.x + radius; x++) {
+			
+			var searchCoord = {
+				x : x,
+				y : y
+			};		
+					
+			if (validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle/2) && validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle/2) && distance(coord, searchCoord) <= radius) {
+				block.push(boundary(indexToCoord(getCell(searchCoord)), MAP_BOUNDARY));
+			} else if (validateDirection(angleTo(searchCoord, coord)) >= validateDirection(direction + angle/2) && validateDirection(angleTo(searchCoord, coord)) <= validateDirection(direction - angle/2) && distance(coord, searchCoord) <= radius){
+				block.push(boundary(indexToCoord(getCell(searchCoord)), MAP_BOUNDARY));
+			}	// hacky version should work out logic of this else if
+		}
+	}
+	
 	return block;
 }
 
@@ -351,13 +380,23 @@ function ColorLuminance(hex, lum) {
 }
 
 // Creates a new ant object
-function createAnt(species, coord) {
-	var ant = new Ant(-1, coord);
-	species.addAnt(ant);
+function createAnt(species, coord, nest, startingHealth) {
+	console.log('new ant!')
+	var x = coord.x;
+	var y = coord.y;
+	var a = new Worker(genID(), {x : x, y : y});
+	a.addToMap();
+	a.species = species;
+	antsList.push(a);
+	a.nest = nest;
+	a.health = startingHealth;
+	a.sayHello();
+	/*
+	var ant = new worker(genID(), coord);
 	antsList.push(ant);
-	ant.id = antsList.length - 1;		// <--- This will mess up once ants start getting deleted from the array as all of the indexs will be changed
 	console.log('new ant id: ' + ant.id);
 	ant.addToMap();
+	*/
 }
 
 function genID() {

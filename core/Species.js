@@ -10,6 +10,7 @@ var Species = function(id) {
 		jawSize : 0,
 		stingSize : 0,
 		eyesight : 0,
+		eyeAngle : 0,
 		pheromoneConcentration : 0,
 		reproduction : {
 			worker : {prob : 0.80, foodCost : 5},		// 80 % of the time create a worker

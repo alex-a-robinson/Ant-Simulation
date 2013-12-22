@@ -10,10 +10,11 @@ var Nest = function(id, coord) {
 	this.pieces = [];
 	
 	// Computed attributes
-	this.hunger = 10;		// Lower means ant needs to eat more quickly
-	this.hungerThreshold = 3;// hunger point bellow which ant starts eating food it finds/has on it
-	this.hungerRate;	// The rate at which hunger decreases
-	this.hungerMax = 20;
+	this.health = 10000;
+	this.hungerThreshold = 500;		// hunger point bellow which ant starts eating food it finds/has on it
+	this.healthRate = 1;				// The rate at which hunger decreases
+	this.healthMax = 10000;
+	this.hungry = false;
 
 	this.carrying = 0;		// The amount of food an ant is carrying
 	this.carryingMax = 5;	// The maximum amount of food an ant can carry
@@ -23,28 +24,36 @@ var Nest = function(id, coord) {
 Nest.prototype.reproduce = function() {
 	var prob = Math.random();
 	switch (true) {
-		case (prob < this.species.reproduction.queen.prob):
-			if (this.carrying >= this.species.reproduction.queen.cost) {
-				createAnt(this.species, this.coord);
-				this.carrying -= this.species.reproduction.queen.cost;
+		case (prob < this.species.chars.reproduction.queen.prob):
+			if (this.health >= this.species.chars.reproduction.queen.foodCost + 1000) {
+				createAnt(this.species, this.coord, this, 1000);
+				this.health -= this.species.chars.reproduction.queen.foodCost + 1000;
 			}
 			break;
-		case (prob < this.species.reproduction.soldier.prob):
-			if (this.carrying >= this.species.reproduction.soldier.cost) {
-				createAnt(this.species, this.coord);
-				this.carrying -= this.species.reproduction.soldier.cost;
+		case (prob < this.species.chars.reproduction.soldier.prob):
+			if (this.health >= this.species.chars.reproduction.soldier.foodCost + 1000) {
+				createAnt(this.species, this.coord, this, 1000);
+				this.health -= this.species.chars.reproduction.soldier.foodCost + 1000;
 			}
 			break;
-		case (prob < this.species.reproduction.worker.prob):
-			if (this.carrying >= this.species.reproduction.worker.cost) {
-				createAnt(this.species, this.coord);
-				this.carrying -= this.species.reproduction.worker.cost;
+		case (prob < this.species.chars.reproduction.worker.prob):
+			if (this.health >= this.species.chars.reproduction.worker.foodCost + 1000) {
+				createAnt(this.species, this.coord, this, 1000);
+				
+				this.health -= this.species.chars.reproduction.worker.foodCost + 1000;
 			}
 			break;
 		default:
 			// No ants where created
 			break;
-	}
+	}	
+};
+
+Nest.prototype.isHungry = function() {
+	if (this.health < this.hungerThreshold)
+		this.hungry = true;
+	else
+		this.hungry = false;
 };
 
 Nest.prototype.addNestPiece = function(coord) {
@@ -53,13 +62,26 @@ Nest.prototype.addNestPiece = function(coord) {
 	nestPiece.addToMap();
 };
 
+Nest.prototype.die = function() {
+	var index = antsList.indexOf(this);
+	antsList.splice(index, 1);
+};
 
 Nest.prototype.update = function() {
 	for (var i = 0; i < this.pieces.length; i++)
 		this.pieces[i].removeFromMap();
-
-	//if (Math.random() > 0.8)
-	//	this.reproduce();
+		
+	this.isHungry();
+	this.health -= this.healthRate;
+	
+	if (this.health <= 0) {
+		this.die();
+		return void(0);	// die
+	}
+		
+	if (Math.random() > 0.08) {
+		this.reproduce();
+	}
 	
 	for (var i = 0; i < this.pieces.length; i++)
 		this.pieces[i].addToMap();
