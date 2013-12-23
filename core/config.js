@@ -11,7 +11,7 @@ var VALUE_TYPE = {
 };
 
 // Main
-var TICK_TIME = 10;
+var TICK_TIME = 10
 var speciesList = [];
 var antsList = [];
 
@@ -32,8 +32,8 @@ var CELL_SIZE = {
 	height : 2
 };
 var GRID_SIZE = {	// should be width and height! rather then x and y
-	x : 200,
-	y : 200
+	x : 250,
+	y : 250
 };
 var NUM_OF_CELLS = GRID_SIZE.x * GRID_SIZE.y;
 
@@ -52,7 +52,7 @@ var MAP_BOUNDARY = {
 
 // Food
 var FOOD;
-var FOOD_HEALTH_RATIO = 50;
+var FOOD_HEALTH_RATIO = 500;
 var DEBUG_AMOUNT_OF_FOOD = 500;
 
 
@@ -64,6 +64,7 @@ var GOAL = {
 };
 
 var DEBUG_ANT_NUM = 1;
+var NEST_COORD_MEMORY = 0.1;
 
 var NEST_SIZE = {
 	x : 3,
@@ -83,7 +84,7 @@ var PHEROMONE_BASE_COLOUR = [
 	['#0000FF', '#3333FF', '6666FF', '9999FF', 'CCCCFF']
 ];	// index is species id, value is colour
 var PHEROMONE_EVAPERATION_RATE = 0.001;
-var MAX_PHEROMONE_CONCENTRATION = 1;
+var MAX_PHEROMONE_CONCENTRATION = 2;
 var PHEROMONE_PULL_FACTOR = 500;
 var MOMENTUM_INFLUENCE = 40;	// 0.2
 var CHANGE_DIRECTION_THRESHOLD = 0.05;

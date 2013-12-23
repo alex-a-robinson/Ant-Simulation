@@ -42,6 +42,7 @@ function drawLine(ctx, coord1, coord2, strokeColour, lineWidth) {
 	}
 }
 
+
 function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour, lineWidth) {
 	if (lineWidth > 0) {
 		ctx.strokeStyle = strokeColour;

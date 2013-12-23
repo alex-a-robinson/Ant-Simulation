@@ -10,7 +10,7 @@ var Nest = function(id, coord) {
 	this.pieces = [];
 	
 	// Computed attributes
-	this.health = 10000;
+	this.health = 100000;
 	this.hungerThreshold = 500;		// hunger point bellow which ant starts eating food it finds/has on it
 	this.healthRate = 1;				// The rate at which hunger decreases
 	this.healthMax = 10000;
@@ -73,13 +73,14 @@ Nest.prototype.update = function() {
 		
 	this.isHungry();
 	this.health -= this.healthRate;
+	console.log(this.health)
 	
 	if (this.health <= 0) {
 		this.die();
 		return void(0);	// die
 	}
 		
-	if (Math.random() > 0.08) {
+	if (Math.random() < 0.01) {
 		this.reproduce();
 	}
 	

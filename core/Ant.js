@@ -122,7 +122,8 @@ Ant.prototype.scan = function() {
 		
 		var index = getCell(block[i]);
 		if (MAP[index].ant.length > 0) {	// Check for ants
-			this.itemsInView.ants.push(MAP[index].ant);
+			for (var k = 0; k < MAP[index].ant.length; k++)
+				this.itemsInView.ants.push(MAP[index].ant[k]);
 		} if (MAP[index].food !== void(0)) {			// Check for food
 			this.itemsInView.food.push(MAP[index].food);
 		} if (MAP[index].pheromone.length > 0) { // Check for pheromone
@@ -136,43 +137,15 @@ Ant.prototype.smell = function() {
 	this.pheromonesInRange = [];
 	
 	var block = []
-	
-	/*
-	switch (this.direction) {
-		case DIR.north:
-			for (var i = 0; i < this.species.chars.antennaSize; i++)
-				block.push(boundary({x : this.coord.x, y : this.coord.y - i}, MAP_BOUNDARY));
-			break;
-			
-		case DIR.south:
-			for (var i = 0; i < this.species.chars.antennaSize; i++)
-				block.push(boundary({x : this.coord.x, y : this.coord.y + i}, MAP_BOUNDARY));
-			break;
-			
-		case DIR.east:
-			for (var i = 0; i < this.species.chars.antennaSize; i++)
-				block.push(boundary({x : this.coord.x - i, y : this.coord.y}, MAP_BOUNDARY));
-			break;
-			
-		case DIR.west:
-			for (var i = 0; i < this.species.chars.antennaSize; i++)
-				block.push(boundary({x : this.coord.x + i, y : this.coord.y - i}, MAP_BOUNDARY));
-			break;
-	}*/
-	
-	//var block = getBlock2(this.coord, this.direction);
-	
+
 	var block = getSector(this.coord, this.species.chars.antennaSize, this.direction, this.species.chars.eyeAngle);
 	
-	/*for (var i = 0; i < block.length; i++) {
-		var s = new show(indexToCoord(getCell(block[i])), genID());
-		s.colour = '#0000FF';
-		s.addToMap();
-	}*/
-	
 	for (var i = 0; i < block.length; i++) {
-		var index = getCell(block[i]);
-				
+		var index = coordToIndex(block[i]);
+		
+		if (index === getCell(this.coord))
+			continue;
+
 		for (var k = 0; k < MAP[index].pheromone.length; k++) {
 			this.pheromonesInRange.push(MAP[index].pheromone[k]);
 		}

@@ -135,16 +135,19 @@ window.onload = function() {
 	// Create food system
 	FOOD = new FoodSystem(DEBUG_AMOUNT_OF_FOOD);
 	FOOD.ctx = canvasCTX;
-	FOOD.addRandFood({x: 140, y: 140}, 35);
+	FOOD.addRandFood({x: 40, y: 40}, 5);
+	FOOD.addRandFood({x: 140, y: 140}, 25);
+	FOOD.addRandFood({x: 20, y: 80}, 15);
+	FOOD.addRandFood({x: 230, y: 80}, 20);
 	
 	// Create a species
 	var testSpecies = new Species(genID());
 	speciesList.push(testSpecies);
 	testSpecies.chars.speed = 1;
-	testSpecies.chars.eyesight = 3;
-	testSpecies.chars.eyeAngle = Math.PI;	// only seems to work for pi i.e. 180 degs
+	testSpecies.chars.eyesight = 5;
+	testSpecies.chars.eyeAngle = Math.PI/2;	// only seems to work for pi i.e. 180 degs
 	testSpecies.chars.pheromoneConcentration = 0.4;
-	testSpecies.chars.antennaSize = 1;
+	testSpecies.chars.antennaSize = 5;
 	testSpecies.colour = {
 		ant : '#222222',
 		pheromone : '#E8E5A3',

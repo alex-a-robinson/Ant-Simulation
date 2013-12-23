@@ -92,8 +92,8 @@ function distance(coord1, coord2) {
 
 // Calculates the effort required to get a item of a certain value at a certain distance
 function calcEffort(coord1, coord2, value) {
-	var distance = calcDist(coord1, coord2);
-	return distance/value;
+	var dist = distance(coord1, coord2);
+	return dist/value;
 }
 
 function coordToIndex(coord) {
@@ -117,61 +117,6 @@ function scaleCoord(coord) {
 function getCell(coord) {
 	var cellCoord = boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
 	return coordToIndex(cellCoord);
-}
-
-
-// Returns the direction to take to get from coord to target
-function pathTo(coord, target) {
-
-	if (coord.x === target.x && coord.y === target.y)	// already at target
-		return DIR.none
-		
-	// Determin if it the distance going over the wraped edge is shorter
-	var wrapedX = (Math.abs(coord.x - target.x) >= GRID_SIZE.x / 2)?true:false;
-	var wrapedY = (Math.abs(coord.y - target.y) >= GRID_SIZE.y / 2)?true:false;
-	
-	// Find angle between horizontal and target
-	var b = Math.abs(coord.x - target.x);
-	var c = Math.abs(coord.y - target.y);
-	var a = Math.sqrt(b^2 + c^2);	// pythagrous
-	
-	var theta = Math.acos((a^2 + b^2 - c^2) / (2 * a * b)); // cosine rule
-	
-	if (b === 0)
-		theta = 3.14;
-	if (c === 0)
-		theta = 0;
-	
-	// Determin quadrant
-	if (coord.x < target.x) {
-		if (coord.y < target.y)	// 4th quadrant
-			return (theta < 3.14/2 && theta >= 0)?((!wrapedX)?DIR.east:DIR.west):((!wrapedY)?DIR.south:DIR.north);
-		else	// 1st quadrant
-			return (theta < 3.14/2 && theta >= 0)?((!wrapedX)?DIR.east:DIR.west):((!wrapedY)?DIR.north:DIR.south);
-	} else {
-		if (coord.y < target.y) // 3rd quadrant
-			return (theta < 3.14/2 && theta >= 0)?((!wrapedX)?DIR.west:DIR.east):((!wrapedY)?DIR.south:DIR.north);
-		else	// 2nd quadrant
-			return (theta < 3.14/2 && theta >= 0)?((!wrapedX)?DIR.west:DIR.east):((!wrapedY)?DIR.north:DIR.south);
-	}
-	
-	/***
-	* Old distance choosing 
-	***
-	// Check if the coordinate is on the other side of the plane i.e. the distance between the particles
-	// is > half of the distance (squaring is done to get positive value)
-
-	var wrapedX = (Math.abs(coord1.x - coord2.x) >= GRID_SIZE.x / 2)?true:false;
-	var wrapedY = (Math.abs(coord1.y - coord2.y) >= GRID_SIZE.y / 2)?true:false;
-	
-	// To give rise to diaginal paths .5 probability of move along x-axis vs y-axis
-	var xPriority = (Math.random() < 0.5)?true:false;
-	
-	if (xPriority && coord1.x !== coord2.x) return ((coord1.x < coord2.x))?((wrapedX)?DIR.west:DIR.east):((wrapedX)?DIR.east:DIR.west);
-	else if (coord1.y !== coord2.y) return ((coord1.y < coord2.y))?((wrapedY)?DIR.north:DIR.south):((wrapedY)?DIR.south:DIR.north);
-	else if (coord1.x !== coord2.x) return ((coord1.x < coord2.x))?((wrapedX)?DIR.west:DIR.east):((wrapedX)?DIR.east:DIR.west);
-	else return 0;
-	*/
 }
 
 // Returns the warped coordinate if exceeds a boundary
@@ -219,62 +164,22 @@ function getSector(coord, radius, direction, angle) {
 					
 			if (validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle/2) && validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle/2) && distance(coord, searchCoord) <= radius) {
 				block.push(boundary(indexToCoord(getCell(searchCoord)), MAP_BOUNDARY));
-			} else if (validateDirection(angleTo(searchCoord, coord)) >= validateDirection(direction + angle/2) && validateDirection(angleTo(searchCoord, coord)) <= validateDirection(direction - angle/2) && distance(coord, searchCoord) <= radius){
+			} else if ((validateDirection(direction) <= angle/2 || validateDirection(direction) >= Math.PI*2 - angle/2) && (validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle/2) || validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle/2)) && distance(coord, searchCoord) <= radius){
 				block.push(boundary(indexToCoord(getCell(searchCoord)), MAP_BOUNDARY));
 			}	// hacky version should work out logic of this else if
-		}
+		}  // validateDirection(direction) >= Math.PI*2 - Math.PI/2 && validateDirection(direction) <= Math.PI/2 && 
 	}
+	
+	// Always include the origin coordinate i.e. the one the ant is standing on
+	//if (block.indexOf(indexToCoord(getCell(coord))) < 0)
+	//	block.push(indexToCoord(getCell(coord)));
+	// if (validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction - angle/2) && validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction + angle/2))
 	
 	return block;
 }
 
-// Gets 3 blocks infron the ant ant in the direction its looking
-function getBlock2(coord, dir) {
-
-	var block = [];
-	
-	var validDir = validateDirection(dir);
-	
-	var sin = Math.sin(this.direction);
-	var cos = Math.cos(this.direction);
-	
-	var quadrant;
-	
-	if (validDir <= Math.PI/4 || validDir >= Math.PI*2 - Math.PI/4)
-		quadrant = 1;
-	else if (validDir <= 3 * Math.PI/4)
-		quadrant = 2;
-	else if (validDir <= 5 * Math.PI/4)
-		quadrant = 3;
-	else if (validDir <= Math.PI*2 - Math.PI/4)
-		quadrant = 4;
-	else	
-		console.log('Error in getBlock2 no quadrant?' + sin + ':' + cos)
-		
-	switch(quadrant) {
-		case 1:	// topside
-			block.push(boundary({x : coord.x + 1, y : coord.y - 1}, MAP_BOUNDARY));
-			block.push(boundary({x : coord.x, y : coord.y - 1}, MAP_BOUNDARY));
-			block.push(boundary({x : coord.x - 1, y : coord.y - 1}, MAP_BOUNDARY));
-			break;
-		case 2:	// right side
-			block.push(boundary({x : coord.x + 1, y : coord.y + 1}, MAP_BOUNDARY));
-			block.push(boundary({x : coord.x + 1, y : coord.y}, MAP_BOUNDARY));
-			block.push(boundary({x : coord.x + 1, y : coord.y - 1}, MAP_BOUNDARY));
-			break;
-		case 3:	// bottom side
-			block.push(boundary({x : coord.x + 1, y : coord.y + 1}, MAP_BOUNDARY));
-			block.push(boundary({x : coord.x, y : coord.y + 1}, MAP_BOUNDARY));
-			block.push(boundary({x : coord.x - 1, y : coord.y + 1}, MAP_BOUNDARY));
-			break;
-		case 4:	// left side
-			block.push(boundary({x : coord.x - 1, y : coord.y + 1}, MAP_BOUNDARY));
-			block.push(boundary({x : coord.x - 1, y : coord.y}, MAP_BOUNDARY));
-			block.push(boundary({x : coord.x - 1, y : coord.y - 1}, MAP_BOUNDARY));
-			break;
-	}
-	
-	return block;
+function turnAround(angle) {
+	return angle + Math.PI;
 }
 
 function angleTo(coord, target) {
@@ -282,101 +187,6 @@ function angleTo(coord, target) {
 	var dy = target.y - coord.y;
 	
 	return Math.atan2(dy, dx) + Math.PI/2;	// atan2 find the angle from the horizontal however we use from the vertical
-}
-
-// Need generlised solution look at https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-// Includes the cell being stood on
-function getSegment(coord, dist, dir) {
-	
-	var cells = [];
-	
-	if (dir === DIR.north || dir === DIR.south) {
-	
-		var rowStop = 1;
-		var rowStart = 0;
-	
-		var dirction = (dir === DIR.north)?-1:1;
-		
-		for (var y = 0; y < dist; y++) {
-			for (var x = rowStart; x < rowStop; x++) {
-				cells.push(boundary({x : coord.x + x, y : coord.y + y * dirction}, MAP_BOUNDARY));
-			}
-			rowStop += 1;
-			rowStart -= 1;
-		}
-		
-	} else {
-	
-		var colStop = 1;
-		var colStart = 0;
-	
-		var dirction = (dir === DIR.east)?1:-1;
-		
-		for (var x = 0; x < dist; x++) {
-			for (var y = colStart; y < colStop; y++) {
-				cells.push(boundary({x : coord.x + x * dirction, y : coord.y + y}, MAP_BOUNDARY));
-			}
-			colStop += 1;
-			colStart -= 1;
-		}
-	}
-	
-	for (var i = 0; i < cells.length; i++) {
-		var s = new show(cells[i], genID());
-		s.addToMap();
-	}
-	
-	return cells;
-}
-
-function colourSaturation(baseColours, sat) {
-	sat = Math.round(sat * 10) / 10;
-												// rounding (x * 10) / 10 is to get rounded number to 1dp
-	if (baseColours.length === 5) {
-		switch (true) {
-			case (sat <= 0.2):
-				return baseColours[4];
-				break;
-			case (sat <= 0.4):
-				return baseColours[3];
-				break;
-			case (sat <= 0.6):
-				return baseColours[2];
-				break;
-			case (sat <= 0.8):
-				return baseColours[1];
-				break;
-			case (sat <= 1):
-				return baseColours[0];
-				break;
-			default:
-				console.log('Error: colourSaturation(): saturation not in range.');
-		}
-	} else {
-		console.log('Error: colourSaturation(): Not 5 colours in baseColours.');
-	}
-}
-
-// Calculates lighter or darker hex colours
-// http://www.sitepoint.com/javascript-generate-lighter-darker-color/
-function ColorLuminance(hex, lum) {
-
-	// validate hex string
-	hex = String(hex).replace(/[^0-9a-f]/gi, '');
-	if (hex.length < 6) {
-		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-	}
-	lum = lum || 0;
-
-	// convert to decimal and change luminosity
-	var rgb = "#", c, i;
-	for (i = 0; i < 3; i++) {
-		c = parseInt(hex.substr(i*2,2), 16);
-		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-		rgb += ("00"+c).substr(c.length);
-	}
-
-	return rgb;
 }
 
 // Creates a new ant object
