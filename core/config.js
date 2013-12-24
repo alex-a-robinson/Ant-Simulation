@@ -7,7 +7,7 @@ var VALUE_TYPE = {
 };
 
 // Main
-var TICK_TIME = 100;
+var TICK_TIME = 10;
 var speciesList = [];
 var antsList = [];
 
@@ -79,6 +79,7 @@ var ANT_TYPE = {
 	nest : 3,
 	debug : 4
 };
+var ANT_FOOD_DROP_SPEED = 1;
 var ANT_FOOD_TAKE_SPEED = 1;	// number of ticks it takes for an ant to take one peice of food
 var QUEEN_STEPS = {min : 200, max : 300};
 

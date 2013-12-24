@@ -101,7 +101,7 @@ Ant.prototype.scan = function() {
 	var block = getSector(this.coord, this.species.chars.eyesight, this.direction, this.species.chars.eyeAngle);
 	
 	for (var i = 0; i < block.length; i++) {
-		var index = getCellIndex(block[i]);
+		var index = coordToIndex(block[i]);
 		
 		if (MAP[index].ant.length > 0) {	// Check for ants
 			for (var k = 0; k < MAP[index].ant.length; k++)

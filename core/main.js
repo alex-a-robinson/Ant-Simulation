@@ -6,7 +6,6 @@
 
 * Watch for functions which pass by referance e.g. when using this.varible
 
-*	- Add dynamic canvas resizing
 *	- Add support for IE (version the school uses)
 *	- Create ant subclasses
 *		+ solider
@@ -23,7 +22,6 @@
 // File scope variables
 var canvasDOM;
 var canvasCTX;
-var isDown = false;
 
 // Represents what happens each tick
 function tick() {

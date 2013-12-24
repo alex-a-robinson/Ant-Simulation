@@ -30,12 +30,11 @@ Worker.prototype.canCarry = function() {
 Worker.prototype.depositeFood = function() {	
 
 	if (this.atNest()) {
-		this.dropFood(this.nest);
-		this.goal = GOAL.findFood;
-		this.target = void(0);
-	}
-
-	if (this.seeNest()) {
+		if (this.dropFood(this.nest)) {
+			this.goal = GOAL.findFood;
+			this.target = void(0);
+		}
+	} else  if (this.seeNest()) {
 		this.direction = angleTo(this.coord, this.nest.coord);
 	} else {
 		if (Math.random() < NEST_COORD_MEMORY)  // sense of direction of nest
@@ -46,8 +45,16 @@ Worker.prototype.depositeFood = function() {
 };
 
 Worker.prototype.dropFood = function(nest) {
-	nest.health += this.carrying * FOOD_HEALTH_RATIO;
-	this.carrying = 0;
+	if (this.carrying > 0) {
+		nest.health += 1 * FOOD_HEALTH_RATIO;
+		this.carrying -= 1;
+		this.sleep += ANT_FOOD_DROP_SPEED;
+	}
+	if (this.carrying > 0)
+		return false;
+	else
+		return true;
+	
 };
 
 Ant.prototype.useFood = function() {
