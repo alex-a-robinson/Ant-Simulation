@@ -1,4 +1,3 @@
-// Species class
 var Species = function(id) {
 	this.id = id;
 		

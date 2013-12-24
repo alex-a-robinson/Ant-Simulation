@@ -1,7 +1,3 @@
-/**
-* Collection of tools which aid simulation
-*/ 
-
 function randInt(min, max) {
 	// Returns a random integer in the range(min, max)
 	// -+- Not truely random
@@ -33,14 +29,6 @@ function validateDirection(dir) {
 	return newDir;
 }
 
-// Checks if an angle is within the range 0 <= theta < 2*PI
-function validDirection(dir) {
-	if (dir >= 0 && dir < Math.PI * 2)
-		return true;
-	else
-		return false;
-}
-
 // Picks a random property of a object literal
 // http://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object
 function randProperty(obj) {
@@ -52,36 +40,9 @@ function randProperty(obj) {
 	return result;
 }
 
-// Normalize a list of items
-function normalize(items) {
-	var max = 0;
-	
-	for (var i = 0; i < items.length; i++)
-		if (items[i] > max) max = items[i]; 
-
-	for (var i = 0; i < items.length; i++)
-		items[i] = items[i] / max;
-	
-	return items;
-}
-
-/*
-function log(obj) {
-	// Shorthand to console.log objects, strings, ...
-	console.log(obj);
-}*/
-
 function getDOM(id) {
 	// Returns the Document Object Model of an element with the id
 	return document.getElementById(id);
-}
-
-// UPDATE FOR TOURUS AS distance will wrap around map 				<------------------ is this the real distance?
-function calcDist(coord1, coord2) {
-	// Returns the absolute distance between two coordinates
-	var distX = Math.min(Math.abs(coord1.x - coord2.x), GRID_SIZE.x - Math.abs(coord1.x - coord2.x));
-	var distY = Math.min(Math.abs(coord1.y - coord2.y), GRID_SIZE.y - Math.abs(coord1.y - coord2.y));
-	return distX + distY;
 }
 
 function distance(coord1, coord2) {
@@ -133,23 +94,6 @@ function boundary(coord, bounds) {
 	return coord;
 }
 
-// Returns a list of coordinates around (a distance dist) a point <-- SHOULD BE A CIRCLE NOT SQUARE
-function getBlock(coord, dist) {
-	var block = [];
-	
-	for (var y = (coord.y - dist); y < (coord.y + dist + 1); y++) {	// Extra 1 is need as list is inclusive
-		for (var x = (coord.x - dist); x < (coord.x + dist + 1); x++) {
-			
-			var searchCoord = indexToCoord(getCell({
-				x : x,
-				y : y
-			}));
-			block.push(boundary(searchCoord, MAP_BOUNDARY));
-		}
-	}	
-	return block;
-}
-
 function getSector(coord, radius, direction, angle) {
 
 	var block = [];
@@ -166,15 +110,10 @@ function getSector(coord, radius, direction, angle) {
 				block.push(boundary(indexToCoord(getCell(searchCoord)), MAP_BOUNDARY));
 			} else if ((validateDirection(direction) <= angle/2 || validateDirection(direction) >= Math.PI*2 - angle/2) && (validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle/2) || validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle/2)) && distance(coord, searchCoord) <= radius){
 				block.push(boundary(indexToCoord(getCell(searchCoord)), MAP_BOUNDARY));
-			}	// hacky version should work out logic of this else if
-		}  // validateDirection(direction) >= Math.PI*2 - Math.PI/2 && validateDirection(direction) <= Math.PI/2 && 
+			}
+		}
 	}
-	
-	// Always include the origin coordinate i.e. the one the ant is standing on
-	//if (block.indexOf(indexToCoord(getCell(coord))) < 0)
-	//	block.push(indexToCoord(getCell(coord)));
-	// if (validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction - angle/2) && validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction + angle/2))
-	
+
 	return block;
 }
 

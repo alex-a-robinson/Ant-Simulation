@@ -4,7 +4,6 @@ var show = function(coord, id) {
 	this.colour = '#FF0000';
 	this.size = CELL_SIZE;
 	this.type = ANT_TYPE.debug;
-	
 };
 
 show.prototype.addToMap = function() {

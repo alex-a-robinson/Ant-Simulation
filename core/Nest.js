@@ -15,10 +15,24 @@ var Nest = function(id, coord) {
 	this.healthRate = 1;				// The rate at which hunger decreases
 	this.healthMax = 10000;
 	this.hungry = false;
+};
 
-	this.carrying = 0;		// The amount of food an ant is carrying
-	this.carryingMax = 5;	// The maximum amount of food an ant can carry
-	
+Nest.prototype.isHungry = function() {
+	if (this.health < this.hungerThreshold)
+		this.hungry = true;
+	else
+		this.hungry = false;
+};
+
+Nest.prototype.addNestPiece = function(coord) {
+	var nestPiece = new NestPiece(genID(), coord, this);
+	this.pieces.push(nestPiece);
+	nestPiece.addToMap();
+};
+
+Nest.prototype.die = function() {
+	var index = antsList.indexOf(this);
+	antsList.splice(index, 1);
 };
 
 Nest.prototype.reproduce = function() {
@@ -47,24 +61,6 @@ Nest.prototype.reproduce = function() {
 			// No ants where created
 			break;
 	}	
-};
-
-Nest.prototype.isHungry = function() {
-	if (this.health < this.hungerThreshold)
-		this.hungry = true;
-	else
-		this.hungry = false;
-};
-
-Nest.prototype.addNestPiece = function(coord) {
-	var nestPiece = new NestPiece(genID(), coord, this);
-	this.pieces.push(nestPiece);
-	nestPiece.addToMap();
-};
-
-Nest.prototype.die = function() {
-	var index = antsList.indexOf(this);
-	antsList.splice(index, 1);
 };
 
 Nest.prototype.update = function() {

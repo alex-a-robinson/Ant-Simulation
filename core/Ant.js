@@ -1,14 +1,9 @@
-/**
-* Ant class
-*/
-
 var Ant = function(id, coord) {
 
 	// Spatial attributes
 	this.size = CELL_SIZE;			// The size of the ant
 	this.coord = coord;				// The coordinate of the ant
 	this.direction = randDir(); 		// The direction angle
-	
 
 	// Identifiers
 	this.id = id;					// The ants unique identifier
@@ -24,8 +19,8 @@ var Ant = function(id, coord) {
 	this.hungry = false;
 
 	this.carrying = 0;				// The amount of food an ant is carrying
-	this.carryingThreshold = 3;	// least amount of food required to return to nest with food
-	this.carryingMax = 5;			// The maximum amount of food an ant can carry
+	this.carryingThreshold = 4;	// least amount of food required to return to nest with food
+	this.carryingMax = 10;			// The maximum amount of food an ant can carry
 	
 	// Logic attributes (control the ants logic)
 	this.goal = GOAL.findFood;		// The current goal of the ant
@@ -50,21 +45,6 @@ Ant.prototype.addToMap = function() {
 Ant.prototype.removeFromMap = function() {
 	var index = MAP[getCell(this.coord)].ant.indexOf(this);
 	MAP[getCell(this.coord)].ant.splice(index, 1);
-};
-
-// Update the ants coordinates
-Ant.prototype.move = function() {
-
-	var speed = this.species.chars.speed;
-	this.coord.x += Math.sin(this.direction) * this.species.chars.speed;
-	this.coord.y -= Math.cos(this.direction) * this.species.chars.speed;
-	
-	boundary(this.coord, MAP_BOUNDARY);
-};
-
-Ant.prototype.die = function() {
-	var index = antsList.indexOf(this);
-	antsList.splice(index, 1);
 };
 
 Ant.prototype.isHungry = function() {
@@ -115,12 +95,11 @@ Ant.prototype.scan = function() {
 		pheromone : []
 	};
 
-	//var block = getBlock(this.coord, this.species.chars.eyesight);
-	//var block = getBlock2(this.coord, this.direction);
 	var block = getSector(this.coord, this.species.chars.eyesight, this.direction, this.species.chars.eyeAngle);
+	
 	for (var i = 0; i < block.length; i++) {
-		
 		var index = getCell(block[i]);
+		
 		if (MAP[index].ant.length > 0) {	// Check for ants
 			for (var k = 0; k < MAP[index].ant.length; k++)
 				this.itemsInView.ants.push(MAP[index].ant[k]);
@@ -135,8 +114,6 @@ Ant.prototype.scan = function() {
 
 Ant.prototype.smell = function() {
 	this.pheromonesInRange = [];
-	
-	var block = []
 
 	var block = getSector(this.coord, this.species.chars.antennaSize, this.direction, this.species.chars.eyeAngle);
 	
@@ -152,26 +129,8 @@ Ant.prototype.smell = function() {
 	}
 };
 
-// Chooses which target to go for
-Ant.prototype.findTarget = function() {
-	switch (this.goal) {
-		case GOAL.findFood:
-			// Find the item which involves the least effort to get
-			var leastEffort = 1000;		// <-- Large number to guarantee a number will be less then this
-			for (var i = 0; i < this.itemsInView.food.length; i++) {
-				var effort = calcEffort(this.coord, this.itemsInView.food[i].coord, this.itemsInView.food[i].amount);
-				if (effort < leastEffort) {
-					leastEffort = effort;
-					this.target = this.itemsInView.food[i].coord;
-				}
-			}
-			break;
-	}
-};
-
 // secrete pheromone
 Ant.prototype.secrete = function() {		// Do different types of pheromone
-
 	var index = getCell(this.coord);
 	var pheromones = MAP[index].pheromone;
 
@@ -193,24 +152,29 @@ Ant.prototype.secrete = function() {		// Do different types of pheromone
 	pheromone.addToMap();
 };
 
+// Update the ants coordinates
+Ant.prototype.move = function() {
+	var speed = this.species.chars.speed;
+	this.coord.x += Math.sin(this.direction) * this.species.chars.speed;
+	this.coord.y -= Math.cos(this.direction) * this.species.chars.speed;
+	
+	boundary(this.coord, MAP_BOUNDARY);
+};
+
+Ant.prototype.die = function() {
+	var index = antsList.indexOf(this);
+	antsList.splice(index, 1);
+};
+
 Ant.prototype.draw = function(ctx) {
 	var scaledCoord = scaleCoord(this.coord);
-	
-	
-	var block = getSector(this.coord, this.species.chars.eyesight, this.direction, this.species.chars.eyeAngle);
-	for (var i = 0; i < block.length; i++) {
-		drawRect(ctx, scaleCoord(block[i]), this.size, '#0000FF');
-	}
 	
 	ctx.save();
 	
 	ctx.translate(scaledCoord.x + this.size.width/2, scaledCoord.y + this.size.height/2);
 	ctx.rotate(this.direction);
-	drawRect(ctx, {x: -this.size.width/2, y:-this.size.height/2}, this.size, this.species.colour.ant);
-	
-	drawArc(ctx, {x: 0, y: 0}, this.species.chars.eyesight * CELL_SIZE.width, Math.PI, 0, '#00FF00', 1)
-	
-	drawRect(ctx, {x: 0, y:0}, {width : 1, height: -10}, '#0000FF');
+	drawRect(ctx, {x: -this.size.width/2, y:-this.size.height/2}, this.size, this.species.colour.ant);	
+	drawRect(ctx, {x: 0, y:0}, {width : 1, height: this.size.height}, this.species.colour.ant);	// pointer to show direction
 	
 	ctx.restore();
 };

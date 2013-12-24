@@ -6,14 +6,6 @@ var Pheromone = function(concentration, coord) {
 	this.antID = [];	// Ant ID's of ants which created the pheromone
 };
 
-Pheromone.prototype.draw = function(ctx) {
-	if (this.concentration > 0) {	// If pheromone exsists
-		ctx.globalAlpha = this.concentration;
-		drawRect(ctx, scaleCoord(this.coord), this.size, this.species.colour.pheromone);
-		ctx.globalAlpha = 1;	// Reset alpha
-	}
-};
-
 Pheromone.prototype.addToMap = function() {
 	MAP[coordToIndex(this.coord)].pheromone.push(this);
 };
@@ -23,6 +15,13 @@ Pheromone.prototype.removeFromMap = function() {
 	MAP[coordToIndex(this.coord)].pheromone.splice(index, 1);
 };
 
+Pheromone.prototype.draw = function(ctx) {
+	if (this.concentration > 0) {	// If pheromone exists
+		ctx.globalAlpha = this.concentration;
+		drawRect(ctx, scaleCoord(this.coord), this.size, this.species.colour.pheromone);
+		ctx.globalAlpha = 1;	// Reset alpha
+	}
+};
 
 Pheromone.prototype.update = function() {
 

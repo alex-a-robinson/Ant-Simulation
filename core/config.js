@@ -1,7 +1,3 @@
-/**
-*	Holds all global constants
-*/
-
 var CURRENT_ID = 0;
 
 // Misc
@@ -36,15 +32,6 @@ var GRID_SIZE = {	// should be width and height! rather then x and y
 	y : 250
 };
 var NUM_OF_CELLS = GRID_SIZE.x * GRID_SIZE.y;
-
-var DIR = {
-	none : 0,
-	north : 1,
-	east : 2,
-	south : -1,
-	west : -2,
-};
-
 var MAP_BOUNDARY = {
 	x : {min : 0, max : GRID_SIZE.x},
 	y : {min : 0, max : GRID_SIZE.y}
@@ -53,8 +40,6 @@ var MAP_BOUNDARY = {
 // Food
 var FOOD;
 var FOOD_HEALTH_RATIO = 500;
-var DEBUG_AMOUNT_OF_FOOD = 500;
-
 
 // Ants
 var GOAL = {
@@ -62,10 +47,8 @@ var GOAL = {
 	getFood : 1,
 	dropFood : 2,
 };
-
 var DEBUG_ANT_NUM = 1;
 var NEST_COORD_MEMORY = 0.1;
-
 var NEST_SIZE = {
 	x : 3,
 	y : 3
@@ -80,14 +63,10 @@ var ANT_TYPE = {
 var ANT_FOOD_TAKE_SPEED = 1;	// number of ticks it takes for an ant to take one peice of food
 
 // Pheromones
-var PHEROMONE_BASE_COLOUR = [
-	['#0000FF', '#3333FF', '6666FF', '9999FF', 'CCCCFF']
-];	// index is species id, value is colour
 var PHEROMONE_EVAPERATION_RATE = 0.001;
 var MAX_PHEROMONE_CONCENTRATION = 2;
-var PHEROMONE_PULL_FACTOR = 500;
-var MOMENTUM_INFLUENCE = 40;	// 0.2
 var CHANGE_DIRECTION_THRESHOLD = 0.05;
+var PHEROMONE_INFLUENCE = 0.95;
 
 // Species
 var CHAR_RANGE = {		// <---------------- SOME VALUES ARE INTEGERS AND SOME ARE FLOATS

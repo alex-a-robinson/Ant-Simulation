@@ -7,10 +7,6 @@ var NestPiece = function(id, coord, nest) {
 	this.type = ANT_TYPE.nest;
 };
 
-NestPiece.prototype.draw = function(ctx) {
-	drawRect(ctx, scaleCoord(this.coord), this.size, this.nest.species.colour.nest);
-};
-
 // Adds the current position of the ant to the map
 NestPiece.prototype.addToMap = function() {
 	MAP[coordToIndex(this.coord)].ant.push(this);
@@ -20,6 +16,10 @@ NestPiece.prototype.addToMap = function() {
 NestPiece.prototype.removeFromMap = function() {
 	var index = MAP[coordToIndex(this.coord)].ant.indexOf(this);
 	MAP[coordToIndex(this.coord)].ant.splice(index, 1);
+};
+
+NestPiece.prototype.draw = function(ctx) {
+	drawRect(ctx, scaleCoord(this.coord), this.size, this.nest.species.colour.nest);
 };
 
 NestPiece.prototype.sayHello = function() {
