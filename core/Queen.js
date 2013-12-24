@@ -57,7 +57,7 @@ Queen.prototype.pickDirection = function() {
 
 Queen.prototype.createNest = function() {
 	var nest = new Nest(genID(), this.coord);
-	nest.species = this.species;
+	nest.species = this.species.mutate();
 	nest.createNest();
 	antsList.push(nest);
 };

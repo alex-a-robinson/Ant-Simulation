@@ -10,7 +10,7 @@ var Nest = function(id, coord) {
 	this.pieces = [];
 	
 	// Computed attributes
-	this.health = 100000;
+	this.health = 3000;
 	this.hungerThreshold = 500;		// hunger point bellow which ant starts eating food it finds/has on it
 	this.healthRate = 1;				// The rate at which hunger decreases
 	this.healthMax = 10000;

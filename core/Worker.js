@@ -89,10 +89,15 @@ Worker.prototype.wonder = function() {
 	var Mxy = {x  : 0, y : 0};
 	var CoM =  {x  : 0, y : 0};
 	
+	var pheromones = false;
+	
 	for (var i = 0; i < this.pheromonesInRange.length; i++) {
-		M += this.pheromonesInRange[i].concentration;
-		Mxy.y += this.pheromonesInRange[i].coord.y * this.pheromonesInRange[i].concentration;
-		Mxy.x += this.pheromonesInRange[i].coord.x * this.pheromonesInRange[i].concentration;
+		if (this.pheromonesInRange[i].species === this.species) {		// only follow pheromones of own species
+			M += this.pheromonesInRange[i].concentration;
+			Mxy.y += this.pheromonesInRange[i].coord.y * this.pheromonesInRange[i].concentration;
+			Mxy.x += this.pheromonesInRange[i].coord.x * this.pheromonesInRange[i].concentration;
+			pheromones = true;
+		}
 	}
 	
 	CoM = {x : Mxy.x / M, y : Mxy.y / M};
@@ -104,11 +109,11 @@ Worker.prototype.wonder = function() {
 	
 	choice = Math.random();
 	
-	if (this.pheromonesInRange.length <= 0 && (this.atNest() || this.seeNest())) {
+	if (this.followingPheromone && this.pheromonesInRange.length <= 0 && (this.atNest() || this.seeNest())) {
 		this.direction = turnAround(this.direction);
 		this.prioritizeDirection = this.direction;
 		this.followingPheromone = false;
-	} else if (this.pheromonesInRange.length > 0 && choice < PHEROMONE_INFLUENCE) {	// 95% of the time go towards best pheromone
+	} else if (pheromones && choice < PHEROMONE_INFLUENCE) {	// 95% of the time go towards best pheromone
 		this.direction = angleTo(this.coord, CoM);
 		this.prioritizeDirection = this.direction;
 		this.followingPheromone = true;

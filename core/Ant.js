@@ -118,12 +118,12 @@ Ant.prototype.scan = function() {
 Ant.prototype.smell = function() {
 	this.pheromonesInRange = [];
 
-	var block = getSector(this.coord, this.species.chars.antennaSize, this.direction, this.species.chars.eyeAngle);
+	var block = getSector(this.coord, this.species.chars.antennaSize, this.direction, this.species.chars.antennaAngle);
 	
 	for (var i = 0; i < block.length; i++) {
 		var index = coordToIndex(block[i]);
 		
-		if (index === getCellIndex(this.coord))
+		if (index === getCellIndex(this.coord))	// don't smell own square (check this is nessocery)
 			continue;
 
 		for (var k = 0; k < MAP[index].pheromone.length; k++) {

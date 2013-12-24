@@ -68,19 +68,21 @@ var ANT_FOOD_TAKE_SPEED = 1;	// number of ticks it takes for an ant to take one 
 var QUEEN_STEPS = {min : 200, max : 300};
 
 // Pheromones
-var PHEROMONE_EVAPERATION_RATE = 0.001;
-var MAX_PHEROMONE_CONCENTRATION = 2;
+var PHEROMONE_EVAPERATION_RATE = 0.005;
+var MAX_PHEROMONE_CONCENTRATION = 1;
 var CHANGE_DIRECTION_THRESHOLD = 0.05;
 var PHEROMONE_INFLUENCE = 0.95;
 
 // Species
 var CHAR_RANGE = {		// <---------------- SOME VALUES ARE INTEGERS AND SOME ARE FLOATS
-	speed : {min : 0, max : 10, type : VALUE_TYPE.integerValue},
+	speed : {min : 0, max : 2.5, type : VALUE_TYPE.floatValue},
 	antennaSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue},
 	exoSkeletonThickness : {min : 0, max : 5, type : VALUE_TYPE.integerValue},
 	jawStrength : {min : 0, max : 5, type : VALUE_TYPE.integerValue},
 	jawSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue},
 	stingSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue},
 	eyesight : {min : 0, max : 50, type : VALUE_TYPE.integerValue},
-	pheromoneConcentration : {type : VALUE_TYPE.floatValue}
+	eyeAngle : {min : 0, max : Math.PI*2, type : VALUE_TYPE.floatValue},
+	antennaAngle : {min : 0, max : Math.PI*2, type : VALUE_TYPE.floatValue},
+	pheromoneConcentration : {min : 0, max : 2, type : VALUE_TYPE.floatValue}
 }

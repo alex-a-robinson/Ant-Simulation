@@ -4,6 +4,11 @@ function randInt(range) {
 	return Math.floor(Math.random() * (range.max - range.min + 1) + range.min);
 }
 
+// http://stackoverflow.com/questions/9724404/random-floating-point-double-in-inclusive-range
+function randFloat(range) {
+	  return Math.random() < 0.5 ? ((1-Math.random()) * (range.max - range.min) + range.min) : (Math.random() * (range.max - range.min) + range.min);
+}
+
 // Returns a random direction
 function randDir() {
 	var dir = Math.random() * Math.PI * 2;
@@ -163,7 +168,6 @@ function createAnt(species, coord, nest, startingHealth, type) {
 		case ANT_TYPE.queen:
 			var ant = new Queen(genID(), antCoord);
 			ant.colour = species.colour.queen;
-			console.log('Queen')
 			break;
 			
 		case ANT_TYPE.soldier:

@@ -49,12 +49,12 @@ function tick() {
 	
 	drawGrid(canvasCTX);
 	
-	/*  Framerate system
+	//  Framerate system
 	var ET = new Date;
 	if (ET - ST > 0) {		// so not to console.log infinity if too high
 		var fps = 1000 / (ET - ST);
-		console.log('FPS: ' + fps.toFixed(1));
-	}*/
+		//console.log('FPS: ' + fps.toFixed(1));
+	}
 	setTimeout(tick, TICK_TIME);
 }
 
@@ -100,12 +100,12 @@ window.onload = function() {
 	
 	// Create a species
 	var testSpecies = new Species(genID());
-	speciesList.push(testSpecies);
 	testSpecies.chars.speed = 1;
 	testSpecies.chars.eyesight = 5;
 	testSpecies.chars.eyeAngle = Math.PI/2;	// only seems to work for pi i.e. 180 degs
 	testSpecies.chars.pheromoneConcentration = 0.4;
 	testSpecies.chars.antennaSize = 5;
+	testSpecies.chars.antennaAngle = Math.PI/2;
 	testSpecies.colour = {
 		worker : '#1C1C1C',
 		soldier : '#1C1C1C',
@@ -114,24 +114,15 @@ window.onload = function() {
 		pheromone : '#E8E5A3',
 	};	
 	
-	// Create a nest
-	var coord = {x: 25, y: 25};
-	
-	var nest = new Nest(genID(), coord);
-	nest.species = testSpecies;
-	nest.createNest();
-	antsList.push(nest);
-	
 	// Add ants
 	for (var i = 0; i < DEBUG_ANT_NUM; i++) {
 		var x = randInt({min : 0, max : GRID_SIZE.x - 1});	// -1 as randInt is inclusive
 		var y = randInt({min : 0, max : GRID_SIZE.y - 1});
-		var a = new Worker(genID(), {x : x, y : y});
+		var a = new Queen(genID(), {x : x, y : y});
 		a.addToMap();
 		a.species = testSpecies;
 		a.colour = testSpecies.colour.worker;
 		antsList.push(a);
-		a.nest = nest;
 		a.sayHello();
 	}
 	
