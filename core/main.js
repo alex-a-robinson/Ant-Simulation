@@ -46,7 +46,6 @@ function tick() {
 		antsList[i].update();
 	
 	drawMap(canvasCTX);
-	
 	drawGrid(canvasCTX);
 	
 	//  Framerate system
@@ -94,9 +93,9 @@ window.onload = function() {
 	FOOD = new FoodSystem();
 	FOOD.ctx = canvasCTX;
 	FOOD.addRandFood({x: 40, y: 40}, 5);
-	FOOD.addRandFood({x: 140, y: 140}, 25);
-	FOOD.addRandFood({x: 20, y: 80}, 15);
-	FOOD.addRandFood({x: 230, y: 80}, 20);
+	//FOOD.addRandFood({x: 140, y: 140}, 25);
+	//FOOD.addRandFood({x: 20, y: 80}, 15);
+	//FOOD.addRandFood({x: 230, y: 80}, 20);
 	
 	// Create a species
 	var testSpecies = new Species(genID());

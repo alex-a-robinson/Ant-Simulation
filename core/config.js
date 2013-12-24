@@ -7,7 +7,7 @@ var VALUE_TYPE = {
 };
 
 // Main
-var TICK_TIME = 10
+var TICK_TIME = 10;
 var speciesList = [];
 var antsList = [];
 
@@ -21,15 +21,15 @@ var CANVAS = {
 // Map
 var MAP = [];
 var GRID_COLOUR = '#000000';
-var BACKGROUND_COLOUR = '#5C3700';
+var BACKGROUND_COLOUR = '#C2AB8A';
 var GRID_LINE_WIDTH = 0.2;
 var CELL_SIZE = {
-	width : 2,
-	height : 2
+	width : 10,
+	height : 10
 };
 var GRID_SIZE = {	// should be width and height! rather then x and y
-	x : 250,
-	y : 250
+	x : 50,
+	y : 50
 };
 var NUM_OF_CELLS = GRID_SIZE.x * GRID_SIZE.y;
 var MAP_BOUNDARY = {

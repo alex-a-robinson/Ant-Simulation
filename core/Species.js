@@ -42,7 +42,7 @@ Species.prototype.mutateChar = function(characteristic) {
 
 Species.prototype.mutate = function() {
 	if (Math.random() <= this.mutationRate) {
-		var altChars = this.chars;
+		var altChars = clone(this.chars);
 		var altCharacteristic = randProperty(altChars);
 		if (altCharacteristic !== 'reproduction') {		// Altering reproduction rates requires extra logic
 			var altValue = this.mutateChar(altCharacteristic);
@@ -50,6 +50,8 @@ Species.prototype.mutate = function() {
 			altChars[altCharacteristic] = altValue;
 			var species = this.createSpecies(altChars);
 			return species;
+		} else {
+			return this;
 		}
 	} else {
 		return this;
