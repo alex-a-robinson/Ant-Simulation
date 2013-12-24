@@ -1,9 +1,13 @@
 function drawGrid(ctx) {
 	for (var x = 0; x < GRID_SIZE.x + 1; x += 1)
-		drawLine(ctx, {x : x * CELL_SIZE.width, y : 0}, {x : x * CELL_SIZE.width, y : GRID_SIZE.y * CELL_SIZE.height}, GRID_COLOUR, GRID_LINE_WIDTH);
+		drawLine(ctx, {x : x * CELL_SIZE.width  + START_COORD.x, y : START_COORD.y}, {x : x * CELL_SIZE.width + START_COORD.x, y : GRID_SIZE.y * CELL_SIZE.height + START_COORD.y}, GRID_COLOUR, GRID_LINE_WIDTH);
 		
 	for (var y = 0; y < GRID_SIZE.y + 1; y += 1)
-		drawLine(ctx, {x : 0, y : y * CELL_SIZE.height}, {x : CELL_SIZE.height * GRID_SIZE.y, y : y * CELL_SIZE.height}, GRID_COLOUR, GRID_LINE_WIDTH);
+		drawLine(ctx, {x : START_COORD.x, y : y * CELL_SIZE.height + START_COORD.y}, {x : CELL_SIZE.height * GRID_SIZE.y  + START_COORD.x, y : y * CELL_SIZE.height + START_COORD.y}, GRID_COLOUR, GRID_LINE_WIDTH);
+}
+
+function drawBackground(ctx) {
+	drawRect(ctx, START_COORD, CANVAS, BACKGROUND_COLOUR);
 }
 
 function createMap() {

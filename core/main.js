@@ -15,16 +15,6 @@
 *				+ patrol
 *			- properties:
 *				+ damage rate
-*		+ queen
-*			- functions:
-*				+ reproduce
-*				+ mutate
-*				+ create nest
-*			- properties:
-*				+ worker ant reproduction percent
-*				+ solider ant reproduction percent
-*				+ queen ant reproduction percent
-*				+ mutation rate
 *	- Create map class
 *		+ 2 levels of zoom
 *		+ environments
@@ -33,6 +23,7 @@
 // File scope variables
 var canvasDOM;
 var canvasCTX;
+var isDown = false;
 
 // Represents what happens each tick
 function tick() {
@@ -45,6 +36,7 @@ function tick() {
 	for (var i = 0; i < antsList.length; i++)
 		antsList[i].update();
 	
+	drawBackground(canvasCTX)
 	drawMap(canvasCTX);
 	drawGrid(canvasCTX);
 	
@@ -62,20 +54,24 @@ function drawMap(ctx) {
 	for (var i = 0; i < NUM_OF_CELLS; i++) {		
 		// Update pheromone concentrations (better place to put this is in a function)
 		// However this loop is already running so for performance putting it in here
-
-		for (var k = 0; k < MAP[i].pheromone.length; k++) {
-			var pheromone = MAP[i].pheromone[k];
-			pheromone.update();
-			pheromone.draw(ctx);
-		}
-		if (MAP[i].ant.length > 0) {
-			for (var k = 0; k < MAP[i].ant.length; k++) {
-				var ant = MAP[i].ant[k];
-				ant.draw(ctx);
+		
+		var coord = indexToCoord(i);
+		if (visible(coord)) {
+			
+			for (var k = 0; k < MAP[i].pheromone.length; k++) {
+				var pheromone = MAP[i].pheromone[k];
+				pheromone.update();
+				pheromone.draw(ctx);
 			}
-		} else if (MAP[i].food !== void(0)) {		// Don't want to draw food ontop of ants
-			var food = MAP[i].food;
-			food.draw(ctx);
+			if (MAP[i].ant.length > 0) {
+				for (var k = 0; k < MAP[i].ant.length; k++) {
+					var ant = MAP[i].ant[k];
+					ant.draw(ctx);
+				}
+			} else if (MAP[i].food !== void(0)) {		// Don't want to draw food ontop of ants
+				var food = MAP[i].food;
+				food.draw(ctx);
+			}
 		}
 	}
 }
@@ -86,6 +82,27 @@ window.onload = function() {
 	canvasDOM = getDOM(CANVAS.name);
 	canvasCTX = getCTX(canvasDOM);
 	
+	resizeElement(canvasDOM, CANVAS);
+	
+	window.onkeydown = function(e) {
+		e = e || window.event;
+		var charCode = e.keyCode || e.which;
+		switch (charCode) {
+			case LEFT_ARROW_KEY:		// Left arrow
+				START_COORD.x += 15;
+				break;
+			case RIGHT_ARROW_KEY:		// Right arrow
+				START_COORD.x -= 15;
+				break;
+			case UP_ARROW_KEY:		// Up arrow
+				START_COORD.y += 15;
+				break;
+			case DOWN_ARROW_KEY:		// Down arrow
+				START_COORD.y -= 15;
+				break;
+		}
+	};
+			
 	// Create empty map
 	createMap();
 	

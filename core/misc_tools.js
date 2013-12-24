@@ -76,7 +76,15 @@ function indexToCoord(index) {
 
 function scaleCoord(coord) {
 	// Takes a coord between [0, GRID_SIZE_X] and [0, GRID_SIZE_Y] and translates to acutal position on canvas i.e. with CELL_SIZE_X
-	return {x : coord.x * CELL_SIZE.width, y : coord.y * CELL_SIZE.height};
+	return {x : coord.x * CELL_SIZE.width + START_COORD.x , y : coord.y * CELL_SIZE.height + START_COORD.y};
+}
+
+function visible(coord) {
+	var scaledCoord = scaleCoord(coord);
+	if (scaledCoord.x < GRID_SIZE.x * CELL_SIZE.width && scaledCoord.y < GRID_SIZE.y * CELL_SIZE.height)
+		return true;
+	else
+		return false;
 }
 
 // Returns the cell index which most closely contains the coord

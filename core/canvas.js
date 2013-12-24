@@ -52,5 +52,5 @@ function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour, lineWid
 
 // Shortcut function to clear the entire canvas
 function clearCanvas(ctx) {
-	drawRect(ctx, {x : 0, y : 0}, {width : CANVAS.width, height : CANVAS.height}, BACKGROUND_COLOUR);
+	drawRect(ctx, {x : 0, y : 0}, {width : CANVAS.width, height : CANVAS.height}, OUT_OF_BOUNDS_COLOUR);
 }

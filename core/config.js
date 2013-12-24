@@ -7,7 +7,7 @@ var VALUE_TYPE = {
 };
 
 // Main
-var TICK_TIME = 10;
+var TICK_TIME = 100;
 var speciesList = [];
 var antsList = [];
 
@@ -15,13 +15,28 @@ var antsList = [];
 var CANVAS = {
 	name : 'simulation',
 	width : 500,
-	height : 500
+	height : 500,
+	offset : {
+		x : 0,
+		y : 0
+	}
 };
+
+var START_COORD = {
+	x : 0,
+	y : 0
+};
+
+var LEFT_ARROW_KEY = 37;
+var RIGHT_ARROW_KEY = 39;
+var UP_ARROW_KEY = 38;
+var DOWN_ARROW_KEY = 40;
 
 // Map
 var MAP = [];
 var GRID_COLOUR = '#000000';
 var BACKGROUND_COLOUR = '#C2AB8A';
+var OUT_OF_BOUNDS_COLOUR = '#FFFFFF';
 var GRID_LINE_WIDTH = 0.2;
 var CELL_SIZE = {
 	width : 10,
