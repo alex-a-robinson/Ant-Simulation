@@ -76,7 +76,7 @@ function drawMap(ctx) {
 			}
 		} else if (MAP[i].food !== void(0)) {		// Don't want to draw food ontop of ants
 			var food = MAP[i].food;
-			drawRect(FOOD.ctx, scaleCoord(indexToCoord(i)), CELL_SIZE, FOOD.colours[food.amount]);
+			food.draw(ctx);
 		}
 	}
 }
@@ -91,7 +91,7 @@ window.onload = function() {
 	createMap();
 	
 	// Create food system
-	FOOD = new FoodSystem(DEBUG_AMOUNT_OF_FOOD);
+	FOOD = new FoodSystem();
 	FOOD.ctx = canvasCTX;
 	FOOD.addRandFood({x: 40, y: 40}, 5);
 	FOOD.addRandFood({x: 140, y: 140}, 25);
@@ -107,9 +107,11 @@ window.onload = function() {
 	testSpecies.chars.pheromoneConcentration = 0.4;
 	testSpecies.chars.antennaSize = 5;
 	testSpecies.colour = {
-		ant : '#222222',
+		worker : '#1C1C1C',
+		soldier : '#1C1C1C',
+		queen : '#00FF00',
+		nest : '#555555',
 		pheromone : '#E8E5A3',
-		nest : '#555555'
 	};	
 	
 	// Create a nest
@@ -117,27 +119,17 @@ window.onload = function() {
 	
 	var nest = new Nest(genID(), coord);
 	nest.species = testSpecies;
+	nest.createNest();
 	antsList.push(nest);
-	// Add some basic peices, this could break if coord is off map e.g. on edge, need more reduntent way of doing this
-	nest.addNestPiece(coord);
-	nest.addNestPiece({x : coord.x - 1, y : coord.y});
-	nest.addNestPiece({x : coord.x, y : coord.y - 1});
-	
-	nest.addNestPiece({x : coord.x - 1, y : coord.y - 1});
-	nest.addNestPiece({x : coord.x + 1, y : coord.y});
-	nest.addNestPiece({x : coord.x + 1, y : coord.y - 1});
-	
-	nest.addNestPiece({x : coord.x, y : coord.y + 1});
-	nest.addNestPiece({x : coord.x - 1, y : coord.y + 1});
-	nest.addNestPiece({x : coord.x + 1, y : coord.y + 1});
 	
 	// Add ants
 	for (var i = 0; i < DEBUG_ANT_NUM; i++) {
-		var x = randInt(0, GRID_SIZE.x - 1);	// -1 as randInt is inclusive
-		var y = randInt(0, GRID_SIZE.y - 1);
+		var x = randInt({min : 0, max : GRID_SIZE.x - 1});	// -1 as randInt is inclusive
+		var y = randInt({min : 0, max : GRID_SIZE.y - 1});
 		var a = new Worker(genID(), {x : x, y : y});
 		a.addToMap();
 		a.species = testSpecies;
+		a.colour = testSpecies.colour.worker;
 		antsList.push(a);
 		a.nest = nest;
 		a.sayHello();

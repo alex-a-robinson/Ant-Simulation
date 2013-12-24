@@ -43,15 +43,19 @@ var FOOD_HEALTH_RATIO = 500;
 
 // Ants
 var GOAL = {
+	none : -1,
 	findFood : 0,
 	getFood : 1,
 	dropFood : 2,
+	pickDirection : 3,
+	gotoNestSite : 4,
+	createNest : 5
 };
 var DEBUG_ANT_NUM = 1;
 var NEST_COORD_MEMORY = 0.1;
 var NEST_SIZE = {
-	x : 3,
-	y : 3
+	width : 1,
+	height : 1
 };
 var ANT_TYPE = {
 	queen : 0,
@@ -61,6 +65,7 @@ var ANT_TYPE = {
 	debug : 4
 };
 var ANT_FOOD_TAKE_SPEED = 1;	// number of ticks it takes for an ant to take one peice of food
+var QUEEN_STEPS = {min : 200, max : 300};
 
 // Pheromones
 var PHEROMONE_EVAPERATION_RATE = 0.001;

@@ -1,6 +1,6 @@
 var Nest = function(id, coord) {
 	// Spatial attributes
-	this.size = NEST_SIZE;	// The size of the ant <--- this is in {x, y} so can be scaled and size of ant can be given
+	this.nestSize = NEST_SIZE;	// The size of the ant <--- this is in {x, y} so can be scaled and size of ant can be given
 	this.coord = coord;		// Coordinate of the ant
 	
 	// Identifiers
@@ -15,6 +15,7 @@ var Nest = function(id, coord) {
 	this.healthRate = 1;				// The rate at which hunger decreases
 	this.healthMax = 10000;
 	this.hungry = false;
+	this.alive = true;
 };
 
 Nest.prototype.isHungry = function() {
@@ -22,6 +23,12 @@ Nest.prototype.isHungry = function() {
 		this.hungry = true;
 	else
 		this.hungry = false;
+};
+
+Nest.prototype.createNest = function() {
+	var block = getBlock(this.coord, this.nestSize);
+	for (var i = 0; i < block.length; i++)
+		this.addNestPiece(block[i]);	
 };
 
 Nest.prototype.addNestPiece = function(coord) {
@@ -33,6 +40,7 @@ Nest.prototype.addNestPiece = function(coord) {
 Nest.prototype.die = function() {
 	var index = antsList.indexOf(this);
 	antsList.splice(index, 1);
+	this.alive = false;
 };
 
 Nest.prototype.reproduce = function() {
@@ -40,19 +48,19 @@ Nest.prototype.reproduce = function() {
 	switch (true) {
 		case (prob < this.species.chars.reproduction.queen.prob):
 			if (this.health >= this.species.chars.reproduction.queen.foodCost + 1000) {
-				createAnt(this.species, this.coord, this, 1000);
+				createAnt(this.species, {x : this.coord.x, y : this.coord.y}, this, 1000, ANT_TYPE.queen);
 				this.health -= this.species.chars.reproduction.queen.foodCost + 1000;
 			}
 			break;
 		case (prob < this.species.chars.reproduction.soldier.prob):
 			if (this.health >= this.species.chars.reproduction.soldier.foodCost + 1000) {
-				createAnt(this.species, this.coord, this, 1000);
+				createAnt(this.species, {x : this.coord.x, y : this.coord.y}, this, 1000, ANT_TYPE.soldier);
 				this.health -= this.species.chars.reproduction.soldier.foodCost + 1000;
 			}
 			break;
 		case (prob < this.species.chars.reproduction.worker.prob):
 			if (this.health >= this.species.chars.reproduction.worker.foodCost + 1000) {
-				createAnt(this.species, this.coord, this, 1000);
+				createAnt(this.species, {x : this.coord.x, y : this.coord.y}, this, 1000, ANT_TYPE.worker);
 				
 				this.health -= this.species.chars.reproduction.worker.foodCost + 1000;
 			}
@@ -69,7 +77,6 @@ Nest.prototype.update = function() {
 		
 	this.isHungry();
 	this.health -= this.healthRate;
-	console.log(this.health)
 	
 	if (this.health <= 0) {
 		this.die();

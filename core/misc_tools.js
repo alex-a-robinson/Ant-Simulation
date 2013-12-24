@@ -1,7 +1,7 @@
-function randInt(min, max) {
+function randInt(range) {
 	// Returns a random integer in the range(min, max)
 	// -+- Not truely random
-	return Math.floor(Math.random() * (max - min + 1) + min);
+	return Math.floor(Math.random() * (range.max - range.min + 1) + range.min);
 }
 
 // Returns a random direction
@@ -75,9 +75,13 @@ function scaleCoord(coord) {
 }
 
 // Returns the cell index which most closely contains the coord
-function getCell(coord) {
+function getCellIndex(coord) {
 	var cellCoord = boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
 	return coordToIndex(cellCoord);
+}
+
+function getCellCoord(coord) {
+	return boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
 }
 
 // Returns the warped coordinate if exceeds a boundary
@@ -94,6 +98,18 @@ function boundary(coord, bounds) {
 	return coord;
 }
 
+function getBlock(coord, size) {
+	block = [];
+
+	for (var y = coord.y - size.height; y <= coord.y + size.height; y++) {	// Extra 1 is need as list is inclusive
+		for (var x = coord.x - size.width; x <= coord.x + size.width; x++) {
+			block.push(getCellCoord({x : x, y : y}));
+		}
+	}
+	
+	return block;
+}
+
 function getSector(coord, radius, direction, angle) {
 
 	var block = [];
@@ -107,9 +123,9 @@ function getSector(coord, radius, direction, angle) {
 			};		
 					
 			if (validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle/2) && validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle/2) && distance(coord, searchCoord) <= radius) {
-				block.push(boundary(indexToCoord(getCell(searchCoord)), MAP_BOUNDARY));
+				block.push(getCellCoord(searchCoord));
 			} else if ((validateDirection(direction) <= angle/2 || validateDirection(direction) >= Math.PI*2 - angle/2) && (validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle/2) || validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle/2)) && distance(coord, searchCoord) <= radius){
-				block.push(boundary(indexToCoord(getCell(searchCoord)), MAP_BOUNDARY));
+				block.push(getCellCoord(searchCoord));
 			}
 		}
 	}
@@ -121,6 +137,11 @@ function turnAround(angle) {
 	return angle + Math.PI;
 }
 
+function byValue(varible) {
+	var safe = varible;
+	return safe;
+}
+
 function angleTo(coord, target) {
 	var dx = target.x - coord.x;
 	var dy = target.y - coord.y;
@@ -129,23 +150,34 @@ function angleTo(coord, target) {
 }
 
 // Creates a new ant object
-function createAnt(species, coord, nest, startingHealth) {
-	console.log('new ant!')
-	var x = coord.x;
-	var y = coord.y;
-	var a = new Worker(genID(), {x : x, y : y});
-	a.addToMap();
-	a.species = species;
-	antsList.push(a);
-	a.nest = nest;
-	a.health = startingHealth;
-	a.sayHello();
-	/*
-	var ant = new worker(genID(), coord);
+function createAnt(species, coord, nest, startingHealth, type) {
+	
+	var antCoord = coord;
+
+	switch (type) {
+		case ANT_TYPE.worker:
+			var ant = new Worker(genID(), antCoord);
+			ant.colour = species.colour.worker;
+			break;
+		
+		case ANT_TYPE.queen:
+			var ant = new Queen(genID(), antCoord);
+			ant.colour = species.colour.queen;
+			console.log('Queen')
+			break;
+			
+		case ANT_TYPE.soldier:
+			var ant = new Worker(genID(), antCoord);		// <-- should be soldier
+			ant.colour = species.colour.soldier;
+			break;
+	}
+	
+	ant.species = species;
+	ant.nest = nest;
+	ant.health = startingHealth;
+	
 	antsList.push(ant);
-	console.log('new ant id: ' + ant.id);
 	ant.addToMap();
-	*/
 }
 
 function genID() {

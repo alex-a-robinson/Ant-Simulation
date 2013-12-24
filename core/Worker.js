@@ -2,7 +2,7 @@ Worker.prototype = new Ant(-1, {x : void(0), y : void(0)});
 Worker.prototype.constructor = Worker;
 Worker.prototype.parent = Ant;
 
-var Worker = function(id, coord) {
+function Worker (id, coord) {
 	this.id = id;
 	this.coord = coord;
 	this.type = ANT_TYPE.worker;
@@ -14,7 +14,7 @@ var Worker = function(id, coord) {
 // Moves ant towards food and then uses it
 Worker.prototype.getFood = function() {
 	this.direction = angleTo(this.coord, this.target);	// Go to food
-	if (getCell(this.coord) === coordToIndex(this.target)) {	// If on the food pick it up
+	if (getCellIndex(this.coord) === coordToIndex(this.target)) {	// If on the food pick it up
 		this.useFood();
 		this.followOwnPheromone = false;
 	}
@@ -51,7 +51,7 @@ Worker.prototype.dropFood = function(nest) {
 };
 
 Ant.prototype.useFood = function() {
-	var index = getCell(this.coord);
+	var index = getCellIndex(this.coord);
 	var food = MAP[index].food;
 	
 	if (this.hungry && this.isFood(food))
@@ -63,8 +63,8 @@ Ant.prototype.useFood = function() {
 };
 
 Worker.prototype.atNest = function() {
-	for (var i = 0; i < MAP[getCell(this.coord)].ant.length; i++) {
-		var a = MAP[getCell(this.coord)].ant[i]
+	for (var i = 0; i < MAP[getCellIndex(this.coord)].ant.length; i++) {
+		var a = MAP[getCellIndex(this.coord)].ant[i]
 		if (a.type === ANT_TYPE.nest && a.nest === this.nest) {
 			return true;
 		}
@@ -150,6 +150,11 @@ Worker.prototype.findFoodTarget = function() {
 
 Worker.prototype.updateGoal = function() {
 	switch (this.goal) {
+	
+		case GOAL.none:
+			this.goal = GOAL.findFood;
+			break;
+	
 		case GOAL.findFood:
 			if (this.target !== void(0))	// If found a target
 				this.goal = GOAL.getFood;
@@ -176,12 +181,6 @@ Worker.prototype.updateGoal = function() {
 Worker.prototype.update = function() {
 	this.removeFromMap();
 	
-	if (this.sleep > 0) {		// When sleep timer triggered don't move
-		this.sleep -= 1;
-	} else {
-		this.move();
-	}
-	
 	this.isHungry();
 	this.health -= this.healthRate;
 	
@@ -201,6 +200,12 @@ Worker.prototype.update = function() {
 
 	this.doTask();
 	this.updateGoal();
+	
+	if (this.sleep > 0) {		// When sleep timer triggered don't move
+		this.sleep -= 1;
+	} else {
+		this.move();
+	}
 	
 	if (this.goal === GOAL.dropFood)
 		this.secrete();

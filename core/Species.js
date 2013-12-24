@@ -14,14 +14,14 @@ var Species = function(id) {
 		reproduction : {
 			worker : {prob : 0.80, foodCost : 5},		// 80 % of the time create a worker
 			soldier : {prob : 0.15, foodCost : 15},
-			queen : {prob : 0.05, foodCost : 50},
+			queen : {prob : 0.01, foodCost : 50},
 		}
 	};
 	
 	this.colour = {
 		worker : '#1C1C1C',
 		soldier : '#1C1C1C',
-		queen : '#1C1C1C',
+		queen : '#00FF00',
 		nest : '#1C1C1C',
 		pheromone : '#D9D366'
 	}

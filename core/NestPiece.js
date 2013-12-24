@@ -9,7 +9,8 @@ var NestPiece = function(id, coord, nest) {
 
 // Adds the current position of the ant to the map
 NestPiece.prototype.addToMap = function() {
-	MAP[coordToIndex(this.coord)].ant.push(this);
+	if (this.nest.alive)
+		MAP[coordToIndex(this.coord)].ant.push(this);
 };
 
 // Removes the previous position of the ant from the map

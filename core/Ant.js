@@ -10,6 +10,7 @@ var Ant = function(id, coord) {
 	this.species;					// The ants species
 	this.type;						// The type of ant
 	this.nest;
+	this.colour;
 	
 	// Computed attributes
 	this.health = 10000;
@@ -17,13 +18,14 @@ var Ant = function(id, coord) {
 	this.healthRate = 1;				// The rate at which hunger decreases
 	this.healthMax = 1000;
 	this.hungry = false;
+	this.alive = true;
 
 	this.carrying = 0;				// The amount of food an ant is carrying
 	this.carryingThreshold = 4;	// least amount of food required to return to nest with food
 	this.carryingMax = 10;			// The maximum amount of food an ant can carry
 	
 	// Logic attributes (control the ants logic)
-	this.goal = GOAL.findFood;		// The current goal of the ant
+	this.goal = GOAL.none;		// The current goal of the ant
 	this.target;					// The coordinate of the ants current target
 	this.itemsInView = {
 		ants : [],
@@ -38,13 +40,14 @@ var Ant = function(id, coord) {
 
 // Adds the current position of the ant to the map
 Ant.prototype.addToMap = function() {
-	MAP[getCell(this.coord)].ant.push(this);
+	if (this.alive)
+		MAP[getCellIndex(this.coord)].ant.push(this);
 };
 
 // Removes the previous position of the ant from the map
 Ant.prototype.removeFromMap = function() {
-	var index = MAP[getCell(this.coord)].ant.indexOf(this);
-	MAP[getCell(this.coord)].ant.splice(index, 1);
+	var index = MAP[getCellIndex(this.coord)].ant.indexOf(this);
+	MAP[getCellIndex(this.coord)].ant.splice(index, 1);
 };
 
 Ant.prototype.isHungry = function() {
@@ -78,7 +81,7 @@ Ant.prototype.takeFood = function(food) {
 
 // Assumes standing on food
 Ant.prototype.useFood = function() {
-	var index = getCell(this.coord);
+	var index = getCellIndex(this.coord);
 	var food = MAP[index].food;
 	
 	if (this.hungry)
@@ -98,7 +101,7 @@ Ant.prototype.scan = function() {
 	var block = getSector(this.coord, this.species.chars.eyesight, this.direction, this.species.chars.eyeAngle);
 	
 	for (var i = 0; i < block.length; i++) {
-		var index = getCell(block[i]);
+		var index = getCellIndex(block[i]);
 		
 		if (MAP[index].ant.length > 0) {	// Check for ants
 			for (var k = 0; k < MAP[index].ant.length; k++)
@@ -120,7 +123,7 @@ Ant.prototype.smell = function() {
 	for (var i = 0; i < block.length; i++) {
 		var index = coordToIndex(block[i]);
 		
-		if (index === getCell(this.coord))
+		if (index === getCellIndex(this.coord))
 			continue;
 
 		for (var k = 0; k < MAP[index].pheromone.length; k++) {
@@ -131,7 +134,7 @@ Ant.prototype.smell = function() {
 
 // secrete pheromone
 Ant.prototype.secrete = function() {		// Do different types of pheromone
-	var index = getCell(this.coord);
+	var index = getCellIndex(this.coord);
 	var pheromones = MAP[index].pheromone;
 
 	for (var i = 0; i < pheromones.length; i++) {
@@ -146,7 +149,7 @@ Ant.prototype.secrete = function() {		// Do different types of pheromone
 	}
 	
 	// If pheromone from own species not found, create it!
-	var pheromone = new Pheromone(this.species.chars.pheromoneConcentration, indexToCoord(getCell(this.coord)));
+	var pheromone = new Pheromone(this.species.chars.pheromoneConcentration, getCellCoord(this.coord));
 	pheromone.species = this.species;
 	pheromone.antID.push(this.id);
 	pheromone.addToMap();
@@ -164,6 +167,7 @@ Ant.prototype.move = function() {
 Ant.prototype.die = function() {
 	var index = antsList.indexOf(this);
 	antsList.splice(index, 1);
+	this.alive = false;
 };
 
 Ant.prototype.draw = function(ctx) {
@@ -173,8 +177,8 @@ Ant.prototype.draw = function(ctx) {
 	
 	ctx.translate(scaledCoord.x + this.size.width/2, scaledCoord.y + this.size.height/2);
 	ctx.rotate(this.direction);
-	drawRect(ctx, {x: -this.size.width/2, y:-this.size.height/2}, this.size, this.species.colour.ant);	
-	drawRect(ctx, {x: 0, y:0}, {width : 1, height: this.size.height}, this.species.colour.ant);	// pointer to show direction
+	drawRect(ctx, {x: -this.size.width/2, y:-this.size.height/2}, this.size, this.colour);	
+	drawRect(ctx, {x: 0, y:0}, {width : 1, height: this.size.height}, this.colour);	// pointer to show direction
 	
 	ctx.restore();
 };
