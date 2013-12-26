@@ -8,12 +8,13 @@ function Queen(id, coord) {
 	this.steps;				// Number of steps to take until nest site reached
 	
 	// Identifiers
-	this.id = id;			// The ants unique identifier	
+	this.id = id;			// The ants unique identifier
+	this.goal = GOAL.none;
+	this.type = ANT_TYPE.queen;
 };
 
 Queen.prototype.doTask = function() {
 	switch (this.goal) {
-	
 		case GOAL.pickDirection:
 			this.pickDirection();
 			break;

@@ -36,6 +36,7 @@ var Ant = function(id, coord) {
 	
 	// Test attributes (logic is tested against these)
 	this.sleep = 0;					// Used to control time critical tasks
+	this.followingPheromone = false;
 };
 
 // Adds the current position of the ant to the map
@@ -79,15 +80,26 @@ Ant.prototype.takeFood = function(food) {
 	}
 };
 
-// Assumes standing on food
-Ant.prototype.useFood = function() {
-	var index = getCellIndex(this.coord);
-	var food = MAP[index].food;
+Ant.prototype.atNest = function() {
+	for (var i = 0; i < MAP[getCellIndex(this.coord)].ant.length; i++) {
+		var a = MAP[getCellIndex(this.coord)].ant[i]
+		if (a.type === ANT_TYPE.nest && a.nest === this.nest) {
+			return true;
+		}
+	}
 	
-	if (this.hungry)
-		this.health += this.takeFood(food) * FOOD_HEALTH_RATIO;
-	else
-		this.target = void(0);		// Assumes the target is the food
+	return false;
+};
+
+Ant.prototype.seeNest = function() {
+	for (var i = 0; i < this.itemsInView.ants.length; i++) {
+		var a = this.itemsInView.ants[i];
+		if (a.type === ANT_TYPE.nest && a.nest === this.nest) {
+			return true;
+		}
+	}
+	
+	return false;
 };
 
 // Scans the ants surrounds as far as they can see for items of interest
@@ -155,11 +167,52 @@ Ant.prototype.secrete = function() {		// Do different types of pheromone
 	pheromone.addToMap();
 };
 
+Ant.prototype.wonder = function() {
+	var M = 0;		// total mass
+	var Mxy = {x  : 0, y : 0};
+	var CoM =  {x  : 0, y : 0};
+	
+	var pheromones = false;
+	
+	for (var i = 0; i < this.pheromonesInRange.length; i++) {
+		if (this.pheromonesInRange[i].species === this.species) {		// only follow pheromones of own species
+			M += this.pheromonesInRange[i].concentration;
+			Mxy.y += this.pheromonesInRange[i].coord.y * this.pheromonesInRange[i].concentration;
+			Mxy.x += this.pheromonesInRange[i].coord.x * this.pheromonesInRange[i].concentration;
+			pheromones = true;
+		}
+	}
+	
+	CoM = {x : Mxy.x / M, y : Mxy.y / M};
+
+	// Every so often change the direction
+	var choice = Math.random();
+	if (choice < CHANGE_DIRECTION_THRESHOLD)
+		this.prioritizeDirection = randDir();
+	
+	choice = Math.random();
+	
+	if (this.followingPheromone && this.pheromonesInRange.length <= 0 && (this.atNest() || this.seeNest())) {
+		this.direction = turnAround(this.direction);
+		this.prioritizeDirection = this.direction;
+		this.followingPheromone = false;
+	} else if (pheromones && choice < PHEROMONE_INFLUENCE) {	// 95% of the time go towards best pheromone
+		this.direction = angleTo(this.coord, CoM);
+		this.prioritizeDirection = this.direction;
+		this.followingPheromone = true;
+	} else {
+		this.direction = this.prioritizeDirection;
+		this.followingPheromone = false;
+	}
+};
+
 // Update the ants coordinates
 Ant.prototype.move = function() {
 	var speed = this.species.chars.speed;
-	this.coord.x += Math.sin(this.direction) * this.species.chars.speed;
-	this.coord.y -= Math.cos(this.direction) * this.species.chars.speed;
+	if (this.sleep <= 0) {
+		this.coord.x += Math.sin(this.direction) * this.species.chars.speed;
+		this.coord.y -= Math.cos(this.direction) * this.species.chars.speed;
+	}
 	
 	boundary(this.coord, MAP_BOUNDARY);
 };

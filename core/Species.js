@@ -13,9 +13,9 @@ var Species = function(id) {
 		antennaAngle : 0,
 		pheromoneConcentration : 0,
 		reproduction : {
-			worker : {prob : 0.80, foodCost : 5},		// 80 % of the time create a worker
-			soldier : {prob : 0.15, foodCost : 15},
-			queen : {prob : 0.1, foodCost : 50},
+			worker : {prob : 0.10, foodCost : 5},		// 80 % of the time create a worker
+			soldier : {prob : 0.85, foodCost : 15},
+			queen : {prob : 0.05, foodCost : 50},
 		}
 	};
 	

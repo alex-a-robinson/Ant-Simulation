@@ -64,7 +64,9 @@ var GOAL = {
 	dropFood : 2,
 	pickDirection : 3,
 	gotoNestSite : 4,
-	createNest : 5
+	createNest : 5,
+	patrol : 6,
+	attack : 7
 };
 var DEBUG_ANT_NUM = 1;
 var NEST_COORD_MEMORY = 0.1;
@@ -79,6 +81,15 @@ var ANT_TYPE = {
 	nest : 3,
 	debug : 4
 };
+
+var GUARD_TARGETS = {
+	none : 0,
+	nest : 1,
+	trials : 2,
+	food : 3,
+	queen : 4
+};
+
 var ANT_FOOD_DROP_SPEED = 1;
 var ANT_FOOD_TAKE_SPEED = 1;	// number of ticks it takes for an ant to take one peice of food
 var QUEEN_STEPS = {min : 200, max : 300};
