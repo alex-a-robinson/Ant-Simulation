@@ -10,7 +10,7 @@ var Nest = function(id, coord) {
 	this.pieces = [];
 	
 	// Computed attributes
-	this.health = 30000;
+	this.health = 3000;
 	this.hungerThreshold = 500;		// hunger point bellow which ant starts eating food it finds/has on it
 	this.healthRate = 1;				// The rate at which hunger decreases
 	this.healthMax = 10000;
@@ -45,30 +45,56 @@ Nest.prototype.die = function() {
 
 Nest.prototype.reproduce = function() {
 	var prob = Math.random();
+	
+	var reproduction = this.species.chars.reproduction;
+	
+	// normalise the probabilities
+	var sum = reproduction.queen.prob + reproduction.soldier.prob + reproduction.worker.prob;
+	var queenProb = reproduction.queen.prob / sum;
+	var soldierProb = reproduction.soldier.prob / sum;
+	var workerProb = reproduction.worker.prob / sum;
+	
+	var ordered = [{prob : queenProb, type : ANT_TYPE.queen}, {prob : soldierProb, type : ANT_TYPE.soldier}, {prob : workerProb, type : ANT_TYPE.worker}].sort(function(a,b){return a.prob - b.prob});
+	
+	console.log(ordered)
+	
 	switch (true) {
-		case (prob < this.species.chars.reproduction.queen.prob):
-			if (this.health >= this.species.chars.reproduction.queen.foodCost + 1000) {
-				createAnt(this.species, {x : this.coord.x, y : this.coord.y}, this, 1000, ANT_TYPE.queen);
-				this.health -= this.species.chars.reproduction.queen.foodCost + 1000;
+		case (prob < ordered[0].prob):
+			var cost = this.getCost(ordered[0].type);
+			if (this.health >= cost) {
+				createAnt(this.species, {x : this.coord.x, y : this.coord.y}, this, cost, ordered[0].type);
+				this.health -= cost;
 			}
 			break;
-		case (prob < this.species.chars.reproduction.soldier.prob):
-			if (this.health >= this.species.chars.reproduction.soldier.foodCost + 1000) {
-				createAnt(this.species, {x : this.coord.x, y : this.coord.y}, this, 1000, ANT_TYPE.soldier);
-				this.health -= this.species.chars.reproduction.soldier.foodCost + 1000;
+		case (prob < ordered[1].prob + ordered[0].prob):
+			var cost = this.getCost(ordered[1].type);
+			if (this.health >= cost) {
+				createAnt(this.species, {x : this.coord.x, y : this.coord.y}, this, cost, ordered[1].type);
+				this.health -= cost;
 			}
 			break;
-		case (prob < this.species.chars.reproduction.worker.prob):
-			if (this.health >= this.species.chars.reproduction.worker.foodCost + 1000) {
-				createAnt(this.species, {x : this.coord.x, y : this.coord.y}, this, 1000, ANT_TYPE.worker);
-				
-				this.health -= this.species.chars.reproduction.worker.foodCost + 1000;
+		case (prob < ordered[2].prob + ordered[1].prob + ordered[0].prob):
+			var cost = this.getCost(ordered[2].type);
+			if (this.health >= cost) {
+				createAnt(this.species, {x : this.coord.x, y : this.coord.y}, this, cost, ordered[2].type);
+				this.health -= cost;
 			}
 			break;
 		default:
 			// No ants where created
 			break;
 	}	
+};
+
+Nest.prototype.getCost = function(antType) {
+	switch (antType) {
+		case ANT_TYPE.worker:
+			return this.species.chars.reproduction.worker.foodCost * FOOD_HEALTH_RATIO;
+		case ANT_TYPE.queen:
+			return this.species.chars.reproduction.queen.foodCost * FOOD_HEALTH_RATIO;
+		case ANT_TYPE.soldier:
+			return this.species.chars.reproduction.soldier.foodCost * FOOD_HEALTH_RATIO;
+	}
 };
 
 Nest.prototype.update = function() {
@@ -83,7 +109,7 @@ Nest.prototype.update = function() {
 		return void(0);	// die
 	}
 		
-	if (Math.random() < 0.01) {
+	if (Math.random() < this.species.chars.reproduction.rate) {
 		this.reproduce();
 	}
 	

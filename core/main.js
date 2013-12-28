@@ -98,6 +98,12 @@ window.onload = function() {
 			case DOWN_ARROW_KEY:		// Down arrow
 				START_COORD.y -= 15;
 				break;
+			case PLUS_KEY:		// zoom in
+				zoom(1)
+				break;
+			case MINUS_KEY:
+				zoom(-1)
+				break;
 		}
 	};
 			
@@ -114,7 +120,7 @@ window.onload = function() {
 	
 	// Create a species
 	var testSpecies = new Species(genID());
-	testSpecies.chars.speed = 1;
+	testSpecies.chars.speed = 0.4;
 	testSpecies.chars.eyesight = 5;
 	testSpecies.chars.eyeAngle = Math.PI/2;	// only seems to work for pi i.e. 180 degs
 	testSpecies.chars.pheromoneConcentration = 0.4;

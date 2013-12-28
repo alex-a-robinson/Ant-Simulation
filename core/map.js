@@ -7,7 +7,12 @@ function drawGrid(ctx) {
 }
 
 function drawBackground(ctx) {
-	drawRect(ctx, START_COORD, CANVAS, BACKGROUND_COLOUR);
+	drawRect(ctx, {x : 0, y : 0}, {width : 500, height : 500}, BACKGROUND_COLOUR);
+}
+
+function zoom(amount) {
+	CELL_SIZE.width += amount;
+	CELL_SIZE.height += amount;
 }
 
 function createMap() {

@@ -5,6 +5,7 @@ var NestPiece = function(id, coord, nest) {
 	this.nest = nest;
 	this.id = id;
 	this.type = ANT_TYPE.nest;
+	this.health = this.nest.health;
 };
 
 // Adds the current position of the ant to the map

@@ -31,6 +31,8 @@ var LEFT_ARROW_KEY = 37;
 var RIGHT_ARROW_KEY = 39;
 var UP_ARROW_KEY = 38;
 var DOWN_ARROW_KEY = 40;
+var PLUS_KEY = 107;
+var MINUS_KEY = 109;
 
 // Map
 var MAP = [];
@@ -54,7 +56,7 @@ var MAP_BOUNDARY = {
 
 // Food
 var FOOD;
-var FOOD_HEALTH_RATIO = 500;
+var FOOD_HEALTH_RATIO = 50;
 
 // Ants
 var GOAL = {
@@ -65,8 +67,10 @@ var GOAL = {
 	pickDirection : 3,
 	gotoNestSite : 4,
 	createNest : 5,
-	patrol : 6,
-	attack : 7
+	guardNest : 6,
+	guardPheromone : 7,
+	guardFood : 8,
+	attack : 9
 };
 var DEBUG_ANT_NUM = 1;
 var NEST_COORD_MEMORY = 0.1;
@@ -82,17 +86,9 @@ var ANT_TYPE = {
 	debug : 4
 };
 
-var GUARD_TARGETS = {
-	none : 0,
-	nest : 1,
-	trials : 2,
-	food : 3,
-	queen : 4
-};
-
 var ANT_FOOD_DROP_SPEED = 1;
 var ANT_FOOD_TAKE_SPEED = 1;	// number of ticks it takes for an ant to take one peice of food
-var QUEEN_STEPS = {min : 200, max : 300};
+var QUEEN_STEPS = {min : 150, max : 300};
 
 // Pheromones
 var PHEROMONE_EVAPERATION_RATE = 0.005;
@@ -102,7 +98,7 @@ var PHEROMONE_INFLUENCE = 0.95;
 
 // Species
 var CHAR_RANGE = {		// <---------------- SOME VALUES ARE INTEGERS AND SOME ARE FLOATS
-	speed : {min : 0, max : 2.5, type : VALUE_TYPE.floatValue},
+	speed : {min : 0, max : 1, type : VALUE_TYPE.floatValue},
 	antennaSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue},
 	exoSkeletonThickness : {min : 0, max : 5, type : VALUE_TYPE.integerValue},
 	jawStrength : {min : 0, max : 5, type : VALUE_TYPE.integerValue},

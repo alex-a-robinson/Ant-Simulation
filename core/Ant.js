@@ -13,7 +13,7 @@ var Ant = function(id, coord) {
 	this.colour;
 	
 	// Computed attributes
-	this.health = 10000;
+	this.health = 500;
 	this.hungerThreshold = 300;		// hunger point bellow which ant starts eating food it finds/has on it
 	this.healthRate = 1;				// The rate at which hunger decreases
 	this.healthMax = 1000;
@@ -168,7 +168,7 @@ Ant.prototype.secrete = function() {		// Do different types of pheromone
 };
 
 Ant.prototype.wonder = function() {
-	var M = 0;		// total mass
+	var M = 0;
 	var Mxy = {x  : 0, y : 0};
 	var CoM =  {x  : 0, y : 0};
 	
@@ -188,7 +188,7 @@ Ant.prototype.wonder = function() {
 	// Every so often change the direction
 	var choice = Math.random();
 	if (choice < CHANGE_DIRECTION_THRESHOLD)
-		this.prioritizeDirection = randDir();
+		this.prioritizeDirection = randFloat({min : this.direction - Math.PI/2, max : this.direction + Math.PI /2})//randDir();
 	
 	choice = Math.random();
 	

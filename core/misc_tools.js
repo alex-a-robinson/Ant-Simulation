@@ -11,14 +11,17 @@ function randFloat(range) {
 
 // Returns a random direction
 function randDir() {
-	var dir = Math.random() * Math.PI * 2;
-	return dir;
+	return randFloat({min : 0, max : Math.PI * 2});
 }
 
 function randGuardTarget() {
 	var choies = Object.keys(GUARD_TARGETS);
 	var randomProperty = choices[randInt({min: 0, max : choices.length - 1})];
 	return GUARD_TARGETS[randomProperty];
+}
+
+function randColour() {
+	return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
 // Reverses the ants dirction i.e. turns it 180 degres
@@ -176,17 +179,19 @@ function createAnt(species, coord, nest, startingHealth, type) {
 	switch (type) {
 		case ANT_TYPE.worker:
 			var ant = new Worker(genID(), antCoord);
+			console.log('worker ' + coord.x + ':' + coord.y);
 			ant.colour = species.colour.worker;
 			break;
 		
 		case ANT_TYPE.queen:
 			var ant = new Queen(genID(), antCoord);
+			console.log('queen ' + coord.x + ':' + coord.y);
 			ant.colour = species.colour.queen;
 			break;
 			
 		case ANT_TYPE.soldier:
 			var ant = new Soldier(genID(), antCoord);		// <-- should be soldier
-			console.log('new soldier!');
+			console.log('soldier ' + coord.x + ':' + coord.y);
 			ant.colour = species.colour.soldier;
 			break;
 	}

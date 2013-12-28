@@ -13,15 +13,16 @@ var Species = function(id) {
 		antennaAngle : 0,
 		pheromoneConcentration : 0,
 		reproduction : {
-			worker : {prob : 0.10, foodCost : 5},		// 80 % of the time create a worker
-			soldier : {prob : 0.85, foodCost : 15},
-			queen : {prob : 0.05, foodCost : 50},
+			worker : {prob : 0.5, foodCost : 5},
+			soldier : {prob : 0.00, foodCost : 25},
+			queen : {prob : 0.01, foodCost : 100},
+			rate : 0.05
 		}
 	};
 	
 	this.colour = {
 		worker : '#1C1C1C',
-		soldier : '#1C1C1C',
+		soldier : '#0000FF',
 		queen : '#FF0000',
 		nest : '#1C1C1C',
 		pheromone : '#D9D366'
@@ -60,13 +61,15 @@ Species.prototype.mutate = function() {
 
 Species.prototype.createSpecies = function(chars) {
 	var species = new Species(genID());
+	var colour = randColour();
+
 	species.chars = chars;
 	species.colour = {
-		worker : '#FF0000',
-		soldier : '#FF0000',
-		queen : '#FF0000',
-		nest : '#FF0000',
-		pheromone : '#FF0000',
+		worker : colour,
+		soldier : '#0000FF',
+		queen : colour,
+		nest : colour,
+		pheromone : colour,
 	};	
 	
 	return species;
