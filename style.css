@@ -1,8 +1,82 @@
 body {
 	margin: 0px;
+    padding: 0px;
 }
 
+#header {
+    background-color: #00FF00;
+    width: 100%;
+    height: 64px;
+}
+
+table {
+    border: 1px solid black;
+	float: right;
+	width: 100%;
+}
 td {
-	table-layout : fixed;
-	width : 200px;
+    border: 1px solid black;
+	vertical-align: top;
+	width: 1px;
+}
+tr {
+    border: 1px solid black;
+}
+input {
+    width: 100%;
+}
+
+table.fixed {
+	width: 100%;
+    height: 100%;
+	table-layout:fixed;
+}
+
+td.fixed {
+    overflow: hidden;
+}
+
+td#canvas {
+	width: 500px;
+}
+
+canvas {
+	float : right;
+}
+
+td#data {
+	width: 200px;
+}
+
+td#config {
+	width: 250px;
+}
+
+#config-input-container {
+	width: 100%;
+}
+
+table.config {
+	margin: 5px;
+}
+
+td.config {
+	width : 1px;
+}
+
+input.config {
+	display: block;
+	width: 100%;
+}
+
+tr.config {
+    height: 32px;
+}
+
+td#title {
+    color: red;
+}
+
+div.ant-health {
+    display: inline;
 }

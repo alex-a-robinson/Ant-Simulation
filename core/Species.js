@@ -33,7 +33,7 @@ var Species = function(id) {
 
 Species.prototype.mutateChar = function(characteristic) {
 	console.log(characteristic)
-	var charRange = CHAR_RANGE[characteristic];
+	var charRange = CHARS[characteristic];
 	
 	if (charRange.type === VALUE_TYPE.integerValue)
 		return randInt(charRange);

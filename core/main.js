@@ -80,6 +80,9 @@ window.onload = function() {
 	canvasDOM = getDOM(CANVAS.name);
 	canvasCTX = getCTX(canvasDOM);
 	
+	var configTD = getDOM('config');
+	setDefaultInputs(configTD);
+	
 	resizeElement(canvasDOM, CANVAS);
 	
 	window.onkeydown = function(e) {
