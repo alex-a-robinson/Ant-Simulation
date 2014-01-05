@@ -1,4 +1,5 @@
 var CURRENT_ID = 0;
+var SPECIES_LIST = [];
 
 // Misc
 var VALUE_TYPE = {
@@ -6,10 +7,12 @@ var VALUE_TYPE = {
 	floatValue : 1
 };
 
+var RUNNING = false;
+
 // Main
 var TICK_TIME = 10;
 var speciesList = [];
-var antsList = [];
+var ANTS_LIST = [];
 
 // Canvas
 var CANVAS = {
@@ -98,14 +101,16 @@ var PHEROMONE_INFLUENCE = 0.95;
 
 // Species
 var CHARS = {		// <---------------- SOME VALUES ARE INTEGERS AND SOME ARE FLOATS
-	speed : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-speed', neatName : 'Speed', desc : 'speed charcteristic ...', step : 0.1, healthModifier : 21, defaultValue : 1, value : 1},
+	speed : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-speed', neatName : 'Speed', desc : 'speed charcteristic ...', step : 0.01, healthModifier : 21, defaultValue : 1.00, value : 1.00},
 	antennaSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-antennaSize', neatName : 'Antenna Size', desc : 'Antenna charcteristic ...', step : 1, healthModifier : 21, defaultValue : 1, value : 1},
 	exoSkeletonThickness : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-exoSkeletonThickness', neatName : 'Exoskeleton Thickness', desc : '...', step : 1, healthModifier : 21, defaultValue : 1, value : 1},
 	jawStrength : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-jawStrength', neatName : 'Jaw Strength', desc : '...', step : 1, healthModifier : 21, defaultValue : 1, value : 1},
 	jawSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-jawSize', neatName : 'Jaw Size', desc : '...', step : 1, healthModifier : 21, defaultValue : 1, value : 1},
 	stingSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-stingSize', neatName : 'Sting Size', desc : '...', step : 1, healthModifier : 21, defaultValue : 1, value : 1},
 	eyesight : {min : 0, max : 50, type : VALUE_TYPE.integerValue, id : 'char-eyeSight', neatName : 'Eye Sight', desc : '...', step : 1, healthModifier : 21, defaultValue : 1, value : 1},
-	eyeAngle : {min : 0, max : Math.PI*2, type : VALUE_TYPE.floatValue, id : 'char-eyeAngle', neatName : 'Eye Angle', desc : '...', step : 0.1, healthModifier : 21, defaultValue : 1, value : 1},
-	antennaAngle : {min : 0, max : Math.PI*2, type : VALUE_TYPE.floatValue, id : 'char-antennaAngle', neatName : 'Antenna Angle', desc : '...', step : 0.1, healthModifier : 21, defaultValue : 1, value : 1},
-	pheromoneConcentration : {min : 0, max : 2, type : VALUE_TYPE.floatValue, id : 'char-pheromoneConcentration', neatName : 'Pheromone Concentration', desc : '...', step : 0.1, healthModifier : 21, defaultValue : 1, value : 1}
+	eyeAngle : {min : 0, max : Math.PI*2, type : VALUE_TYPE.floatValue, id : 'char-eyeAngle', neatName : 'Eye Angle', desc : '...', step : 0.01, healthModifier : 21, defaultValue : 1.00, value : 1.00},
+	antennaAngle : {min : 0, max : Math.PI*2, type : VALUE_TYPE.floatValue, id : 'char-antennaAngle', neatName : 'Antenna Angle', desc : '...', step : 0.01, healthModifier : 21, defaultValue : 1.00, value : 1.00},
+	pheromoneConcentration : {min : 0, max : 2, type : VALUE_TYPE.floatValue, id : 'char-pheromoneConcentration', neatName : 'Pheromone Concentration', desc : '...', step : 0.01, healthModifier : 21, defaultValue : 1.00, value : 1.00}
 };
+
+var USER_SPECIES;

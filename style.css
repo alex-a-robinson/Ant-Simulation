@@ -46,7 +46,18 @@ canvas {
 
 td#data {
 	width: 200px;
+	table-layout:fixed;
 }
+
+table.species {
+	width : 100%;
+	table-layout:fixed;
+}
+
+td.species {
+	width: 50%;
+}
+
 
 td#config {
 	width: 250px;
@@ -58,6 +69,7 @@ td#config {
 
 table.config {
 	margin: 5px;
+	text-align: center;
 }
 
 td.config {
@@ -79,4 +91,11 @@ td#title {
 
 div.ant-health {
     display: inline;
+}
+
+.nav {
+	width: 300px;
+	height: 30px;
+	border: 1px solid black;
+	float: right;
 }

@@ -37,48 +37,26 @@
 <table class='fixed'>
 			<tr>
 				<td id='canvas' class='fixed'>
-                    <canvas id='simulation' width='500px' height='500px'></canvas>
+					<div>
+						<canvas id='simulation' width='500px' height='500px'></canvas>
+					</div>
+					<div class='nav'>
+						<button id='button-run' onclick='BUTTONS.run(this)'>run</button>
+						<button id='button-step' onclick='BUTTONS.step(this)'>step</button>
+						<button id='button-restart' onclick='BUTTONS.restart(this)'>restart</button>
+					</div>
 				</td>
 				<td id='data' class='fixed'>
-					<table class='data'>
-                        <tr class='data'>
-                            <td class='data' id='title-click'>
-                                <table class='species-1'>
-                                    <tr class='species-1'>
-                                        <td class='species-1'>Death rate</td>
-                                        <td class='species-1' id='species-1-deathrate'>23</td>
-                                    </tr>
-                                    <tr class='species-1'>
-                                        <td class='species-1'>Birth rate</td>
-                                        <td class='species-1' id='species-1-deathrate'>32</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                        <tr class='data'>
-                            <td class='data' id='title-click'>
-                                <table class='species-2'>
-                                    <tr class='species-2'>
-                                        <td class='species-2'>Death rate</td>
-                                        <td class='species-2' id='species-2-deathrate'>42</td>
-                                    </tr>
-                                    <tr class='species-2'>
-                                        <td class='species-2'>Birth rate</td>
-                                        <td class='species-2' id='species-2-deathrate'>78</td>
-                                    </tr>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
 				</td>
 				<td id='config' class='fixed'>
-                        <div id='title' class='config'>Config</div>    
-                        
-						<button name='reset'>reset</button>
-						<button name='random'>random</button>
-						<hr />
-						<div class='ant-health'>Ant Health</div>
-						<div class='ant-health'>1032</div>
+					<div id='title' class='config'>Config</div>    
+					
+					<button id='button-reset' onclick='BUTTONS.reset()'>reset</button>
+					<button id='button-random' onclick='BUTTONS.random()'>random</button>
+					<button id='button-update' onclick='BUTTONS.update()'>update</button>
+					<hr />
+					<div class='ant-health'>Ant Health</div>
+					<div class='ant-health'>1032</div>
 				</td>
 			</tr>
 		</table>

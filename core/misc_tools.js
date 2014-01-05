@@ -179,19 +179,16 @@ function createAnt(species, coord, nest, startingHealth, type) {
 	switch (type) {
 		case ANT_TYPE.worker:
 			var ant = new Worker(genID(), antCoord);
-			console.log('worker ' + coord.x + ':' + coord.y);
 			ant.colour = species.colour.worker;
 			break;
 		
 		case ANT_TYPE.queen:
 			var ant = new Queen(genID(), antCoord);
-			console.log('queen ' + coord.x + ':' + coord.y);
 			ant.colour = species.colour.queen;
 			break;
 			
 		case ANT_TYPE.soldier:
 			var ant = new Soldier(genID(), antCoord);		// <-- should be soldier
-			console.log('soldier ' + coord.x + ':' + coord.y);
 			ant.colour = species.colour.soldier;
 			break;
 	}
@@ -200,7 +197,8 @@ function createAnt(species, coord, nest, startingHealth, type) {
 	ant.nest = nest;
 	ant.health = startingHealth;
 	
-	antsList.push(ant);
+	species.ants.push(ant);
+	ANTS_LIST.push(ant);
 	ant.addToMap();
 }
 

@@ -1,5 +1,8 @@
 var Species = function(id) {
 	this.id = id;
+	
+	this.ants = [];
+	this.nests = [];
 		
 	this.chars = {
 		speed : 0,
@@ -66,11 +69,14 @@ Species.prototype.createSpecies = function(chars) {
 	species.chars = chars;
 	species.colour = {
 		worker : colour,
-		soldier : '#0000FF',
+		soldier : colour,
 		queen : colour,
 		nest : colour,
 		pheromone : colour,
 	};	
+	
+	SPECIES_LIST.push(species);
+	newSpecies(getDOM('data'), species);
 	
 	return species;
 };

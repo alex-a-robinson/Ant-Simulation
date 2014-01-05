@@ -28,15 +28,8 @@ function tick() {
 	console.log('--------- TICK ----------');
 	var ST = new Date;
 		
-	clearCanvas(canvasCTX);
-	
-	// Update all of the species
-	for (var i = 0; i < antsList.length; i++)
-		antsList[i].update();
-	
-	drawBackground(canvasCTX)
 	drawMap(canvasCTX);
-	drawGrid(canvasCTX);
+	
 	
 	//  Framerate system
 	var ET = new Date;
@@ -44,33 +37,48 @@ function tick() {
 		var fps = 1000 / (ET - ST);
 		//console.log('FPS: ' + fps.toFixed(1));
 	}
+	
+	
+	updateSpeciesData();
 	setTimeout(tick, TICK_TIME);
 }
 
 // All drawing is done in a batch to improve performance [check this]
 function drawMap(ctx) {
-	for (var i = 0; i < NUM_OF_CELLS; i++) {		
-		// Update pheromone concentrations (better place to put this is in a function)
-		// However this loop is already running so for performance putting it in here
+	if (RUNNING) {
+		clearCanvas(canvasCTX);
+	
+		drawBackground(canvasCTX)
 		
-		var coord = indexToCoord(i);
-		if (visible(coord)) {
+		// Update all of the species
+		for (var i = 0; i < ANTS_LIST.length; i++)
+			ANTS_LIST[i].update();
+	
+		for (var i = 0; i < NUM_OF_CELLS; i++) {		
+			// Update pheromone concentrations (better place to put this is in a function)
+			// However this loop is already running so for performance putting it in here
 			
-			for (var k = 0; k < MAP[i].pheromone.length; k++) {
-				var pheromone = MAP[i].pheromone[k];
-				pheromone.update();
-				pheromone.draw(ctx);
-			}
-			if (MAP[i].ant.length > 0) {
-				for (var k = 0; k < MAP[i].ant.length; k++) {
-					var ant = MAP[i].ant[k];
-					ant.draw(ctx);
+			var coord = indexToCoord(i);
+			if (visible(coord)) {
+				
+				for (var k = 0; k < MAP[i].pheromone.length; k++) {
+					var pheromone = MAP[i].pheromone[k];
+					pheromone.update();
+					pheromone.draw(ctx);
 				}
-			} else if (MAP[i].food !== void(0)) {		// Don't want to draw food ontop of ants
-				var food = MAP[i].food;
-				food.draw(ctx);
+				if (MAP[i].ant.length > 0) {
+					for (var k = 0; k < MAP[i].ant.length; k++) {
+						var ant = MAP[i].ant[k];
+						ant.draw(ctx);
+					}
+				} else if (MAP[i].food !== void(0)) {		// Don't want to draw food ontop of ants
+					var food = MAP[i].food;
+					food.draw(ctx);
+				}
 			}
 		}
+		
+		drawGrid(canvasCTX);
 	}
 }
 
@@ -122,14 +130,14 @@ window.onload = function() {
 	//FOOD.addRandFood({x: 230, y: 80}, 20);
 	
 	// Create a species
-	var testSpecies = new Species(genID());
-	testSpecies.chars.speed = 0.4;
-	testSpecies.chars.eyesight = 5;
-	testSpecies.chars.eyeAngle = Math.PI/2;	// only seems to work for pi i.e. 180 degs
-	testSpecies.chars.pheromoneConcentration = 0.4;
-	testSpecies.chars.antennaSize = 5;
-	testSpecies.chars.antennaAngle = Math.PI/2;
-	testSpecies.colour = {
+	USER_SPECIES = new Species(genID());
+	USER_SPECIES.chars.speed = 0.4;
+	USER_SPECIES.chars.eyesight = 5;
+	USER_SPECIES.chars.eyeAngle = Math.PI/2;	// only seems to work for pi i.e. 180 degs
+	USER_SPECIES.chars.pheromoneConcentration = 0.4;
+	USER_SPECIES.chars.antennaSize = 5;
+	USER_SPECIES.chars.antennaAngle = Math.PI/2;
+	USER_SPECIES.colour = {
 		worker : '#1C1C1C',
 		soldier : '#1C1C1C',
 		queen : '#00FF00',
@@ -137,15 +145,18 @@ window.onload = function() {
 		pheromone : '#E8E5A3',
 	};	
 	
+	SPECIES_LIST.push(USER_SPECIES);
+	newSpecies(getDOM('data'), USER_SPECIES);
+	
 	// Add ants
 	for (var i = 0; i < DEBUG_ANT_NUM; i++) {
 		var x = randInt({min : 0, max : GRID_SIZE.x - 1});	// -1 as randInt is inclusive
 		var y = randInt({min : 0, max : GRID_SIZE.y - 1});
 		var a = new Queen(genID(), {x : x, y : y});
 		a.addToMap();
-		a.species = testSpecies;
-		a.colour = testSpecies.colour.worker;
-		antsList.push(a);
+		a.species = USER_SPECIES;
+		a.colour = USER_SPECIES.colour.worker;
+		ANTS_LIST.push(a);
 		a.sayHello();
 	}
 	

@@ -15,9 +15,8 @@ var Ant = function(id, coord) {
 	// Computed attributes
 	this.health = 500;
 	this.hungerThreshold = 300;		// hunger point bellow which ant starts eating food it finds/has on it
-	this.healthRate = 1;				// The rate at which hunger decreases
+	this.healthRate = 0.1;				// The rate at which hunger decreases
 	this.healthMax = 1000;
-	this.hungry = false;
 	this.alive = true;
 
 	this.carrying = 0;				// The amount of food an ant is carrying
@@ -53,9 +52,9 @@ Ant.prototype.removeFromMap = function() {
 
 Ant.prototype.isHungry = function() {
 	if (this.health < this.hungerThreshold)
-		this.hungry = true;
+		return true;
 	else
-		this.hungry = false;
+		return false;
 };
 
 Ant.prototype.isFood = function(food) {
@@ -218,8 +217,12 @@ Ant.prototype.move = function() {
 };
 
 Ant.prototype.die = function() {
-	var index = antsList.indexOf(this);
-	antsList.splice(index, 1);
+	var index = ANTS_LIST.indexOf(this);
+	ANTS_LIST.splice(index, 1);
+	
+	var index = this.species.ants.indexOf(this);
+	this.species.ants.splice(index, 1);
+	
 	this.alive = false;
 };
 

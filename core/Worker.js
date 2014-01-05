@@ -130,22 +130,28 @@ Worker.prototype.updateGoal = function() {
 	}
 };
 
+Worker.prototype.updateHealth = function() {	
+	// Eat food carrying if hungry
+	if (this.isHungry() && this.carrying > 0) {
+		this.health += this.carrying * FOOD_HEALTH_RATIO;
+		this.carrying = 0;
+		this.goal = GOAL.none;
+	}
+
+	this.health -= this.healthRate;
+	
+	if (this.health <= 0)
+		this.die();
+};
+
 Worker.prototype.update = function() {
 	this.removeFromMap();
 	
-	this.isHungry();
-	this.health -= this.healthRate;
+	this.updateHealth();
 	
-	while (this.hungry && this.carrying > 0) {
-		this.health += FOOD_HEALTH_RATIO;
-		this.carrying -= 1;	// take one piece of food from carrying
-		this.isHungry();	// recalculate this.hungry
-	}
-	
-	if (this.health <= 0) {
-		this.die();
-		return void(0);	// die
-	}
+	// May have died during the updateHealth so no need to continue if dead
+	if (this.alive)
+		return void(0);
 	
 	this.scan();
 	this.smell();
