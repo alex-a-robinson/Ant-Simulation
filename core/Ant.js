@@ -186,7 +186,7 @@ Ant.prototype.wonder = function() {
 
 	// Every so often change the direction
 	var choice = Math.random();
-	if (choice < CHANGE_DIRECTION_THRESHOLD)
+	if (choice < this.species.chars.exploitativeness)
 		this.prioritizeDirection = randFloat({min : this.direction - Math.PI/2, max : this.direction + Math.PI /2})//randDir();
 	
 	choice = Math.random();
@@ -195,7 +195,7 @@ Ant.prototype.wonder = function() {
 		this.direction = turnAround(this.direction);
 		this.prioritizeDirection = this.direction;
 		this.followingPheromone = false;
-	} else if (pheromones && choice < PHEROMONE_INFLUENCE) {	// 95% of the time go towards best pheromone
+	} else if (pheromones && choice < this.species.chars.pheromoneInfluence) {	// 95% of the time go towards best pheromone
 		this.direction = angleTo(this.coord, CoM);
 		this.prioritizeDirection = this.direction;
 		this.followingPheromone = true;

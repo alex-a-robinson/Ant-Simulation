@@ -45,8 +45,8 @@ function restart() {
 	
 	// Add ants
 	for (var i = 0; i < DEBUG_ANT_NUM; i++) {
-		var x = randInt({min : 0, max : GRID_SIZE.x - 1});	// -1 as randInt is inclusive
-		var y = randInt({min : 0, max : GRID_SIZE.y - 1});
+		var x = randInt({min : 0, max : GRID_SIZE.width - 1});	// -1 as randInt is inclusive
+		var y = randInt({min : 0, max : GRID_SIZE.height - 1});
 		var a = new Queen(genID(), {x : x, y : y});
 		a.addToMap();
 		a.species = USER_SPECIES;
@@ -95,6 +95,10 @@ function updateValue(dom, value) {
 	getDOM('button-update').style.color = '#FF0000';
 	var characteristic = CHARS[dom.name];
 	characteristic.value = value;
+	
+	if (characteristic.type === VALUE_TYPE.floatValue)
+		value = parseFloat(value).toFixed(2);
+	
 	setHTML(characteristic.id + '-value', value);
 	setValue(characteristic.id, value);
 }
@@ -109,9 +113,13 @@ function updateDefaultValues() {
 function updateRandomValues() {
 	for (var prop in CHARS) {
 		var characteristic = CHARS[prop];
+		
+		if (!characteristic.editable)
+			continue;
+		
 		var value;
 		if (characteristic.type ===  VALUE_TYPE.floatValue)
-			value = randFloat(characteristic).toFixed(2);
+			value = randFloat(characteristic);
 		else if (characteristic.type ===  VALUE_TYPE.integerValue)
 			value = randInt(characteristic);
 			
@@ -151,11 +159,17 @@ function setDefaultInputs(obj) {
 		input.setAttribute('onchange', 'updateValue(this, this.value);')	// <-- wont work in IE
 		input.value = characteristic.defaultValue;
 		
+		if (!characteristic.editable)
+			input.setAttribute('disabled', 'disabled');
+		
+		
 		var value = document.createElement('td');
 		value.setAttribute('class', 'config');
 		value.setAttribute('id', characteristic.id + '-value');		// append value to the end of the id
 		value.innerHTML = characteristic.value;
-		
+		if (characteristic.type === VALUE_TYPE.floatValue)
+			value.innerHTML = characteristic.value.toFixed(2);
+
 		inputContainer.appendChild(input);
 		row.appendChild(label);
 		row.appendChild(inputContainer);
@@ -172,26 +186,43 @@ function updateUserSpecies() {
 		var value;
 		var characteristic = CHARS[prop];
 		
-		if (characteristic.type = VALUE_TYPE.floatValue)
+		if (characteristic.type === VALUE_TYPE.floatValue)
 			value = parseFloat(characteristic.value);
-		else if (characteristic.type = VALUE_TYPE.integerValue)
+		else if (characteristic.type === VALUE_TYPE.integerValue)
 			value = parseInt(characteristic.value);
 			
-		USER_SPECIES.chars[prop] = value;
+		SELECTED_SPECIES.chars[prop] = value;
 	}
 }
+
 
 function newSpecies(obj, species) {
 	
 	var ID = ''+species.id;
 	var className = 'species ' + ID;	// two classes
 	
+	// open/close icon
+	var toggleVisibility = document.createElement('td');
+	toggleVisibility.setAttribute('class', className + ' toggleVisibility');
+	toggleVisibility.setAttribute('id', ID + '-toggleVisibility');
+	toggleVisibility.innerHTML = '-'
+	toggleVisibility.setAttribute('onclick', 'updateClassVisibility(this)');
+	
 	// title
+	var title = document.createElement('td');
+	title.setAttribute('class', className);
+	title.setAttribute('id', ID + '-label');
+	title.innerHTML = 'Species ID: ' + species.id;
+	title.setAttribute('onclick', 'select(this)');
+	
+	// titleRow
 	var rowLabel = document.createElement('tr');
 	rowLabel.setAttribute('class', className);
-	rowLabel.setAttribute('id', ID + '-label');
-	rowLabel.innerHTML = 'Species ID: ' + species.id;
-	rowLabel.setAttribute('onclick', 'updateClassVisibility(this)');		// unsafe
+	rowLabel.setAttribute('id', ID + '-label-row');
+	//rowLabel.setAttribute('onclick', 'updateClassVisibility(this)');
+	
+	rowLabel.appendChild(title);		
+	rowLabel.appendChild(toggleVisibility);	
 	
 	// colour
 	
@@ -289,7 +320,7 @@ function updateSpeciesData() {
 		for (var i = 0; i < species.nests.length; i++)
 			foodAmount += species.nests[i].health;
 	
-		foodAmountDataDOM.innerHTML = foodAmount;
+		foodAmountDataDOM.innerHTML = foodAmount.toFixed(2);
 	}
 }
 
@@ -301,16 +332,52 @@ function updateClassVisibility(obj) {
 	var specificClass = className.split(' ')[1];
 	
 	var DOM = document.getElementsByClassName(specificClass);
+
+	var display;
+	if (obj.innerHTML === '+') {
+		obj.innerHTML = '-';
+		display = 'table-row';
+	} else {
+		obj.innerHTML = '+';
+		display = 'none';
+	}
 	
 	for (var i = 0; i < DOM.length; i++) {
-		if (DOM[i].tagName === 'TR' && DOM[i].className.split(' ')[1] === specificClass && DOM[i].id !== specificClass + '-label') {
+		if (DOM[i].tagName === 'TR' && DOM[i].className.split(' ')[1] === specificClass && (DOM[i].id !== specificClass + '-label' && DOM[i].id !== specificClass + '-toggleVisibility' && DOM[i].id !== specificClass + '-label-row')) {
+			DOM[i].style.display = display;
+		}	
+	}
+}
 
-			if (DOM[i].style.display !== 'none')
-				DOM[i].style.display = 'none';
-			else 
-				DOM[i].style.display = 'table-row';
+function select(obj) {
+	// De colour previous selected table
+	var DOM = document.getElementsByClassName(SELECTED_SPECIES.id);
+	for (var i = 0; i < DOM.length; i++) {
+		if (DOM[i].tagName === 'TABLE')
+			DOM[i].style.backgroundColor = '#FFFFFF';
+	}
+
+	// Update new selected table
+	var className = (obj.className);
+	var genericClass = className.split(' ')[0];
+	var specificClass = className.split(' ')[1];
+	var DOM = document.getElementsByClassName(specificClass);
+	
+	for (var i = 0; i < DOM.length; i++) {
+		if (DOM[i].tagName === 'TABLE')
+			DOM[i].style.backgroundColor = SELECTED_COLOUR;
+	}
+
+	for (var s in SPECIES_LIST) {
+		var species = SPECIES_LIST[s];
+		if (species.id === parseInt(specificClass)) {
+			SELECTED_SPECIES = species;
 		}
-			
+	}
+	
+	for (var prop in CHARS) {
+		var characteristic = CHARS[prop];
+		updateValue(getDOM(characteristic.id), SELECTED_SPECIES.chars[prop]);
 	}
 }
 		

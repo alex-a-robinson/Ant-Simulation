@@ -15,10 +15,17 @@ var Species = function(id) {
 		eyeAngle : 0,
 		antennaAngle : 0,
 		pheromoneConcentration : 0,
+		nestCoordMemory : 0.1,
+		exploitativeness : 0.05,
+		pheromoneInfluence : 0.95,
+		queenSteps : {
+			min : 150,
+			max : 300
+		},
 		reproduction : {
 			worker : {prob : 0.5, foodCost : 5},
-			soldier : {prob : 0.00, foodCost : 25},
-			queen : {prob : 0.01, foodCost : 100},
+			soldier : {prob : 0.00, foodCost : 0},
+			queen : {prob : 0.01, foodCost : 25},
 			rate : 0.05
 		}
 	};

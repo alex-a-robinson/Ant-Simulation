@@ -1,10 +1,8 @@
 /**
 *Todo:
-* Pherhapes implament a memory of the 5 least effort foods arond an ant?  even if it is out of sight
+* Perhaps implement a memory of the 5 least effort foods around an ant?  even if it is out of sight
 
-* What if target moves/gets eaten while on way to target?  i.e. check target is still where it should be each tick
-
-* Watch for functions which pass by referance e.g. when using this.varible
+* Watch for functions which pass by reference e.g. when using this.variable
 
 *	- Add support for IE (version the school uses)
 *	- Create ant subclasses
@@ -17,6 +15,10 @@
 *	- Create map class
 *		+ 2 levels of zoom
 *		+ environments
+
+	Need regenerating food
+	Need better looking food
+	
 */
 
 // File scope variables
@@ -29,7 +31,6 @@ function tick() {
 	var ST = new Date;
 		
 	drawMap(canvasCTX);
-	
 	
 	//  Framerate system
 	var ET = new Date;
@@ -131,12 +132,6 @@ window.onload = function() {
 	
 	// Create a species
 	USER_SPECIES = new Species(genID());
-	USER_SPECIES.chars.speed = 0.4;
-	USER_SPECIES.chars.eyesight = 5;
-	USER_SPECIES.chars.eyeAngle = Math.PI/2;	// only seems to work for pi i.e. 180 degs
-	USER_SPECIES.chars.pheromoneConcentration = 0.4;
-	USER_SPECIES.chars.antennaSize = 5;
-	USER_SPECIES.chars.antennaAngle = Math.PI/2;
 	USER_SPECIES.colour = {
 		worker : '#1C1C1C',
 		soldier : '#1C1C1C',
@@ -145,13 +140,16 @@ window.onload = function() {
 		pheromone : '#E8E5A3',
 	};	
 	
+	SELECTED_SPECIES = USER_SPECIES;
+	
 	SPECIES_LIST.push(USER_SPECIES);
 	newSpecies(getDOM('data'), USER_SPECIES);
+	updateUserSpecies();
 	
 	// Add ants
 	for (var i = 0; i < DEBUG_ANT_NUM; i++) {
-		var x = randInt({min : 0, max : GRID_SIZE.x - 1});	// -1 as randInt is inclusive
-		var y = randInt({min : 0, max : GRID_SIZE.y - 1});
+		var x = randInt({min : 0, max : GRID_SIZE.width - 1});	// -1 as randInt is inclusive
+		var y = randInt({min : 0, max : GRID_SIZE.height - 1});
 		var a = new Queen(genID(), {x : x, y : y});
 		a.addToMap();
 		a.species = USER_SPECIES;

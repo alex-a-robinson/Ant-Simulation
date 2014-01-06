@@ -37,7 +37,7 @@ Worker.prototype.depositeFood = function() {
 	} else  if (this.seeNest()) {
 		this.direction = angleTo(this.coord, this.nest.coord);
 	} else {
-		if (Math.random() < NEST_COORD_MEMORY)  // sense of direction of nest
+		if (Math.random() < this.species.chars.nestCoordMemory)  // sense of direction of nest
 			this.prioritizeDirection = angleTo(this.coord, this.nest.coord);
 			
 		this.wonder();
@@ -150,7 +150,7 @@ Worker.prototype.update = function() {
 	this.updateHealth();
 	
 	// May have died during the updateHealth so no need to continue if dead
-	if (this.alive)
+	if (!this.alive)
 		return void(0);
 	
 	this.scan();

@@ -73,13 +73,13 @@ function calcEffort(coord1, coord2, value) {
 
 function coordToIndex(coord) {
 	// Translates (x, y) coordinate to linear position in map
-	return coord.x + coord.y * GRID_SIZE.x;
+	return coord.x + coord.y * GRID_SIZE.width;
 }
 
 function indexToCoord(index) {
 	// Translates linear position in map to (x, y) coordinates on grid
-	var x = index - Math.floor(index / GRID_SIZE.x) * GRID_SIZE.x;
-	var y = Math.floor(index / GRID_SIZE.x);
+	var x = index - Math.floor(index / GRID_SIZE.width) * GRID_SIZE.height;
+	var y = Math.floor(index / GRID_SIZE.width);
 	return {x:x, y:y};
 }
 
@@ -90,7 +90,7 @@ function scaleCoord(coord) {
 
 function visible(coord) {
 	var scaledCoord = scaleCoord(coord);
-	if (scaledCoord.x < GRID_SIZE.x * CELL_SIZE.width && scaledCoord.y < GRID_SIZE.y * CELL_SIZE.height)
+	if (scaledCoord.x < GRID_SIZE.width * CELL_SIZE.width && scaledCoord.y < GRID_SIZE.height * CELL_SIZE.height)
 		return true;
 	else
 		return false;

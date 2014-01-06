@@ -53,7 +53,7 @@ Queen.prototype.updateGoal = function() {
 
 Queen.prototype.pickDirection = function() {
 	this.direction = randDir();
-	this.steps = randInt(QUEEN_STEPS);
+	this.steps = randInt(this.species.chars.queenSteps);
 };
 
 Queen.prototype.createNest = function() {

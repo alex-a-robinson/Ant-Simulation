@@ -96,7 +96,7 @@ Soldier.prototype.guardNest = function() {
 		this.nearNest = true;
 		this.direction = reverseDir(this.direction);	// so its looking outwards
 	} else {
-		if (Math.random() < NEST_COORD_MEMORY)  // sense of direction of nest
+		if (Math.random() < this.species.nestCoordMemory)  // sense of direction of nest
 			this.prioritizeDirection = angleTo(this.coord, this.nest.coord);
 		
 		this.nearNest = false;

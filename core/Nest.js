@@ -108,7 +108,7 @@ Nest.prototype.update = function() {
 		
 	this.updateHealth();
 	
-	if (this.alive)
+	if (!this.alive)
 		return void(0);
 		
 	if (Math.random() < this.species.chars.reproduction.rate) {

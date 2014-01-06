@@ -93,6 +93,11 @@ div.ant-health {
     display: inline;
 }
 
+.toggleVisibility {
+	text-align: right;
+	border: none;
+}
+
 .nav {
 	width: 300px;
 	height: 30px;
