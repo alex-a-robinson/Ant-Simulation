@@ -1,61 +1,3 @@
-var BUTTONS = {
-	reset : updateDefaultValues,
-	random : updateRandomValues,
-	run : runPauseButton,
-	update : updateUserSpecies,
-	step : alert,
-	restart : restart
-};
-
-function restart() {
-	ANTS_LIST = [];
-	CURRENT_ID = 0;
-	SPECIES_LIST = [];
-	RUNNING = true;
-	
-	// Create empty map
-	createMap();
-	
-	// Create food system
-	FOOD = new FoodSystem();
-	FOOD.ctx = canvasCTX;
-	FOOD.addRandFood({x: 40, y: 40}, 5);
-	//FOOD.addRandFood({x: 140, y: 140}, 25);
-	//FOOD.addRandFood({x: 20, y: 80}, 15);
-	//FOOD.addRandFood({x: 230, y: 80}, 20);
-	
-	// Create a species
-	USER_SPECIES = new Species(genID());
-	USER_SPECIES.chars.speed = 0.4;
-	USER_SPECIES.chars.eyesight = 5;
-	USER_SPECIES.chars.eyeAngle = Math.PI/2;	// only seems to work for pi i.e. 180 degs
-	USER_SPECIES.chars.pheromoneConcentration = 0.4;
-	USER_SPECIES.chars.antennaSize = 5;
-	USER_SPECIES.chars.antennaAngle = Math.PI/2;
-	USER_SPECIES.colour = {
-		worker : '#1C1C1C',
-		soldier : '#1C1C1C',
-		queen : '#00FF00',
-		nest : '#555555',
-		pheromone : '#E8E5A3',
-	};	
-	
-	SPECIES_LIST.push(USER_SPECIES);
-	newSpecies(getDOM('data'), USER_SPECIES);
-	
-	// Add ants
-	for (var i = 0; i < DEBUG_ANT_NUM; i++) {
-		var x = randInt({min : 0, max : GRID_SIZE.width - 1});	// -1 as randInt is inclusive
-		var y = randInt({min : 0, max : GRID_SIZE.height - 1});
-		var a = new Queen(genID(), {x : x, y : y});
-		a.addToMap();
-		a.species = USER_SPECIES;
-		a.colour = USER_SPECIES.colour.worker;
-		ANTS_LIST.push(a);
-		a.sayHello();
-	}
-}
-
 function start() {
 	RUNNING = true;
 }
@@ -64,6 +6,26 @@ function pause() {
 	RUNNING = false;
 }
 
+function toggleRunning() {
+	if (RUNNING)
+		pause();
+	else
+		start();
+}
+
+/**
+* Steps through a single tick
+*/
+function step() {
+	start();
+	tick();
+	pause();
+}
+
+/**
+* Toggles RUNNING and updates the puase/run button
+* @param {obj} button - The button element 
+*/
 function runPauseButton(button) {
 	toggleRunning();
 	if (RUNNING)
@@ -72,133 +34,206 @@ function runPauseButton(button) {
 		button.innerHTML = 'run';
 }
 
-function toggleRunning() {
-	if (RUNNING)
-		RUNNING = false;
-	else
-		RUNNING = true;
-}
-
-function getValue(id) {
-	return document.getElementById(id).value;
-}
-
-function setValue(id, value) {
-	document.getElementById(id).value = value;
-}
-
-function setHTML(id, html) {
-	document.getElementById(id).innerHTML = html;
-}
-
-function updateValue(dom, value) {
-	getDOM('button-update').style.color = '#FF0000';
-	var characteristic = CHARS[dom.name];
+/**
+* Updates the value of a characteristic
+* @param {HTML element} element - An element of a input in the settings panel
+* @param {*} value - The new value of the characteristic
+*/
+function updateValue(element, value) {
+	// Update the button colour to show an update needs to be pushed to the species
+	getElement('button-update').style.color = BUTTON_UPDATE_COLOUR;
+	
+	// Get the characteristic the element referees to and set its to the new value
+	var characteristic = CHARS[element.name];
 	characteristic.value = value;
 	
 	if (characteristic.type === VALUE_TYPE.floatValue)
-		value = parseFloat(value).toFixed(2);
+		value = parseFloat(value).toFixed(NUMBER_OF_FIXED_PLACES);
 	
-	setHTML(characteristic.id + '-value', value);
+	// Update the characteristics value in settings as well as the input 
+	setInnerHTML(getElement(characteristic.id + '-value'), value);
 	setValue(characteristic.id, value);
 }
 
+/**
+* Updates the value of all characteristics to their default values
+*/
 function updateDefaultValues() {
 	for (var prop in CHARS) {
 		var characteristic = CHARS[prop];
-		updateValue(getDOM(characteristic.id), characteristic.defaultValue);
+		updateValue(getElement(characteristic.id), characteristic.defaultValue);
 	}
 }
 
+/**
+* Updates the value of all characteristics a random value
+*/
 function updateRandomValues() {
 	for (var prop in CHARS) {
 		var characteristic = CHARS[prop];
 		
 		if (!characteristic.editable)
 			continue;
-		
-		var value;
-		if (characteristic.type ===  VALUE_TYPE.floatValue)
-			value = randFloat(characteristic);
-		else if (characteristic.type ===  VALUE_TYPE.integerValue)
-			value = randInt(characteristic);
+			
+		if (characteristic.type ===  VALUE_TYPE.floatValue)		// If characteristic requires a float must use randFloat
+			var value = randFloat(characteristic);
+		else if (characteristic.type ===  VALUE_TYPE.integerValue) 	// If characteristic requires a integer must use randInt
+			var value = randInt(characteristic);
 			
 		updateValue(getDOM(characteristic.id), value);
 	}
 }
 
-// Need to change the default in-built class name
-function setDefaultInputs(obj) {
-	var table = document.createElement('table');
-	table.setAttribute('class', 'config');
-	
-	for (var prop in CHARS) {
-		
-		var characteristic = CHARS[prop];
-		
-		var row = document.createElement('tr');
-		row.setAttribute('class', 'config');
-		row.setAttribute('title', characteristic.desc);
-		
-		var label = document.createElement('td');
-		label.setAttribute('class', 'config');
-		label.innerHTML = characteristic.neatName;
-		
-		var inputContainer = document.createElement('td');
-		inputContainer.setAttribute('class', 'config');
-		inputContainer.setAttribute('id', 'config-input-container');
-		
-		var input = document.createElement('input');
-		input.setAttribute('class', 'config');
-		input.setAttribute('type', 'range');
-		input.setAttribute('id', characteristic.id);
-		input.setAttribute('name', prop);
-		input.setAttribute('min', characteristic.min);
-		input.setAttribute('max', characteristic.max);
-		input.setAttribute('step', characteristic.step);
-		input.setAttribute('onchange', 'updateValue(this, this.value);')	// <-- wont work in IE
-		input.value = characteristic.defaultValue;
-		
-		if (!characteristic.editable)
-			input.setAttribute('disabled', 'disabled');
-		
-		
-		var value = document.createElement('td');
-		value.setAttribute('class', 'config');
-		value.setAttribute('id', characteristic.id + '-value');		// append value to the end of the id
-		value.innerHTML = characteristic.value;
-		if (characteristic.type === VALUE_TYPE.floatValue)
-			value.innerHTML = characteristic.value.toFixed(2);
-
-		inputContainer.appendChild(input);
-		row.appendChild(label);
-		row.appendChild(inputContainer);
-		row.appendChild(value);
-		table.appendChild(row);
-	}
-	
-	obj.appendChild(table);
+/**
+* Create a new HTML element
+* @param {string} tag - A HTML tag name e.g. 'div'
+* @param [{type : {string}, value : {*}}] attributes - A list of attributes to add to the new element
+* @return {HTML element}
+*/
+function newElement(tag, attributes) {
+	var element = document.createElement(tag);
+	for (var i = 0; i < attributes.length; i++)
+		element.setAttribute(attributes[i].type, attributes[i].value);
+	return element;
 }
 
+/**
+* Create an input element of type [range, button, colour]
+* @param {*} characteristic - A single characteristic from CHARS variable
+* @return {HTML element}
+*/
+function createInputType(characteristic) {
+
+	// Create the intial input tag
+	var input = newElement('input', [
+		{type : 'class', value : 'config'},
+		{type : 'type', value : 'range'},
+		{type : 'id', value : 'characteristic.id)'},
+		{type : 'name', value : 'prop'},
+		{type : 'onchange', value : 'updateValue(this, this.value);'},
+	]);
+	
+	if (!characteristic.editable)
+		input.setAttribute('disabled', 'disabled');
+	
+	input.value = characteristic.defaultValue;
+	
+	// Depending on the type add extra attributes
+	if (characteristic.inputType === INPUT_TYPE.slider) {
+		input.setAttribute('min', 'characteristic.min');
+		input.setAttribute('max', 'characteristic.max');
+		input.setAttribute('step', 'characteristic.step');
+		input.setAttribute('type', 'range');
+	}
+	
+	return input;
+}
+
+/**
+* Create a row containing a label, input and value elements used for creating dynamic inputs for characteristics
+* @param {*} characteristic - A single characteristic from CHARS variable
+* @return {HTML element}
+*/
+function createInput(characteristic) {
+	// Row
+	var row = newElement('tr', [{type : 'class', value : 'config'}, {type : 'title', value : characteristic.desc}]);
+	
+	// Label element
+	var label = newElement('td', [{type : 'class', value : 'config'}]);
+	setInnerHTML(label, characteristic.neatName);
+	
+	// Input and container elements
+	var inputContainer = newElement('td', [{type : 'class', value : 'config'}, {type : 'id', value : 'input-container'}]);
+	var input = createInputType(characteristic);
+	
+	// Value element
+	var value = newElement('td', [{type : 'class', value : 'config'}, {type : 'id', value : characteristic.id + '-value'}]);	// Append '-value' to the id of the elements which show the characteristics value
+	if (characteristic.type === VALUE_TYPE.floatValue)
+		setInnerHTML(value, characteristic.value.toFixed(NUMBER_OF_FIXED_PLACES)); 
+	else
+		setInnerHTML(value, characteristic.value);
+	
+	// Add all the individual elements to the row
+	inputContainer.appendChild(input);
+	row.appendChild(label);
+	row.appendChild(inputContainer);
+	row.appendChild(value);
+	
+	return row;
+}
+
+/**
+* Creates inputs for all characteristics used for creating dynamic inputs for characteristics
+* And appends them to a table in the config panel
+*/
+function createCharacteristicInputs() {
+	var configPanel = getElement('config');
+	var table = newElement('table', {type : 'class', value : 'config'});
+	
+	for (var prop in CHARS) {		
+		var inputRow = createInput(CHARS[prop])
+		table.appendChild(inputRow);
+	}
+	
+	configPanel.appendChild(table);
+}
+
+/**
+* Updates the selected species with the new values selected in the config panel
+*/
 function updateUserSpecies() {
-	getDOM('button-update').style.color = '#000000';
+	// Return the button to its original colour showing no pending updates need to be pushed to the species
+	getElement('button-update').style.color = BUTTON_NO_UPDATE_COLOUR;
 	for (var prop in CHARS) {
-		var value;
 		var characteristic = CHARS[prop];
 		
+		// Parse the input to make sure its in the correct format
 		if (characteristic.type === VALUE_TYPE.floatValue)
-			value = parseFloat(characteristic.value);
+			var value = parseFloat(characteristic.value);
 		else if (characteristic.type === VALUE_TYPE.integerValue)
-			value = parseInt(characteristic.value);
-			
+			var value = parseInt(characteristic.value);
+		
+		// Update the selected species characteristics to this new value
 		SELECTED_SPECIES.chars[prop] = value;
 	}
 }
 
-
-function newSpecies(obj, species) {
+function createDataRow(className, id, labelValue, dataValue) {
+	var row = newElement('tr', [{type : 'class', value : className}]);
 	
-	var ID = ''+species.id;
+	var label = newElement('tr', [{type : 'class', value : className}]);
+	setInnnerHTML(label, labelValue);
+	
+	var data = newElement('tr', [{type : 'class', value : className}, {type : 'id', value : id + '-data'}]);
+	setInnnerHTML(data, dataValue);
+	
+	row.appendChild(label);
+	row.appendChild(data);
+	return row;
+}
+
+function createSpeciesData(species) {
+	
+	var className = 'species' + ' ' + ID;
+	
+	// Create a new table element which will contain all other elements
+	var table = newElement('table', [{type : 'class', value : className}]);
+	
+	// Create a new row for the title and visibility button
+	var titleRow = newElement('tr', [{type : 'class', value : className}, {type : 'id', value : ID + '-label-row'}]);	// Given a specific ID so does not turn invisible when visibility is toggled
+	
+	var title = newElement('td', [{type : 'class', value : className}, {type : 'onclick', value : 'select(this)'}]);
+	setInnerHTML(title, 'Species: ' + ID);
+	
+	var toggleVisibility = newElement('td', [{type : 'class', value : className + ' toggleVisibility'}, {type : 'onclick', value : ;'updateClassVisibility(this)'}]);
+	setInnerHTML(title, '-');	// Default expanded
+}
+
+
+function newSpeciesData(species) {
+	var dataPanel = getElement('data');
+	
+	var ID = species.id;
 	var className = 'species ' + ID;	// two classes
 	
 	// open/close icon
@@ -295,7 +330,7 @@ function newSpecies(obj, species) {
 	var row = document.createElement('tr');
 	
 	row.appendChild(table);
-	obj.appendChild(row);
+	dataPanel.appendChild(row);
 	
 }
 
@@ -320,7 +355,7 @@ function updateSpeciesData() {
 		for (var i = 0; i < species.nests.length; i++)
 			foodAmount += species.nests[i].health;
 	
-		foodAmountDataDOM.innerHTML = foodAmount.toFixed(2);
+		foodAmountDataDOM.innerHTML = foodAmount.toFixed(NUMBER_OF_FIXED_PLACES);
 	}
 }
 

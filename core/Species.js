@@ -25,7 +25,7 @@ var Species = function(id) {
 		reproduction : {
 			worker : {prob : 0.5, foodCost : 5},
 			soldier : {prob : 0.00, foodCost : 0},
-			queen : {prob : 0.01, foodCost : 25},
+			queen : {prob : 0.1, foodCost : 25},
 			rate : 0.05
 		}
 	};
@@ -83,7 +83,7 @@ Species.prototype.createSpecies = function(chars) {
 	};	
 	
 	SPECIES_LIST.push(species);
-	newSpecies(getDOM('data'), species);
+	newSpeciesData(species);
 	
 	return species;
 };

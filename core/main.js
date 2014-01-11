@@ -13,7 +13,6 @@
 *			- properties:
 *				+ damage rate
 *	- Create map class
-*		+ 2 levels of zoom
 *		+ environments
 
 	Need regenerating food
@@ -21,15 +20,14 @@
 	
 */
 
-// File scope variables
+// Define file scope varibles
 var canvasDOM;
 var canvasCTX;
 
-// Represents what happens each tick
+// What is done each tick
 function tick() {
-	console.log('--------- TICK ----------');
 	var ST = new Date;
-		
+	
 	drawMap(canvasCTX);
 	
 	//  Framerate system
@@ -39,34 +37,33 @@ function tick() {
 		//console.log('FPS: ' + fps.toFixed(1));
 	}
 	
-	
 	updateSpeciesData();
 	setTimeout(tick, TICK_TIME);
 }
 
-// All drawing is done in a batch to improve performance [check this]
+// Draw all objects
 function drawMap(ctx) {
 	if (RUNNING) {
 		clearCanvas(canvasCTX);
-	
 		drawBackground(canvasCTX)
 		
-		// Update all of the species
+		// Update all of the ants in the sytem
 		for (var i = 0; i < ANTS_LIST.length; i++)
 			ANTS_LIST[i].update();
-	
+		
+		// Update each cell on the map
 		for (var i = 0; i < NUM_OF_CELLS; i++) {		
-			// Update pheromone concentrations (better place to put this is in a function)
-			// However this loop is already running so for performance putting it in here
-			
 			var coord = indexToCoord(i);
 			if (visible(coord)) {
 				
+				// Update and draw the pheromones in the cell
 				for (var k = 0; k < MAP[i].pheromone.length; k++) {
 					var pheromone = MAP[i].pheromone[k];
 					pheromone.update();
 					pheromone.draw(ctx);
 				}
+				
+				// Draw all the ants in a cell [This can be reduced to only drawing the top ant as the others are hidden]
 				if (MAP[i].ant.length > 0) {
 					for (var k = 0; k < MAP[i].ant.length; k++) {
 						var ant = MAP[i].ant[k];
@@ -78,59 +75,46 @@ function drawMap(ctx) {
 				}
 			}
 		}
-		
 		drawGrid(canvasCTX);
 	}
 }
 
-window.onload = function() {
-
-	// Get canvas DOM then canvas context
-	canvasDOM = getDOM(CANVAS.name);
-	canvasCTX = getCTX(canvasDOM);
+// Setups the enviroment when starting or restarting the simulation
+function createEnviroment() {
 	
-	var configTD = getDOM('config');
-	setDefaultInputs(configTD);
+	CURRENT_ID = 0;
+	SPECIES_LIST = [];
+	ANTS_LIST = [];
+	RUNNING = true;
 	
-	resizeElement(canvasDOM, CANVAS);
+	// Remove previouse data about old species
+	var speciesClass = document.getElementsByClassName('species');
+	for (var i = 0; i < speciesClass.length; i++) {
+		var DOM = speciesClass[i];
+		DOM.parentElement.removeChild(DOM);
+	}
 	
-	window.onkeydown = function(e) {
-		e = e || window.event;
-		var charCode = e.keyCode || e.which;
-		switch (charCode) {
-			case LEFT_ARROW_KEY:		// Left arrow
-				START_COORD.x += 15;
-				break;
-			case RIGHT_ARROW_KEY:		// Right arrow
-				START_COORD.x -= 15;
-				break;
-			case UP_ARROW_KEY:		// Up arrow
-				START_COORD.y += 15;
-				break;
-			case DOWN_ARROW_KEY:		// Down arrow
-				START_COORD.y -= 15;
-				break;
-			case PLUS_KEY:		// zoom in
-				zoom(1)
-				break;
-			case MINUS_KEY:
-				zoom(-1)
-				break;
-		}
-	};
-			
 	// Create empty map
 	createMap();
 	
-	// Create food system
+	// Create food system & add food
 	FOOD = new FoodSystem();
-	FOOD.ctx = canvasCTX;
-	FOOD.addRandFood({x: 40, y: 40}, 5);
-	//FOOD.addRandFood({x: 140, y: 140}, 25);
-	//FOOD.addRandFood({x: 20, y: 80}, 15);
-	//FOOD.addRandFood({x: 230, y: 80}, 20);
 	
-	// Create a species
+	/*FOOD.addRandFood({x: 40, y: 40}, 5);
+	FOOD.addRandFood({x: 40, y: 10}, 4);
+	FOOD.addRandFood({x: 15, y: 40}, 2);
+	FOOD.addRandFood({x: 10, y: 20}, 3);
+	
+	FOOD.addRandFood({x: 80, y: 60}, 10);
+	FOOD.addRandFood({x: 20, y: 75}, 15);
+	FOOD.addRandFood({x: 45, y: 90}, 6);
+	FOOD.addRandFood({x: 70, y: 70}, 8);
+	FOOD.addRandFood({x: 5, y: 80}, 5);
+	FOOD.addRandFood({x: 5, y: 80}, 5);
+	FOOD.addRandFood({x: 25, y: 40}, 10);*/
+	FOOD.addFood();
+	
+	// Create the users species
 	USER_SPECIES = new Species(genID());
 	USER_SPECIES.colour = {
 		worker : '#1C1C1C',
@@ -143,11 +127,11 @@ window.onload = function() {
 	SELECTED_SPECIES = USER_SPECIES;
 	
 	SPECIES_LIST.push(USER_SPECIES);
-	newSpecies(getDOM('data'), USER_SPECIES);
+	newSpeciesData(USER_SPECIES);
 	updateUserSpecies();
 	
-	// Add ants
-	for (var i = 0; i < DEBUG_ANT_NUM; i++) {
+	// Add some starting queen ants
+	for (var i = 0; i < STARTING_QUEEN_ANT_NUMBER; i++) {
 		var x = randInt({min : 0, max : GRID_SIZE.width - 1});	// -1 as randInt is inclusive
 		var y = randInt({min : 0, max : GRID_SIZE.height - 1});
 		var a = new Queen(genID(), {x : x, y : y});
@@ -157,6 +141,57 @@ window.onload = function() {
 		ANTS_LIST.push(a);
 		a.sayHello();
 	}
+}
+
+// Obj holding the functions each button performs
+var BUTTONS = {	
+	reset : updateDefaultValues,
+	random : updateRandomValues,
+	run : runPauseButton,
+	update : updateUserSpecies,
+	step : step,
+	restart : createEnviroment
+};
+
+// Once the HTML is loaded
+window.onload = function() {
+
+	// Get canvas DOM & canvas context
+	canvasDOM = getDOM(CANVAS.name);
+	canvasCTX = getCTX(canvasDOM);
+	
+	resizeElement(canvasDOM, CANVAS);
+	
+	// Add event listeners for keypress
+	window.onkeydown = function(e) {
+		e = e || window.event;
+		var charCode = e.keyCode || e.which;
+		switch (charCode) {
+			case LEFT_ARROW_KEY:
+				START_COORD.x += PAN_AMOUNT;
+				break;
+			case RIGHT_ARROW_KEY:
+				START_COORD.x -= PAN_AMOUNT;
+				break;
+			case UP_ARROW_KEY:
+				START_COORD.y += PAN_AMOUNT;
+				break;
+			case DOWN_ARROW_KEY:
+				START_COORD.y -= PAN_AMOUNT;
+				break;
+			case PLUS_KEY:
+				zoom(ZOOM_AMOUNT)
+				break;
+			case MINUS_KEY:
+				zoom(-1 *ZOOM_AMOUNT)
+				break;
+		}
+	};
+	
+	createEnviroment();
+	
+	// Set the sliders to their defualt values
+	createCharacteristicInputs();
 	
 	tick();
 };

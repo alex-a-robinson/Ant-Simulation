@@ -1,3 +1,4 @@
+
 function getCTX(canvasDOM) {
 	// Get canvas context
 	return canvasDOM.getContext('2d');

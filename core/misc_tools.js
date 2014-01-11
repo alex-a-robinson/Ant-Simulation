@@ -218,3 +218,32 @@ function clone(obj) {
 
     return temp;
 }
+
+// ---------- DOM ----------
+
+/**
+* Returns the html element an ID responds to
+* @param {*} id - HTML id
+*/
+function getElement(id) {
+	return document.getElementById(id);
+}
+
+/**
+* Sets the value of a html element
+* @param {*} id - HTML id
+* @param {*} value
+*/
+function setValue(id, value) {
+	document.getElementById(id).value = value;
+}
+
+/**
+* Sets the inner html of a html element
+* @param {*} id - HTML id
+* @param {*} html - the new html content
+*/
+function setInnerHTML(element, html) {
+	element.innerHTML = html;
+}
+
