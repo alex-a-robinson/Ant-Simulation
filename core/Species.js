@@ -83,7 +83,7 @@ Species.prototype.createSpecies = function(chars) {
 	};	
 	
 	SPECIES_LIST.push(species);
-	newSpeciesData(species);
+	createSpeciesData(species);
 	
 	return species;
 };

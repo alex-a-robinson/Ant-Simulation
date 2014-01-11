@@ -23,8 +23,8 @@ function step() {
 }
 
 /**
-* Toggles RUNNING and updates the puase/run button
-* @param {obj} button - The button element 
+* Toggles RUNNING and updates the pause/run button
+* @param {HTML element} button - The pause/run buttons HTML element 
 */
 function runPauseButton(button) {
 	toggleRunning();
@@ -51,7 +51,7 @@ function updateValue(element, value) {
 		value = parseFloat(value).toFixed(NUMBER_OF_FIXED_PLACES);
 	
 	// Update the characteristics value in settings as well as the input 
-	setInnerHTML(getElement(characteristic.id + '-value'), value);
+	getElement(characteristic.id + '-value').innerHTML = value;
 	setValue(characteristic.id, value);
 }
 
@@ -100,16 +100,17 @@ function newElement(tag, attributes) {
 /**
 * Create an input element of type [range, button, colour]
 * @param {*} characteristic - A single characteristic from CHARS variable
+* @param {*} prop - The property of CHARS which the characteristic refers to
 * @return {HTML element}
 */
-function createInputType(characteristic) {
+function createInputType(characteristic, prop) {
 
 	// Create the intial input tag
 	var input = newElement('input', [
 		{type : 'class', value : 'config'},
 		{type : 'type', value : 'range'},
-		{type : 'id', value : 'characteristic.id)'},
-		{type : 'name', value : 'prop'},
+		{type : 'id', value : characteristic.id},
+		{type : 'name', value : prop},
 		{type : 'onchange', value : 'updateValue(this, this.value);'},
 	]);
 	
@@ -120,9 +121,9 @@ function createInputType(characteristic) {
 	
 	// Depending on the type add extra attributes
 	if (characteristic.inputType === INPUT_TYPE.slider) {
-		input.setAttribute('min', 'characteristic.min');
-		input.setAttribute('max', 'characteristic.max');
-		input.setAttribute('step', 'characteristic.step');
+		input.setAttribute('min', characteristic.min);
+		input.setAttribute('max', characteristic.max);
+		input.setAttribute('step', characteristic.step);
 		input.setAttribute('type', 'range');
 	}
 	
@@ -132,26 +133,27 @@ function createInputType(characteristic) {
 /**
 * Create a row containing a label, input and value elements used for creating dynamic inputs for characteristics
 * @param {*} characteristic - A single characteristic from CHARS variable
+* @param {string} prop - The property of CHARS which the characteristic refers to
 * @return {HTML element}
 */
-function createInput(characteristic) {
+function createInput(characteristic, prop) {
 	// Row
 	var row = newElement('tr', [{type : 'class', value : 'config'}, {type : 'title', value : characteristic.desc}]);
 	
 	// Label element
 	var label = newElement('td', [{type : 'class', value : 'config'}]);
-	setInnerHTML(label, characteristic.neatName);
+	label.innerHTML = characteristic.neatName;
 	
 	// Input and container elements
 	var inputContainer = newElement('td', [{type : 'class', value : 'config'}, {type : 'id', value : 'input-container'}]);
-	var input = createInputType(characteristic);
+	var input = createInputType(characteristic, prop);
 	
 	// Value element
 	var value = newElement('td', [{type : 'class', value : 'config'}, {type : 'id', value : characteristic.id + '-value'}]);	// Append '-value' to the id of the elements which show the characteristics value
 	if (characteristic.type === VALUE_TYPE.floatValue)
-		setInnerHTML(value, characteristic.value.toFixed(NUMBER_OF_FIXED_PLACES)); 
+		value.innerHTML = characteristic.value.toFixed(NUMBER_OF_FIXED_PLACES); 
 	else
-		setInnerHTML(value, characteristic.value);
+		value.innerHTML = characteristic.value;
 	
 	// Add all the individual elements to the row
 	inputContainer.appendChild(input);
@@ -171,7 +173,7 @@ function createCharacteristicInputs() {
 	var table = newElement('table', {type : 'class', value : 'config'});
 	
 	for (var prop in CHARS) {		
-		var inputRow = createInput(CHARS[prop])
+		var inputRow = createInput(CHARS[prop], prop)
 		table.appendChild(inputRow);
 	}
 	
@@ -198,218 +200,171 @@ function updateUserSpecies() {
 	}
 }
 
+/**
+* Create a row containing a label and data elements used for displaying information about species
+* @param {string} className - The name of the class for the species
+* @param {string} id - The ID which will be used to access and update the species
+* @param {string} labelValue - The text which will be used as a label for the data
+* @param {string} dataValue - The data which will be displayed
+* @return {HTML element}
+*/
 function createDataRow(className, id, labelValue, dataValue) {
 	var row = newElement('tr', [{type : 'class', value : className}]);
 	
-	var label = newElement('tr', [{type : 'class', value : className}]);
-	setInnnerHTML(label, labelValue);
+	var label = newElement('td', [{type : 'class', value : className}]);
+	label.innerHTML =  labelValue;
 	
-	var data = newElement('tr', [{type : 'class', value : className}, {type : 'id', value : id + '-data'}]);
-	setInnnerHTML(data, dataValue);
+	var data = newElement('td', [{type : 'class', value : className}, {type : 'id', value : id + '-data'}]);	// Always append '-data' so can be eddied later
+	data.innerHTML = dataValue;
 	
 	row.appendChild(label);
 	row.appendChild(data);
 	return row;
 }
 
+/**
+* Create a row containing a label and data elements used for displaying information about species
+* @param {species obj} species - The species whose data you want to create a data display for
+*/
 function createSpeciesData(species) {
 	
-	var className = 'species' + ' ' + ID;
+	var id = species.id;
+	var className = 'species' + ' ' + id;
 	
 	// Create a new table element which will contain all other elements
 	var table = newElement('table', [{type : 'class', value : className}]);
 	
 	// Create a new row for the title and visibility button
-	var titleRow = newElement('tr', [{type : 'class', value : className}, {type : 'id', value : ID + '-label-row'}]);	// Given a specific ID so does not turn invisible when visibility is toggled
+	var titleRow = newElement('tr', [{type : 'class', value : className}, {type : 'id', value : id + '-label-row'}]);	// Given a specific ID so does not turn invisible when visibility is toggled
 	
 	var title = newElement('td', [{type : 'class', value : className}, {type : 'onclick', value : 'select(this)'}]);
-	setInnerHTML(title, 'Species: ' + ID);
+	title.innerHTML = 'Species: ' + id;
 	
-	var toggleVisibility = newElement('td', [{type : 'class', value : className + ' toggleVisibility'}, {type : 'onclick', value : ;'updateClassVisibility(this)'}]);
-	setInnerHTML(title, '-');	// Default expanded
-}
-
-
-function newSpeciesData(species) {
-	var dataPanel = getElement('data');
+	var toggleVisibility = newElement('td', [{type : 'class', value : className + ' toggleVisibility'}, {type : 'onclick', value : 'toggleClassVisibility(this)'}]);
+	toggleVisibility.innerHTML = '-';	// Default expanded
 	
-	var ID = species.id;
-	var className = 'species ' + ID;	// two classes
+	// Create a data row for colour
+	var colourRow = createDataRow(className, id + '-colour', 'colour', '');
+	colourRow.childNodes[1].style.backgroundColor = species.colour.nest;
 	
-	// open/close icon
-	var toggleVisibility = document.createElement('td');
-	toggleVisibility.setAttribute('class', className + ' toggleVisibility');
-	toggleVisibility.setAttribute('id', ID + '-toggleVisibility');
-	toggleVisibility.innerHTML = '-'
-	toggleVisibility.setAttribute('onclick', 'updateClassVisibility(this)');
+	// Create a data row for number of ants
+	var antNumRow = createDataRow(className, id + '-antNum', 'Number of ants', species.ants.length);
 	
-	// title
-	var title = document.createElement('td');
-	title.setAttribute('class', className);
-	title.setAttribute('id', ID + '-label');
-	title.innerHTML = 'Species ID: ' + species.id;
-	title.setAttribute('onclick', 'select(this)');
-	
-	// titleRow
-	var rowLabel = document.createElement('tr');
-	rowLabel.setAttribute('class', className);
-	rowLabel.setAttribute('id', ID + '-label-row');
-	//rowLabel.setAttribute('onclick', 'updateClassVisibility(this)');
-	
-	rowLabel.appendChild(title);		
-	rowLabel.appendChild(toggleVisibility);	
-	
-	// colour
-	
-	var colorRow = document.createElement('tr');
-	colorRow.setAttribute('class', className);
-	
-	var colorLabel = document.createElement('td');
-	colorLabel.setAttribute('class', className);
-	colorLabel.innerHTML = 'Colour'
-	
-	var colorData = document.createElement('td');
-	colorData.setAttribute('class', className);
-	colorData.setAttribute('id', ID + '-color-data');
-	colorData.style.backgroundColor = species.colour.nest;
-	
-	colorRow.appendChild(colorLabel);
-	colorRow.appendChild(colorData);
-	
-	// number of ants
-	
-	var antNumRow = document.createElement('tr');
-	antNumRow.setAttribute('class', className);
-	
-	var antNumLabel = document.createElement('td');
-	antNumLabel.setAttribute('class', className);
-	antNumLabel.innerHTML = 'Ant Number'
-	
-	var antNumData = document.createElement('td');
-	antNumData.setAttribute('class', className);
-	antNumData.setAttribute('id', ID + '-antNum-data');
-	antNumData.innerHTML = species.ants.length;
-	
-	antNumRow.appendChild(antNumLabel);
-	antNumRow.appendChild(antNumData);
-	
-	// Food amount
-	
-	var foodAmountRow = document.createElement('tr');
-	foodAmountRow.setAttribute('class', className);
-	
-	var foodAmountLabel = document.createElement('td');
-	foodAmountLabel.setAttribute('class', className);
-	foodAmountLabel.innerHTML = 'Nest Food'
-	
-	var foodAmountData = document.createElement('td');
-	foodAmountData.setAttribute('class', className);
-	foodAmountData.setAttribute('id', ID + '-foodAmount-data');
-	
+	// Create a data row for amount of food
 	var foodAmount = 0;
 	for (var i = 0; i < species.nests.length; i++)
 		foodAmount += species.nests[i].health;
+	var foodAmountRow = createDataRow(className, id + '-foodAmount', 'Amount of food', foodAmount);
 	
-	foodAmountData.innerHTML = foodAmount;
+	// Append all of the rows to the table
+	titleRow.appendChild(title);
+	titleRow.appendChild(toggleVisibility);
 	
-	foodAmountRow.appendChild(foodAmountLabel);
-	foodAmountRow.appendChild(foodAmountData);
-	
-	// table
-	
-	var table = document.createElement('table');
-	table.setAttribute('class', className);
-	
-	table.appendChild(rowLabel);
-	table.appendChild(colorRow);
+	table.appendChild(titleRow);
+	table.appendChild(colourRow);
 	table.appendChild(antNumRow);
 	table.appendChild(foodAmountRow);
 	
-	// row
-	
-	var row = document.createElement('tr');
-	
-	row.appendChild(table);
-	dataPanel.appendChild(row);
-	
+	// Append the table to the data panel
+	getElement('data').appendChild(table);
 }
 
+/**
+* Updates data for all of the species currently in the simulation
+*/
 function updateSpeciesData() {
 	for (var i = 0; i < SPECIES_LIST.length; i++) {
 		var species = SPECIES_LIST[i];
 		
-		var baseID = '' + species.id;
+		var id = species.id;
 		
-		// Colour
-		var colourDataDOM = getDOM(baseID + '-color-data');
-		colourDataDOM.style.backgroundColour = species.colour.nest;
+		// Update the species colour
+		var colourDataElement = getElement(id + '-colour-data');
+		colourDataElement.style.backgroundColour = species.colour.nest;
 		
-		// Number of Ants
-		var antNumDataDOM = getDOM(baseID + '-antNum-data');
-		antNumDataDOM.innerHTML = species.ants.length;
+		// Update the number of Ants
+		var antNumDataElement = getElement(id + '-antNum-data');
+		antNumDataElement.innerHTML = species.ants.length;
 		
-		// Food Amount
-		var foodAmountDataDOM = getDOM(baseID + '-foodAmount-data');
+		// Update the amount of food
+		var foodAmountDataElement = getElement(id + '-foodAmount-data');
 		
 		var foodAmount = 0;
-		for (var i = 0; i < species.nests.length; i++)
-			foodAmount += species.nests[i].health;
+		for (var k = 0; k < species.nests.length; k++)
+			foodAmount += species.nests[k].health;
 	
-		foodAmountDataDOM.innerHTML = foodAmount.toFixed(NUMBER_OF_FIXED_PLACES);
+		foodAmountDataElement.innerHTML = foodAmount.toFixed(NUMBER_OF_FIXED_PLACES);
 	}
 }
 
-function updateClassVisibility(obj) {
+/**
+* Checks whether the species data is currently maximised or minimised and returns 
+* whether or not the species data should be hidden or not assuming the button has
+* been clicked
+* @param {HTML element} button - A reference to the toggle visibility button
+* @return {string} - The value of the display styling
+*/
+function nextVisibility(button) {
+	if (button.innerHTML === '+')
+		return 'table-row';		// Show the element
+	else
+		return 'none';		// Hide the element
+}
 
-	var className = (obj.className);
-		
-	var genericClass = className.split(' ')[0];
-	var specificClass = className.split(' ')[1];
-	
-	var DOM = document.getElementsByClassName(specificClass);
+/**
+* Toggles the text in the visibility button
+* @param {HTML element} button - A reference to the toggle visibility button
+*/
+function toggleVisibilityButton(button) {
+	if (button.innerHTML === '-')
+		button.innerHTML = '+';
+	else
+		button.innerHTML = '-';
+}
 
-	var display;
-	if (obj.innerHTML === '+') {
-		obj.innerHTML = '-';
-		display = 'table-row';
-	} else {
-		obj.innerHTML = '+';
-		display = 'none';
-	}
+/**
+* Maximises and Minimises the data for a particular species
+* @param {HTML element} button - A reference to the toggle visibility button
+*/
+function toggleClassVisibility(button) {
+	var id = button.className.split(' ')[1];	// The second class name is the species id
 	
-	for (var i = 0; i < DOM.length; i++) {
-		if (DOM[i].tagName === 'TR' && DOM[i].className.split(' ')[1] === specificClass && (DOM[i].id !== specificClass + '-label' && DOM[i].id !== specificClass + '-toggleVisibility' && DOM[i].id !== specificClass + '-label-row')) {
-			DOM[i].style.display = display;
+	var listOfClassElements = document.getElementsByClassName(id)[0].getElementsByTagName('TR');	// Get all other elements with the same class name i.e. all elements relating to that species data
+	
+	// For each element in the list
+	for (var i = 0; i < listOfClassElements.length; i++) {
+				
+		// Check if its a row and also check if its not the row containing the visibility button (so as not to hide the button from being used afterwards) 
+		if (listOfClassElements[i].id !== id + '-label-row') {
+			listOfClassElements[i].style.display = nextVisibility(button);	// Then hide/show the element
 		}	
 	}
+	
+	// Finally toggle the button to show the next symbol i.e. + or -
+	toggleVisibilityButton(button);
 }
 
-function select(obj) {
+/**
+* Selects a new species allowing the user to alter that species characteristics
+* @param {HTML element} title - A reference to the title element of the species data
+*/
+function select(title) {
 	// De colour previous selected table
-	var DOM = document.getElementsByClassName(SELECTED_SPECIES.id);
-	for (var i = 0; i < DOM.length; i++) {
-		if (DOM[i].tagName === 'TABLE')
-			DOM[i].style.backgroundColor = '#FFFFFF';
-	}
+	document.getElementsByClassName(SELECTED_SPECIES.id)[0].style.backgroundColor = UNSELECTED_COLOUR;
 
 	// Update new selected table
-	var className = (obj.className);
-	var genericClass = className.split(' ')[0];
-	var specificClass = className.split(' ')[1];
-	var DOM = document.getElementsByClassName(specificClass);
+	var id = title.className.split(' ')[1];		// The second class name is the species id
+	document.getElementsByClassName(id)[0].style.backgroundColor = SELECTED_COLOUR;
 	
-	for (var i = 0; i < DOM.length; i++) {
-		if (DOM[i].tagName === 'TABLE')
-			DOM[i].style.backgroundColor = SELECTED_COLOUR;
-	}
-
+	// Find the species which the id refers to and set the selected species to it
 	for (var s in SPECIES_LIST) {
 		var species = SPECIES_LIST[s];
-		if (species.id === parseInt(specificClass)) {
+		if (species.id === parseInt(id)) {
 			SELECTED_SPECIES = species;
 		}
 	}
 	
+	// Update the characteristics in the config panel to the characteristics of the selected species
 	for (var prop in CHARS) {
 		var characteristic = CHARS[prop];
 		updateValue(getDOM(characteristic.id), SELECTED_SPECIES.chars[prop]);

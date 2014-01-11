@@ -31,6 +31,7 @@ var CANVAS = {			// Used to define characteristics about the simulations canvas
 var NUMBER_OF_FIXED_PLACES = 2;		// The number of numbers after the decimal place to display
 var SELECTED_SPECIES;
 var SELECTED_COLOUR = '#A5C7D9';
+var UNSELECTED_COLOUR = '#FFFFFF';
 var BUTTON_UPDATE_COLOUR = '#FF0000';	// The colour of a button when settings have changed and the update needs to be pushed to the simulation
 var BUTTON_NO_UPDATE_COLOUR = '#000000';	// The normal colour of a button when no settings have been altered
 var LEFT_ARROW_KEY = 37;	// The key number for left arrow

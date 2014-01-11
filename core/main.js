@@ -127,7 +127,7 @@ function createEnviroment() {
 	SELECTED_SPECIES = USER_SPECIES;
 	
 	SPECIES_LIST.push(USER_SPECIES);
-	newSpeciesData(USER_SPECIES);
+	createSpeciesData(USER_SPECIES);
 	updateUserSpecies();
 	
 	// Add some starting queen ants
@@ -157,8 +157,8 @@ var BUTTONS = {
 window.onload = function() {
 
 	// Get canvas DOM & canvas context
-	canvasDOM = getDOM(CANVAS.name);
-	canvasCTX = getCTX(canvasDOM);
+	canvasDOM = getElement(CANVAS.name);
+	canvasCTX = canvasDOM.getContext('2d');
 	
 	resizeElement(canvasDOM, CANVAS);
 	
