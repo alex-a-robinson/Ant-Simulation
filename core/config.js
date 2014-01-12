@@ -70,6 +70,7 @@ var NUM_OF_CELLS = GRID_SIZE.width * GRID_SIZE.height;	// The total number of ce
 // ---------- FOOD ----------
 var FOOD;	// A variable holding the global food system
 var FOOD_HEALTH_RATIO = 50;		// The ratio of food to health used for ants
+var FOOD_CHANCE = 0.0004;	// The probability of a food source spawning in a cell
 
 
 // ---------- ANTS ----------

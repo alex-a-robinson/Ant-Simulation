@@ -87,7 +87,7 @@ function updateRandomValues() {
 /**
 * Create a new HTML element
 * @param {string} tag - A HTML tag name e.g. 'div'
-* @param [{type : {string}, value : {*}}] attributes - A list of attributes to add to the new element
+* @param [{type : string, value : *}] attributes - A list of attributes to add to the new element
 * @return {HTML element}
 */
 function newElement(tag, attributes) {
@@ -224,7 +224,7 @@ function createDataRow(className, id, labelValue, dataValue) {
 
 /**
 * Create a row containing a label and data elements used for displaying information about species
-* @param {species obj} species - The species whose data you want to create a data display for
+* @param {species object} species - The species whose data you want to create a data display for
 */
 function createSpeciesData(species) {
 	

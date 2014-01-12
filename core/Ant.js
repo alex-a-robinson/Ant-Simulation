@@ -153,8 +153,6 @@ Ant.prototype.secrete = function() {		// Do different types of pheromone
 			pheromones[i].concentration += this.species.chars.pheromoneConcentration;
 			if (pheromones[i].concentration > MAX_PHEROMONE_CONCENTRATION)
 				pheromones[i].concentration = MAX_PHEROMONE_CONCENTRATION;	// Cannot be over the maximum
-			if (pheromones[i].antID.indexOf(this.id) < 0)
-				pheromones[i].antID.push(this.id);
 			return void(0);
 		}
 	}
@@ -162,7 +160,6 @@ Ant.prototype.secrete = function() {		// Do different types of pheromone
 	// If pheromone from own species not found, create it!
 	var pheromone = new Pheromone(this.species.chars.pheromoneConcentration, getCellCoord(this.coord));
 	pheromone.species = this.species;
-	pheromone.antID.push(this.id);
 	pheromone.addToMap();
 };
 

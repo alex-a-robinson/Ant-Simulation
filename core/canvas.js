@@ -1,7 +1,7 @@
 /**
 * Resizes an HTML element to a specific size
 * @param {HTML element} element - The element to be resized
-* @param {width : {number}, height : {number}} size - The new size of the element
+* @param {width : number, height : number} size - The new size of the element
 */
 function resizeElement(element, size) {
 	element.width = size.width;
@@ -11,8 +11,8 @@ function resizeElement(element, size) {
 /**
 * Draws a rectangle onto a canvas context
 * @param {canvas context 2d} ctx - The context which the rectangle will be drawn onto
-* @param {x : {number}, y : {number}} coord - The coordinate of the top left corner
-* @param {width : {number}, height : {number}} size - The size of the rectangle
+* @param {x : number, y : number} coord - The coordinate of the top left corner
+* @param {width : number, height : number} size - The size of the rectangle
 * @param {string} fillColour - The colour of the rectangle
 * @param {string} strokeColour - The stroke colour of the rectangle (defaults to '#000000')
 * @param {number} lineWidth - The width of the border (defaults to 0)
@@ -35,8 +35,8 @@ function drawRect(ctx, coord, size, fillColour, strokeColour, lineWidth) {
 /**
 * Draws a line onto a canvas context
 * @param {canvas context 2d} ctx - The context which the line will be drawn onto
-* @param {x : {number}, y : {number}} coord1 - The coordinate of the starting point
-* @param {x : {number}, y : {number}} coord2 - The coordinate of the ending point
+* @param {x : number, y : number} coord1 - The coordinate of the starting point
+* @param {x : number, y : number} coord2 - The coordinate of the ending point
 * @param {string} strokeColour - The stroke colour of the line
 * @param {number} lineWidth - The width of the stroke
 */
@@ -58,7 +58,7 @@ function drawLine(ctx, coord1, coord2, strokeColour, lineWidth) {
 /**
 * Draws an arc onto a canvas context
 * @param {canvas context 2d} ctx - The context which the arc will be drawn onto
-* @param {x : {number}, y : {number}} coord - The coordinate of the centre of the arc
+* @param {x : number, y : number} coord - The coordinate of the centre of the arc
 * @param {number} radius - The radius of the arc
 * @param {number} startAngle - The angle from the horizontal to start the arc at
 * @param {number} endAngle - The angle from the horizontal to stop the arc at
