@@ -40,6 +40,8 @@ var UP_ARROW_KEY = 38;
 var DOWN_ARROW_KEY = 40;
 var PLUS_KEY = 107;
 var MINUS_KEY = 109;
+var MIN_ZOOM = 1;
+var MAX_ZOOM = 14;
 var START_COORD = {			// The offset coordinate for the current view when panning around
 	x : 0,
 	y : 0
@@ -49,7 +51,7 @@ var START_COORD = {			// The offset coordinate for the current view when panning
 // ---------- MAP ----------
 var MAP = [];	// Holds all objects displayed on the map
 var GRID_COLOUR = '#000000';
-var BACKGROUND_COLOUR = '#C2AB8A';
+var BACKGROUND_COLOUR = '#0000FF';//'#C2AB8A';
 var OUT_OF_BOUNDS_COLOUR = '#FFFFFF';	// Used if panning around off map
 var GRID_LINE_WIDTH = 0.2;
 var CELL_SIZE = {	// The size in pixels of a single cell on the grid

@@ -1,32 +1,43 @@
+/**
+* @class Nest
+* @classdesc Represents the ant nest entity
+* @property {integer} id - A unique identifier
+* @property {x : number, y : number} coord - The coordinate of the piece
+*/
 var Nest = function(id, coord) {
-	// Spatial attributes
-	this.nestSize = NEST_SIZE;	// The size of the ant <--- this is in {x, y} so can be scaled and size of ant can be given
-	this.coord = coord;		// Coordinate of the ant
+	/**
+	* @property {x : integer, y : integer} this.nestSize - The number of pieces the nest extends both in the x and y directions
+	* @property {x : number, y : number} this.coord - The coordinate of the nest
+	* @property {integer} this.id - A unique identifier
+	* @property {Species object} this.species - The species which the nest belongs to
+	* @property {[NestPiece object]} this.pieces - An array of the NestPiece objects belonging to the nest
+	* @property {number} this.health - The health the nest has
+	* @property {number} this.hungerThreshold - The threshold below which the nest is hungry and tries to preserve food
+	* @property {number} this.healthRate - The rate at which the nests health reduces each tick
+	* @property {boolean} this.hungry - If hungry ant tries to preserve food
+	* @property {boolean} this.alive - If the ant is alive or not, needed if ant dies mid execution so does not keep acting as if it is alive
+	*/
 	
-	// Identifiers
-	this.id = id;		// The ants unique identifier
-	this.species;		// The ants species
+	this.nestSize = NEST_SIZE;
+	this.coord = coord;
+	
+	this.id = id;
+	this.species;
 	
 	this.pieces = [];
 	
-	// Computed attributes
 	this.health = 3000;
-	this.hungerThreshold = 500;		// hunger point bellow which ant starts eating food it finds/has on it
-	this.healthRate = 0.1;				// The rate at which hunger decreases
-	this.healthMax = 10000;
+	this.hungerThreshold = 500;
+	this.healthRate = 0.1;
 	this.hungry = false;
 	this.alive = true;
 };
 
-Nest.prototype.isHungry = function() {
-	if (this.health < this.hungerThreshold)
-		return true;
-	else
-		return false;
-};
-
+/**
+* Creates all the nest pieces
+*/
 Nest.prototype.createNest = function() {
-	var block = getBlock(this.coord, this.nestSize);
+	var block = getBlock(this.coord, this.nestSize);	// Get block around
 	for (var i = 0; i < block.length; i++)
 		this.addNestPiece(block[i]);	
 };

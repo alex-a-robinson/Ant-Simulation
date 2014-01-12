@@ -81,5 +81,5 @@ function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour, lineWid
 * @param {canvas context 2d} ctx - The context which the rectangle will be drawn onto
 */
 function clearCanvas(ctx) {
-	drawRect(ctx, {x : 0, y : 0}, {width : CANVAS.width, height : CANVAS.height}, OUT_OF_BOUNDS_COLOUR);
+	drawRect(ctx, {x : 0, y : 0}, CANVAS, OUT_OF_BOUNDS_COLOUR);
 }

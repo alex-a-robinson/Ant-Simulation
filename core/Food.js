@@ -8,9 +8,9 @@
 var Food = function(foodSystem, amount, coord) {
 	/**
 	 * @property {FoodSystem object} this.foodSystem - A parent food system 
-	 * @property {{width : {number}, height : {number}} this.size - The size the food will be in pixels
+	 * @property {width : number, height : number} this.size - The size the food will be in pixels
 	 * @property {string} this.amount - The concentration of food the piece has  
-	 * @property {x : {number}, y : {number}} this.coord - The coordinate of the piece of food
+	 * @property {x : number, y : number} this.coord - The coordinate of the piece of food
 	 */
 
 	this.foodSystem = foodSystem;
