@@ -1,9 +1,9 @@
 /**
 * @class NestPiece
 * @classdesc Represents a single piece of the nest
-* @property {integer} id - A unique identifier
-* @property {x : number, y : number} coord - The coordinate of the piece
-* @property {Nest object} nest - The parent nest class which controls the nest piece
+* @param {integer} id - A unique identifier
+* @param {x : number, y : number} coord - The coordinate of the piece
+* @param {Nest object} nest - The parent nest class which controls the nest piece
 */
 var NestPiece = function(id, coord, nest) {
 	/**

@@ -8,7 +8,7 @@ var Pheromone = function(concentration, coord) {
 	/**
 	 * @property {float} this.concentration - The concentration of the pheromone
 	 * @property {x : number, y : number} this.coord - The coordinate of the pheromone
-	 * @property {{width : {number}, height : {number}} this.size - The size the pheromone will be in pixels
+	 * @property {width : number, height : number} this.size - The size the pheromone will be in pixels
 	 * @property {Species object} this.species - The species which the pheromone belongs to
 	 */
 	this.concentration = concentration;

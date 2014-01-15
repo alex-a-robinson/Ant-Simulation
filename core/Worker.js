@@ -1,8 +1,25 @@
+/**
+* @class Worker
+* @extends Ant
+* @classdesc Represents a single worker ant
+*/
 Worker.prototype = new Ant(-1, {x : void(0), y : void(0)});
 Worker.prototype.constructor = Worker;
 Worker.prototype.parent = Ant;
 
+/**
+* @constructor 
+* @param {integer} id - The unqiue ant id
+* @param {x : number, y : number} coord - The coordinate of the ant
+*/
 function Worker (id, coord) {
+	/**
+	 * @property {integer} this.id - The unqiue ant id
+	 * @property {x : number, y : number} this.coord - The coordinate of the ant
+	 * @property {ANT_TYPE : integer} this.type - The type of ant i.e. Queen ant (defualt: ANT_TYPE.queen)
+	 * @property {number} this.direction - The direction in radians from the verticle axis clockwise
+	 * @property {number} this.prioritizeDirection - The direction the ant will gernal move, used to get striagter more realistic paths
+	 */
 	this.id = id;
 	this.coord = coord;
 	this.type = ANT_TYPE.worker;
@@ -11,15 +28,20 @@ function Worker (id, coord) {
 	this.prioritizeDirection = randDir();
 };
 
-// Moves ant towards food and then uses it
+/**
+* Walk towards food until ontop of it and then pick it up
+*/
 Worker.prototype.getFood = function() {
-	this.direction = angleTo(this.coord, this.target);	// Go to food
-	if (getCellIndex(this.coord) === coordToIndex(this.target)) {	// If on the food pick it up
+	this.direction = angleTo(this.coord, this.target);	// Point towards the food
+	if (getCellIndex(this.coord) === coordToIndex(this.target)) {	// If on the food pick it up. As this.coord is a number, work out which cell the ant is mostly in using getCellIndex
 		this.useFood();
 		this.followOwnPheromone = false;
 	}
 };
 
+/**
+* Work out if 
+*/
 Worker.prototype.canCarry = function() {
 	if (this.carrying < this.carryingMax)
 		return true;

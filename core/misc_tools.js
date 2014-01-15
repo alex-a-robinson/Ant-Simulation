@@ -173,27 +173,29 @@ function angleTo(coord, target) {
 
 // Creates a new ant object
 function createAnt(species, coord, nest, startingHealth, type) {
-	
-	var antCoord = coord;
 
 	switch (type) {
 		case ANT_TYPE.worker:
-			var ant = new Worker(genID(), antCoord);
+			var ant = new Worker(genID(), coord);
 			ant.colour = species.colour.worker;
 			break;
 		
 		case ANT_TYPE.queen:
-			var ant = new Queen(genID(), antCoord);
+			var ant = new Queen(genID(), coord);
 			ant.colour = species.colour.queen;
 			break;
 			
 		case ANT_TYPE.soldier:
-			var ant = new Soldier(genID(), antCoord);		// <-- should be soldier
+			var ant = new Soldier(genID(), coord);
 			ant.colour = species.colour.soldier;
 			break;
 	}
 	
-	ant.species = species;
+	if (type === ANT_TYPE.queen)
+		ant.species = species.mutate();	// Mutate species
+	else
+		ant.species = species;
+	
 	ant.nest = nest;
 	ant.health = startingHealth;
 	
