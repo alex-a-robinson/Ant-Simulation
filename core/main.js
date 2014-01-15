@@ -139,7 +139,6 @@ function createEnviroment() {
 		a.species = USER_SPECIES;
 		a.colour = USER_SPECIES.colour.worker;
 		ANTS_LIST.push(a);
-		a.sayHello();
 	}
 }
 

@@ -9,16 +9,16 @@ Queen.prototype.parent = Ant;
 
 /**
 * @constructor 
-* @param {integer} id - The unqiue ant id
+* @param {integer} id - The unique ant id
 * @param {x : number, y : number} coord - The coordinate of the ant
 */
 function Queen(id, coord) {
 	/**
 	 * @property {x : number, y : number} this.coord - The coordinate of the ant
 	 * @property {integer} this.steps - The number of steps the Queen will take until reaching the nest site
-	 * @property {integer} this.id - The unqiue ant id
+	 * @property {integer} this.id - The unique ant id
 	 * @property {GOAL : integer} this.goal - The current goal the ant is trying to accomplish (default: GOAL.none)
-	 * @property {ANT_TYPE : integer} this.type - The type of ant i.e. Queen ant (defualt: ANT_TYPE.queen)
+	 * @property {ANT_TYPE : integer} this.type - The type of ant i.e. Queen ant (default: ANT_TYPE.queen)
 	 */
 	this.coord = coord;
 	this.steps;
@@ -48,7 +48,7 @@ Queen.prototype.doTask = function() {
 };
 
 /**
-* Checks to see if the goal is accomplished and updates it if nessocery
+* Checks to see if the goal is accomplished and updates it if necessary
 */
 Queen.prototype.updateGoal = function() {
 	switch (this.goal) {

@@ -9,17 +9,17 @@ Worker.prototype.parent = Ant;
 
 /**
 * @constructor 
-* @param {integer} id - The unqiue ant id
+* @param {integer} id - The unique ant id
 * @param {x : number, y : number} coord - The coordinate of the ant
 */
 function Worker (id, coord) {
 	/**
-	 * @property {integer} this.id - The unqiue ant id
-	 * @property {x : number, y : number} this.coord - The coordinate of the ant
-	 * @property {ANT_TYPE : integer} this.type - The type of ant i.e. Queen ant (defualt: ANT_TYPE.queen)
-	 * @property {number} this.direction - The direction in radians from the verticle axis clockwise
-	 * @property {number} this.prioritizeDirection - The direction the ant will gernal move, used to get striagter more realistic paths
-	 */
+	* @property {integer} this.id - The unique ant id
+	* @property {x : number, y : number} this.coord - The coordinate of the ant
+	* @property {ANT_TYPE : integer} this.type - The type of ant i.e. Queen ant (default: ANT_TYPE.queen)
+	* @property {number} this.direction - The direction in radians from the vertical axis clockwise (default: *random direction*)
+	* @property {number} this.prioritizeDirection - The direction the ant will general move, used to get straighter more realistic paths (default: *random direction*)
+	*/
 	this.id = id;
 	this.coord = coord;
 	this.type = ANT_TYPE.worker;
@@ -29,7 +29,7 @@ function Worker (id, coord) {
 };
 
 /**
-* Walk towards food until ontop of it and then pick it up
+* Walk towards food until on top of it and then pick it up
 */
 Worker.prototype.getFood = function() {
 	this.direction = angleTo(this.coord, this.target);	// Point towards the food
@@ -40,7 +40,8 @@ Worker.prototype.getFood = function() {
 };
 
 /**
-* Work out if 
+* Determines if an ant can carry food or not
+* @return {boolean}
 */
 Worker.prototype.canCarry = function() {
 	if (this.carrying < this.carryingMax)
@@ -49,23 +50,29 @@ Worker.prototype.canCarry = function() {
 		return false;
 };
 
+/**
+* Navigate towards the nest and deposit food at the nest
+*/
 Worker.prototype.depositeFood = function() {	
-
-	if (this.atNest()) {
+	if (this.atNest()) {	// Deposit food when at the nest
 		if (this.dropFood(this.nest)) {
 			this.goal = GOAL.findFood;
 			this.target = void(0);
 		}
-	} else  if (this.seeNest()) {
+	} else  if (this.seeNest()) {	// If can see the nest, head straight towards it
 		this.direction = angleTo(this.coord, this.nest.coord);
 	} else {
-		if (Math.random() < this.species.chars.nestCoordMemory)  // sense of direction of nest
+		if (Math.random() < this.species.chars.nestCoordMemory)  // Ant has a sense of the direction of the nest, so randomly it will pick the right direction depending on how strong the nestCoordMemeory is
 			this.prioritizeDirection = angleTo(this.coord, this.nest.coord);
 			
-		this.wonder();
+		this.wonder();	// If not cannot see the nest, walk around randomly
 	}
 };
 
+/**
+* Drop food at the nest
+* @return {boolean} - True if there is no more food to drop off
+*/
 Worker.prototype.dropFood = function(nest) {
 	if (this.carrying > 0) {
 		nest.health += 1 * FOOD_HEALTH_RATIO;
@@ -79,19 +86,24 @@ Worker.prototype.dropFood = function(nest) {
 	
 };
 
+/**
+* Determines the best use of food - Eating it or Carrying it
+*/
 Ant.prototype.useFood = function() {
 	var index = getCellIndex(this.coord);
 	var food = MAP[index].food;
 	
-	if (this.hungry && this.isFood(food))
+	if (this.hungry && this.isFood(food))	// Eat the food (this.ifFood(food) needed to check the food still exists as another ant may have taken it)
 		this.health += this.takeFood(food) * FOOD_HEALTH_RATIO;
-	else if (this.canCarry() && this.isFood(food))
+	else if (this.canCarry() && this.isFood(food))	// Carry the food
 		this.carrying += this.takeFood(food);
-	else
-		this.target = void(0);		// Assuming the food is the target should really be this.GOAL is not this.getFood
+	else	// Food is not there/cannot be carried
+		this.target = void(0);
 };
 
-// Performs the current task
+/**
+* Performs the actions required to complete a task
+*/
 Worker.prototype.doTask = function() {
 	switch (this.goal) {
 		case GOAL.findFood:
@@ -110,9 +122,13 @@ Worker.prototype.doTask = function() {
 	}
 };
 
-// Chooses which target to go for
+/**
+* Choose the target piece of food the worker should go for
+*/
 Worker.prototype.findFoodTarget = function() {
-	var leastEffort = 100000;		// <-- Large number to guarantee a number will be less then this
+	var leastEffort = 999999;		// Large number to guarantee a number will be less then this
+	
+	// Go through each peice of food and pick the piece which involves the least amount of effort to collect. Effort is determined by the distance to the peice of food by the amount of food which is in the piece
 	for (var i = 0; i < this.itemsInView.food.length; i++) {
 		var effort = calcEffort(this.coord, this.itemsInView.food[i].coord, this.itemsInView.food[i].amount);
 		if (effort < leastEffort) {
@@ -122,6 +138,9 @@ Worker.prototype.findFoodTarget = function() {
 	}
 };
 
+/**
+* Determines if a goal has been completed or not and updates the next goal for the ant
+*/
 Worker.prototype.updateGoal = function() {
 	switch (this.goal) {
 	
@@ -135,10 +154,10 @@ Worker.prototype.updateGoal = function() {
 			break;
 
 		case GOAL.getFood:
-			if (this.carrying >= this.carryingThreshold) {	// If have enough food
+			if (this.carrying >= this.carryingThreshold) {	// If have enough food, drop it off at the nest
 				this.goal = GOAL.dropFood;
 				this.target = void(0);
-			} else if (this.target === void(0)) {	// If have no target and still need food
+			} else if (this.target === void(0)) {	// If the food has been taken by another ant, go back to looking for food
 				this.goal = GOAL.findFood;
 			}
 			
@@ -147,14 +166,11 @@ Worker.prototype.updateGoal = function() {
 		case GOAL.dropFood:
 			this.target = void(0);
 			break;
-		default:
-			console.log('Error: updateGoal(): Invalid goal: ' + this.goal);
 	}
 };
 
 Worker.prototype.updateHealth = function() {	
-	// Eat food carrying if hungry
-	if (this.isHungry() && this.carrying > 0) {
+	if (this.isHungry() && this.carrying > 0) {		// If have food and is hungry, eat the food
 		this.health += this.carrying * FOOD_HEALTH_RATIO;
 		this.carrying = 0;
 		this.goal = GOAL.none;
@@ -166,8 +182,11 @@ Worker.prototype.updateHealth = function() {
 		this.die();
 };
 
+/**
+* Update the ant each tick
+*/
 Worker.prototype.update = function() {
-	this.removeFromMap();
+	this.removeFromMap();	// Remove from map as ant may move
 	
 	this.updateHealth();
 	
@@ -181,10 +200,11 @@ Worker.prototype.update = function() {
 	this.doTask();
 	this.updateGoal();
 	
-	if (this.sleep > 0)		// When sleep timer triggered don't move
+	// If performing an action which takes multiple ticks this.sleep will be > 0
+	if (this.sleep > 0)	
 		this.sleep -= 1;
 	
 	this.move();
 
-	this.addToMap();
+	this.addToMap();	// Once moved add back to map
 };

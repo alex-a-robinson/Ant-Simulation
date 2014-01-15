@@ -80,7 +80,7 @@ function updateRandomValues() {
 		else if (characteristic.type ===  VALUE_TYPE.integerValue) 	// If characteristic requires a integer must use randInt
 			var value = randInt(characteristic);
 			
-		updateValue(getDOM(characteristic.id), value);
+		updateValue(getElement(characteristic.id), value);
 	}
 }
 
@@ -367,7 +367,7 @@ function select(title) {
 	// Update the characteristics in the config panel to the characteristics of the selected species
 	for (var prop in CHARS) {
 		var characteristic = CHARS[prop];
-		updateValue(getDOM(characteristic.id), SELECTED_SPECIES.chars[prop]);
+		updateValue(getElement(characteristic.id), SELECTED_SPECIES.chars[prop]);
 	}
 }
 		

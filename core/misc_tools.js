@@ -1,15 +1,25 @@
+/**
+* Returns a random integer within a specific range
+* @param {min : integer, max : integer} range - The range inclusive
+* @return {integer}
+*/
 function randInt(range) {
-	// Returns a random integer in the range(min, max)
-	// -+- Not truely random
 	return Math.floor(Math.random() * (range.max - range.min + 1) + range.min);
 }
 
-// http://stackoverflow.com/questions/9724404/random-floating-point-double-in-inclusive-range
+/**
+* Returns a random float within a specific range
+* @param {min : number, max : number} range - The range inclusive
+* @return {number}
+*/
 function randFloat(range) {
 	  return Math.random() < 0.5 ? ((1-Math.random()) * (range.max - range.min) + range.min) : (Math.random() * (range.max - range.min) + range.min);
 }
 
-// Returns a random direction
+/**
+* Returns a random angle between 0 and 2PI radians
+* @return {number}
+*/
 function randDir() {
 	return randFloat({min : 0, max : Math.PI * 2});
 }
@@ -20,16 +30,19 @@ function randGuardTarget() {
 	return GUARD_TARGETS[randomProperty];
 }
 
+/**
+* Returns a random hex colour
+* @return {string}
+*/
 function randColour() {
 	return '#' + Math.floor(Math.random() * 16777215).toString(16);
 }
 
-// Reverses the ants dirction i.e. turns it 180 degres
-function reverseDir(dir) {
-	return dir + Math.PI;
-}
-
-// Returns a direction in the range 0 to 2 * PI
+/**
+* Returns an angle in the range 0 to 2PI i.e. if dir = 4PI returns 2PI
+* @param {number} dir - The direction
+* @return {number}
+*/
 function validateDirection(dir) {
 	var newDir = dir;
 	while (newDir >= Math.PI * 2) {	// if over the range
@@ -43,8 +56,14 @@ function validateDirection(dir) {
 	return newDir;
 }
 
-// Picks a random property of a object literal
-// http://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object
+/**
+* Picks a random property of a object literal
+* @param {object} obj - the object literal which you want to pick a random property for
+* @return {object}
+*
+* Credit: 
+* http://stackoverflow.com/questions/2532218/pick-random-property-from-a-javascript-object
+*/
 function randProperty(obj) {
 	var result;
 	var count = 0;
@@ -54,28 +73,43 @@ function randProperty(obj) {
 	return result;
 }
 
-function getDOM(id) {
-	// Returns the Document Object Model of an element with the id
-	return document.getElementById(id);
-}
-
+/**
+* Returns the distance between two coordinates
+* @param {x : number, y : number} coord1, coord2 - The coordinates
+* @return {number}
+*/
 function distance(coord1, coord2) {
 	var x = coord1.x - coord2.x;
 	var y = coord1.y - coord2.y;
 	return Math.sqrt(x*x + y*y);
 }
 
-// Calculates the effort required to get a item of a certain value at a certain distance
+/**
+* Calculates the effort by finding the distance between two points and dividing by a weighted value
+* @param {x : number, y : number} coord1, coord2 - The coordinates
+* @param {number} value - The weighted value
+* @return {number}
+*/
 function calcEffort(coord1, coord2, value) {
 	var dist = distance(coord1, coord2);
 	return dist/value;
 }
 
+/**
+* Converts a coordinate to a map index i.e. the index in the MAP array which is the cell where the coordinate lies
+* @param {x : number, y : number} coord - The coordinate which will be converted
+* @return {integer} - The map index which the coordinate converts to
+*/
 function coordToIndex(coord) {
 	// Translates (x, y) coordinate to linear position in map
 	return coord.x + coord.y * GRID_SIZE.width;
 }
 
+/**
+* Converts a map index to a coordinate
+* @param {integer} index - The map index
+* @return {x : number, y : number} - The coordinate which the index converts to
+*/
 function indexToCoord(index) {
 	// Translates linear position in map to (x, y) coordinates on grid
 	var x = index - Math.floor(index / GRID_SIZE.width) * GRID_SIZE.height;
@@ -83,11 +117,20 @@ function indexToCoord(index) {
 	return {x:x, y:y};
 }
 
+/**
+* Scale a coordinate to its location in pixels
+* @param {x : number, y : number} coord - The coordinate to scale
+* @return {x : number, y : number} - The scaled coordinate
+*/
 function scaleCoord(coord) {
-	// Takes a coord between [0, GRID_SIZE_X] and [0, GRID_SIZE_Y] and translates to acutal position on canvas i.e. with CELL_SIZE_X
 	return {x : coord.x * CELL_SIZE.width + START_COORD.x , y : coord.y * CELL_SIZE.height + START_COORD.y};
 }
 
+/**
+* Determines whether a coordinate is visible on the canvas i.e. if it is off screen when panned or zoomed
+* @param {x : number, y : number} coord - The coordinate
+* @return {boolean}
+*/
 function visible(coord) {
 	var scaledCoord = scaleCoord(coord);
 	if (scaledCoord.x < GRID_SIZE.width * CELL_SIZE.width && scaledCoord.y < GRID_SIZE.height * CELL_SIZE.height)
@@ -96,22 +139,36 @@ function visible(coord) {
 		return false;
 }
 
-// Returns the cell index which most closely contains the coord
+/**
+* Converts a coordinate to a map index differs from coordToIndex as it can be used with coordinates which don't map exactly to a single index and will work out which cell the coordinate lies in mostly.
+* @param {x : number, y : number} coord - The coordinate which will be converted
+* @return {integer} - The map index which the coordinate converts to
+*/
 function getCellIndex(coord) {
 	var cellCoord = boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
 	return coordToIndex(cellCoord);
 }
 
+/**
+* Smiler to getCellIndex however returns the *neat* coordinate i.e. a coordinate which maps exactly to a single map index by finding the cell which the coordinate lies in mostly
+* @param {x : number, y : number} coord - The coordinate
+* @return {x : number, y : number} - The coordinate which maps exactly to a single map index
+*/
 function getCellCoord(coord) {
 	return boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
 }
 
-// Returns the warped coordinate if exceeds a boundary
+/**
+* Returns the *warped* coordinate of a coordinate if it exceeds the map boundary. As the map wraps around if an ant goes off one side it will appear on the other.
+* @param {x : number, y : number} coord - The coordinate to test
+* @param {x : {min : number, max : number}, y : {min : number, max : number}} bounds - The boundary which is tested against
+* @return {x : number, y : number} - The warped coordinate
+*/
 function boundary(coord, bounds) {
 
 	// Check x bounds
 	if (coord.x < bounds.x.min) coord.x = bounds.x.max - Math.abs(coord.x);	// x may be negative if x < 0
-	else if (coord.x >= bounds.x.max) coord.x = coord.x - bounds.x.max;		// x cannot be negative unless boundry is
+	else if (coord.x >= bounds.x.max) coord.x = coord.x - bounds.x.max;		// x cannot be negative unless boundary is
 	
 	// Check y bounds
 	if (coord.y < bounds.y.min) coord.y = bounds.y.max - Math.abs(coord.y);
@@ -120,6 +177,12 @@ function boundary(coord, bounds) {
 	return coord;
 }
 
+/**
+* Returns an array of cells which lie a certain distance around a specific point
+* @param {x : number, y : number} coord - The coordinate to get the block around
+* @param {width : integer, height : integer} size - The size of the block i.e. if width = 2, takes 2 block to the left, and two blocks to the right of the coordinate
+* @return {[{x : number, y : number}]} - An array of coordinates which lie around the coordinate
+*/
 function getBlock(coord, size) {
 	block = [];
 
@@ -132,10 +195,18 @@ function getBlock(coord, size) {
 	return block;
 }
 
+/**
+* Returns an array of cells which lie in the sector of a circle of a particular radius around a specific point
+* @param {x : number, y : number} coord - The coordinate to get the block around
+* @param {integer} radius - The radius of the circle which a sector is being taken from
+* @param {number} direction - The direction the ant is facing
+* @param {number} angle - The angle of the sector
+* @return {[{x : number, y : number}]} - An array of coordinates which lie in the sector
+*/
 function getSector(coord, radius, direction, angle) {
 
 	var block = [];
-
+	
 	for (var y = coord.y - radius; y <= coord.y + radius; y++) {	// Extra 1 is need as list is inclusive
 		for (var x = coord.x - radius; x <= coord.x + radius; x++) {
 			
@@ -144,6 +215,7 @@ function getSector(coord, radius, direction, angle) {
 				y : y
 			};		
 					
+			// Determine if the coordinate lies in the sector
 			if (validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle/2) && validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle/2) && distance(coord, searchCoord) <= radius) {
 				block.push(getCellCoord(searchCoord));
 			} else if ((validateDirection(direction) <= angle/2 || validateDirection(direction) >= Math.PI*2 - angle/2) && (validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle/2) || validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle/2)) && distance(coord, searchCoord) <= radius){
@@ -155,23 +227,35 @@ function getSector(coord, radius, direction, angle) {
 	return block;
 }
 
+/**
+* Returns the reverse direction i.e. + PI radians
+* @param {number} angle - The angle in radians
+* @return {number}
+*/
 function turnAround(angle) {
 	return angle + Math.PI;
 }
 
-function byValue(varible) {
-	var safe = varible;
-	return safe;
-}
-
+/**
+* Returns the direction/angle of the target from the coord
+* @param {x : number, y : number} coord, target - The coordinates
+* @return {number} - The angel from the vertical axis clockwise in radians
+*/
 function angleTo(coord, target) {
 	var dx = target.x - coord.x;
 	var dy = target.y - coord.y;
 	
-	return Math.atan2(dy, dx) + Math.PI/2;	// atan2 find the angle from the horizontal however we use from the vertical
+	return Math.atan2(dy, dx) + Math.PI/2;	// atan2 find the angle from the horizontal however ants use angle from the vertical
 }
 
-// Creates a new ant object
+/**
+* Creates a new ant
+* @param {Species object} species - The species of the new ant
+* @param {x : number, y : number} coord - The coordinate of the new ant
+* @param {Nest object} nest - The new ants home nest (the nest which it delivers food to)
+* @param {number} startingHealth - The new ants health
+* @param {integer} type - The type of ant to create i.e. ANT_TYPE.worker
+*/
 function createAnt(species, coord, nest, startingHealth, type) {
 
 	switch (type) {
@@ -191,8 +275,9 @@ function createAnt(species, coord, nest, startingHealth, type) {
 			break;
 	}
 	
+	// Only possible to mutate queens (due to the nature of ant reproduction)
 	if (type === ANT_TYPE.queen)
-		ant.species = species.mutate();	// Mutate species
+		ant.species = species.mutate();
 	else
 		ant.species = species;
 	
@@ -204,12 +289,23 @@ function createAnt(species, coord, nest, startingHealth, type) {
 	ant.addToMap();
 }
 
+/**
+* Generates a unique id. Requires CURRENT_ID variable to keep track of current id
+* @return {integer} - A unique ID
+*/
 function genID() {
 	CURRENT_ID += 1;
 	return CURRENT_ID
 }
 
-// http://stackoverflow.com/questions/7574054/javascript-how-to-pass-object-by-value
+/**
+* Clones a object needed as JavaScript passes everything by reference
+* @param {object} obj - The obj which will be cloned
+* @return {object} - A copy of obj
+*
+* Credit: 
+* http://stackoverflow.com/questions/7574054/javascript-how-to-pass-object-by-value
+*/
 function clone(obj) {
 	if(obj == null || typeof(obj) != 'object')
         return obj;
@@ -221,11 +317,9 @@ function clone(obj) {
     return temp;
 }
 
-// ---------- DOM ----------
-
 /**
 * Returns the html element an ID responds to
-* @param {*} id - HTML id
+* @param {string} id - HTML id
 */
 function getElement(id) {
 	return document.getElementById(id);
@@ -233,8 +327,8 @@ function getElement(id) {
 
 /**
 * Sets the value of a html element
-* @param {*} id - HTML id
-* @param {*} value
+* @param {string} id - HTML id
+* @param {string} value
 */
 function setValue(id, value) {
 	document.getElementById(id).value = value;
@@ -242,8 +336,8 @@ function setValue(id, value) {
 
 /**
 * Sets the inner html of a html element
-* @param {*} id - HTML id
-* @param {*} html - the new html content
+* @param {string} id - HTML id
+* @param {string} html - the new html content
 */
 function setInnerHTML(element, html) {
 	element.innerHTML = html;
