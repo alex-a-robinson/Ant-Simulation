@@ -51,8 +51,8 @@ var Species = function(id) {
 		exploitativeness : 0.05,
 		pheromoneInfluence : 0.95,
 		queenSteps : {
-			min : 150,
-			max : 300
+			min : 10,
+			max : 10
 		},
 		reproduction : {
 			/**
@@ -61,7 +61,7 @@ var Species = function(id) {
 			*/
 			worker : {prob : 0.5, foodCost : 5},
 			soldier : {prob : 0.00, foodCost : 0},
-			queen : {prob : 0.1, foodCost : 25},
+			queen : {prob : 0.0, foodCost : 25},
 			rate : 0.05
 		}
 	};
@@ -133,7 +133,7 @@ Species.prototype.createSpecies = function(chars) {
 	};	
 	
 	SPECIES_LIST.push(species);
-	createSpeciesData(species);
+	// createSpeciesData(species);					<--
 	
 	return species;
 };

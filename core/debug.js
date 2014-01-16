@@ -25,3 +25,10 @@ show.prototype.draw = function(ctx) {
 show.prototype.sayHello = function() {
 	console.log('Hello, DEBUG ant ' + this.id + ' at (' + this.coord.x + ',' + this.coord.y + ').')
 };
+
+function setSpeciesDefualtValue(species) {
+	for (var prop in CHARS) {
+		var characteristic = CHARS[prop];
+		species.chars[prop] = characteristic.defaultValue;
+	}
+}

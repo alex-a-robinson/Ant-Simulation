@@ -12,7 +12,7 @@ var INPUT_TYPE = {
 };
 
 // ---------- MAIN ----------
-var TICK_TIME = 10;		// The time between ticks
+var TICK_TIME = 100;		// The time between ticks
 var CURRENT_ID = 0;		// Used to keep track of the latest unique ID (so previous IDs are not reused)
 var ANTS_LIST = [];		// Holds all ant objects
 var SPECIES_LIST = [];	// Holds all species objects
@@ -59,8 +59,8 @@ var CELL_SIZE = {	// The size in pixels of a single cell on the grid
 	height : 10
 };
 var GRID_SIZE = {	// The size in number of cells of the grid (actual size displayed depends on CELL_SIZE)
-	width : 250,
-	height : 250
+	width : 40,
+	height : 40
 };
 var MAP_BOUNDARY = {	// Used to determine whether an ant is in bounds or not
 	x : {min : 0, max : GRID_SIZE.width},

@@ -37,7 +37,7 @@ function tick() {
 		//console.log('FPS: ' + fps.toFixed(1));
 	}
 	
-	updateSpeciesData();
+	//updateSpeciesData();				<--
 	setTimeout(tick, TICK_TIME);
 }
 
@@ -85,7 +85,7 @@ function createEnviroment() {
 	CURRENT_ID = 0;
 	SPECIES_LIST = [];
 	ANTS_LIST = [];
-	RUNNING = true;
+	RUNNING = false;
 	
 	// Remove previouse data about old species
 	var speciesClass = document.getElementsByClassName('species');
@@ -100,19 +100,7 @@ function createEnviroment() {
 	// Create food system & add food
 	FOOD = new FoodSystem();
 	
-	/*FOOD.addRandFood({x: 40, y: 40}, 5);
-	FOOD.addRandFood({x: 40, y: 10}, 4);
-	FOOD.addRandFood({x: 15, y: 40}, 2);
-	FOOD.addRandFood({x: 10, y: 20}, 3);
-	
-	FOOD.addRandFood({x: 80, y: 60}, 10);
-	FOOD.addRandFood({x: 20, y: 75}, 15);
-	FOOD.addRandFood({x: 45, y: 90}, 6);
-	FOOD.addRandFood({x: 70, y: 70}, 8);
-	FOOD.addRandFood({x: 5, y: 80}, 5);
-	FOOD.addRandFood({x: 5, y: 80}, 5);
-	FOOD.addRandFood({x: 25, y: 40}, 10);*/
-	FOOD.addFood();
+	FOOD.addRandFood({x: 30, y: 30}, 5);	// 			<--
 	
 	// Create the users species
 	USER_SPECIES = new Species(genID());
@@ -127,8 +115,8 @@ function createEnviroment() {
 	SELECTED_SPECIES = USER_SPECIES;
 	
 	SPECIES_LIST.push(USER_SPECIES);
-	createSpeciesData(USER_SPECIES);
-	updateUserSpecies();
+	//createSpeciesData(USER_SPECIES);				<--
+	//updateUserSpecies();				<--
 	
 	// Add some starting queen ants
 	for (var i = 0; i < STARTING_QUEEN_ANT_NUMBER; i++) {
@@ -190,7 +178,9 @@ window.onload = function() {
 	createEnviroment();
 	
 	// Set the sliders to their default values
-	createCharacteristicInputs();
+	//createCharacteristicInputs();								<--
+	
+	setSpeciesDefualtValue(USER_SPECIES)
 	
 	tick();
 };
