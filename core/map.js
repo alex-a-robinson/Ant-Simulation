@@ -27,7 +27,6 @@ function zoom(level) {
 		CELL_SIZE.width += level;
 		CELL_SIZE.height += level;
 	}
-	console.log(CELL_SIZE.width + ':' + CELL_SIZE.height);
 }
 
 /**

@@ -41,7 +41,7 @@ var Ant = function(id, coord) {
 	
 	this.health = 500;
 	this.hungerThreshold = 300;		
-	this.healthRate = 0.1;	
+	this.healthRate = 0.5;	
 	this.alive = true;
 
 	this.carrying = 0;	

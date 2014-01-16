@@ -69,7 +69,7 @@ function drawMap(ctx) {
 						var ant = MAP[i].ant[k];
 						ant.draw(ctx);
 					}
-				} else if (MAP[i].food !== void(0)) {		// Don't want to draw food ontop of ants
+				} else if (MAP[i].food !== void(0)) {		// Don't want to draw food on top of ants
 					var food = MAP[i].food;
 					food.draw(ctx);
 				}
@@ -79,7 +79,7 @@ function drawMap(ctx) {
 	}
 }
 
-// Setups the enviroment when starting or restarting the simulation
+// Setups the environment when starting or restarting the simulation
 function createEnviroment() {
 	
 	CURRENT_ID = 0;
@@ -161,7 +161,7 @@ window.onload = function() {
 	
 	resizeElement(canvasDOM, CANVAS);
 	
-	// Add event listeners for keypress
+	// Add event listeners for key press
 	window.onkeydown = function(e) {
 		e = e || window.event;
 		var charCode = e.keyCode || e.which;
@@ -189,7 +189,7 @@ window.onload = function() {
 	
 	createEnviroment();
 	
-	// Set the sliders to their defualt values
+	// Set the sliders to their default values
 	createCharacteristicInputs();
 	
 	tick();

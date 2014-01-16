@@ -28,7 +28,7 @@ var Nest = function(id, coord) {
 	
 	this.health = 3000;
 	this.hungerThreshold = 500;
-	this.healthRate = 0.1;
+	this.healthRate = 0.5;
 	this.hungry = false;
 	this.alive = true;
 };
@@ -64,6 +64,11 @@ Nest.prototype.die = function() {
 	index = this.species.nests.indexOf(this);
 	this.species.nests.splice(index, 1);
 	
+	
+	for (var i = 0; i < this.pieces.length; i++) {
+		this.pieces[i].removeFromMap();
+	}
+	
 	this.alive = false;
 };
 
@@ -84,7 +89,7 @@ Nest.prototype.getCost = function(type) {
 };
 
 /**
-* Determins whather or not it is viable to create a specific type of ant
+* Determines whether or not it is viable to create a specific type of ant
 * @param {ANT_TYPE} type - Represents a specific type of ant
 * @return {boolean}
 */
@@ -107,7 +112,7 @@ Nest.prototype.createAnt = function(type) {
 };
 
 /**
-* Determins what type of ant to create
+* Determines what type of ant to create
 */
 Nest.prototype.reproduce = function() {
 	var prob = Math.random();
@@ -122,7 +127,7 @@ Nest.prototype.reproduce = function() {
 	
 	var ordered = [{prob : queenProb, type : ANT_TYPE.queen}, {prob : soldierProb, type : ANT_TYPE.soldier}, {prob : workerProb, type : ANT_TYPE.worker}].sort(function(a,b){return a.prob - b.prob});
 		
-	// Determin which outcome occured
+	// Determine which outcome occurred
 	switch (true) {
 		case (prob < ordered[0].prob):
 			if (this.viable(ordered[0].type))
@@ -155,7 +160,7 @@ Nest.prototype.update = function() {
 	if (!this.alive)
 		return void(0);
 	
-	// Determins if a new ant should be created or not
+	// Determines if a new ant should be created or not
 	if (Math.random() < this.species.chars.reproduction.rate) {
 		this.reproduce();
 	}

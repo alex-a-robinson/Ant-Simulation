@@ -128,7 +128,7 @@ Worker.prototype.doTask = function() {
 Worker.prototype.findFoodTarget = function() {
 	var leastEffort = 999999;		// Large number to guarantee a number will be less then this
 	
-	// Go through each peice of food and pick the piece which involves the least amount of effort to collect. Effort is determined by the distance to the peice of food by the amount of food which is in the piece
+	// Go through each piece of food and pick the piece which involves the least amount of effort to collect. Effort is determined by the distance to the piece of food by the amount of food which is in the piece
 	for (var i = 0; i < this.itemsInView.food.length; i++) {
 		var effort = calcEffort(this.coord, this.itemsInView.food[i].coord, this.itemsInView.food[i].amount);
 		if (effort < leastEffort) {
