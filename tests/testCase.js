@@ -28,6 +28,19 @@ testCase.prototype.createTest = function(functionToTest, arguments, type, expect
 	return singleTest;
 };
 
+testCase.prototype.quickTest = function(functionToTest, arguments, type, expected, showPassMessage, showFailMessage) {
+	showPassMessage = typeof showPassMessage !== 'undefined' ? showPassMessage : false;
+	showFailMessage = typeof showFailMessage !== 'undefined' ? showFailMessage : true;
+	
+	var test = this.createTest(functionToTest, arguments, type, expected, showPassMessage, showFailMessage);
+	var result = test.test();
+	if (result)
+		this.passed += 1;
+	else
+		this.failed += 1;
+	this.summery();
+};
+
 testCase.prototype.testAll = function() {
 	for (var i = 0; i < this.tests.length; i++) {
 		var result = this.tests[i].test();

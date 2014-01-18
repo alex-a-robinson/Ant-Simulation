@@ -3,11 +3,17 @@
 /**
 * Test case - Test randInt returns a value within a specific range
 * Test data - {min : 0, max : 100}
+* Expected  - 0 <= value <= 100
 * Test data - {min : 0, max : 0}
+* Expected  - 0 <= value <= 0
 * Test data - {min : -100, max : 0}
+* Expected  - -100 <= value <= 0
 * Test data - {min : 20, max : 40}
+* Expected  - 20 <= value <= 40
 * Test data - {min : -20, max : 20}
+* Expected  - -20 <= value <= 20
 * Test data - {min : 0, max : 1}
+* Expected  - 0 <= value <= 1
 */
 
 var randIntTest = new testCase('Test randInt returns a value within a specific range');

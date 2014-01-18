@@ -133,29 +133,10 @@ function scaleCoord(coord) {
 */
 function visible(coord) {
 	var scaledCoord = scaleCoord(coord);
-	if (scaledCoord.x < GRID_SIZE.width * CELL_SIZE.width && scaledCoord.y < GRID_SIZE.height * CELL_SIZE.height)
+	if (scaledCoord.x >= 0 && scaledCoord.x < GRID_SIZE.width * CELL_SIZE.width && scaledCoord.y >= 0 && scaledCoord.y < GRID_SIZE.height * CELL_SIZE.height)
 		return true;
 	else
 		return false;
-}
-
-/**
-* Converts a coordinate to a map index differs from coordToIndex as it can be used with coordinates which don't map exactly to a single index and will work out which cell the coordinate lies in mostly.
-* @param {x : number, y : number} coord - The coordinate which will be converted
-* @return {integer} - The map index which the coordinate converts to
-*/
-function getCellIndex(coord) {
-	var cellCoord = boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
-	return coordToIndex(cellCoord);
-}
-
-/**
-* Smiler to getCellIndex however returns the *neat* coordinate i.e. a coordinate which maps exactly to a single map index by finding the cell which the coordinate lies in mostly
-* @param {x : number, y : number} coord - The coordinate
-* @return {x : number, y : number} - The coordinate which maps exactly to a single map index
-*/
-function getCellCoord(coord) {
-	return boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
 }
 
 /**
@@ -175,6 +156,25 @@ function boundary(coord, bounds) {
 	else if (coord.y >= bounds.y.max) coord.y = coord.y - bounds.y.max;
 
 	return coord;
+}
+
+/**
+* Converts a coordinate to a map index differs from coordToIndex as it can be used with coordinates which don't map exactly to a single index and will work out which cell the coordinate lies in mostly.
+* @param {x : number, y : number} coord - The coordinate which will be converted
+* @return {integer} - The map index which the coordinate converts to
+*/
+function getCellIndex(coord) {
+	var cellCoord = boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
+	return coordToIndex(cellCoord);
+}
+
+/**
+* Smiler to getCellIndex however returns the *neat* coordinate i.e. a coordinate which maps exactly to a single map index by finding the cell which the coordinate lies in mostly
+* @param {x : number, y : number} coord - The coordinate
+* @return {x : number, y : number} - The coordinate which maps exactly to a single map index
+*/
+function getCellCoord(coord) {
+	return boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
 }
 
 /**
@@ -338,5 +338,13 @@ function setValue(id, value) {
 */
 function setInnerHTML(element, html) {
 	element.innerHTML = html;
+}
+
+/**
+* A shorthand to log values
+* @param {string} value - The string you want to log
+*/
+function log(value) {
+	console.log(value);
 }
 

@@ -32,3 +32,26 @@ function setSpeciesDefualtValue(species) {
 		species.chars[prop] = characteristic.defaultValue;
 	}
 }
+
+function simpleGridRect(coord, colour) {
+	var canvasDOM;
+	var canvasCTX;
+
+	window.onload = function() {
+	
+		createMap();
+
+		// Get canvas DOM & canvas context
+		canvasDOM = getElement(CANVAS.name);
+		canvasCTX = canvasDOM.getContext('2d');
+		
+		resizeElement(canvasDOM, CANVAS);
+		
+		clearCanvas(canvasCTX);
+		drawBackground(canvasCTX);
+		
+		drawRect(canvasCTX, scaleCoord(coord), CELL_SIZE, colour);
+		
+		drawGrid(canvasCTX);
+	};
+}
