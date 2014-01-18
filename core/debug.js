@@ -33,25 +33,27 @@ function setSpeciesDefualtValue(species) {
 	}
 }
 
-function simpleGridRect(coord, colour) {
-	var canvasDOM;
-	var canvasCTX;
+function simpleGrid(ctx) {
 
-	window.onload = function() {
+	createMap();
 	
-		createMap();
+	clearCanvas(ctx);
+	drawBackground(ctx);
+		
+	drawGrid(ctx);
+}
 
-		// Get canvas DOM & canvas context
-		canvasDOM = getElement(CANVAS.name);
-		canvasCTX = canvasDOM.getContext('2d');
-		
-		resizeElement(canvasDOM, CANVAS);
-		
-		clearCanvas(canvasCTX);
-		drawBackground(canvasCTX);
-		
-		drawRect(canvasCTX, scaleCoord(coord), CELL_SIZE, colour);
-		
-		drawGrid(canvasCTX);
-	};
+function format(value) {
+	if (typeof value === 'object') {
+		str = '{';
+		for (prop in value) {
+			str += prop + ' : ' + format(value[prop]) + ', '
+		}
+		if (str[str.length - 2] === ',')
+			str = str.substr(0, str.length-2);
+		str += '}';
+		return str;
+	} else {
+		return value;
+	}
 }

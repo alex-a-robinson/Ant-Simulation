@@ -159,22 +159,22 @@ function boundary(coord, bounds) {
 }
 
 /**
-* Converts a coordinate to a map index differs from coordToIndex as it can be used with coordinates which don't map exactly to a single index and will work out which cell the coordinate lies in mostly.
-* @param {x : number, y : number} coord - The coordinate which will be converted
-* @return {integer} - The map index which the coordinate converts to
-*/
-function getCellIndex(coord) {
-	var cellCoord = boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
-	return coordToIndex(cellCoord);
-}
-
-/**
 * Smiler to getCellIndex however returns the *neat* coordinate i.e. a coordinate which maps exactly to a single map index by finding the cell which the coordinate lies in mostly
 * @param {x : number, y : number} coord - The coordinate
 * @return {x : number, y : number} - The coordinate which maps exactly to a single map index
 */
 function getCellCoord(coord) {
-	return boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
+	return boundary({x: Math.floor(coord.x), y: Math.floor(coord.y)}, MAP_BOUNDARY);
+}
+
+/**
+* Converts a coordinate to a map index differs from coordToIndex as it can be used with coordinates which don't map exactly to a single index and will work out which cell the coordinate lies in mostly.
+* @param {x : number, y : number} coord - The coordinate which will be converted
+* @return {integer} - The map index which the coordinate converts to
+*/
+function getCellIndex(coord) {
+	var cellCoord = getCellCoord(coord);
+	return coordToIndex(cellCoord);
 }
 
 /**

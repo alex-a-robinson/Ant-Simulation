@@ -64,15 +64,24 @@ function drawLine(ctx, coord1, coord2, strokeColour, lineWidth) {
 * @param {number} endAngle - The angle from the horizontal to stop the arc at
 * @param {string} strokeColour - The stroke colour of the arc
 * @param {number} lineWidth - The width of the stroke
+* @param {string} fillColour - The colour of the arc
 */
-function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour, lineWidth) {
+function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour, lineWidth, fillColour) {
 	if (lineWidth > 0) {
-		ctx.strokeStyle = strokeColour;
-		ctx.lineWidth = lineWidth;
 		ctx.beginPath();
 		ctx.arc(coord.x, coord.y, radius, startAngle, endAngle, false);
 		ctx.closePath();
-		ctx.stroke();
+		
+		if (typeof strokeColour !== 'unefined') {
+			ctx.strokeStyle = strokeColour;
+			ctx.lineWidth = lineWidth;
+			ctx.stroke();
+		}
+		
+		if (typeof fillColour !== 'unefined') {
+			ctx.fillStyle = fillColour;
+			ctx.fill();
+		}
 	}
 }
 

@@ -8,6 +8,8 @@ var test = function(functionToTest, arguments) {
 	this.showFailMessage = true;
 	this.expected;
 	this.type;	// 'equal' for an equality test or 'range' for a range check 
+	
+	this.callback;
 };
 
 test.prototype.passMessage = function(msg) {
@@ -23,7 +25,12 @@ test.prototype.failMessage = function(msg) {
 
 // Returns the value of the testing function run with specific args
 test.prototype.run = function() {
-	return this.functionToTest.apply(this, this.arguments);
+	var result = this.functionToTest.apply(this, this.arguments);
+	
+	if (typeof this.callback === 'function')
+		this.callback(result);
+			
+	return result;
 };
 
 test.prototype.test = function() {
@@ -33,16 +40,22 @@ test.prototype.test = function() {
 		return this.inRange(this.expected);
 	} else if (this.type === 'typeOf') {
 		return this.ofType(this.expected);
+	} else if (this.type === 'none') {
+		this.run();
+		return void(0);
+	} else if (this.type === 'desc') {
+		var result = this.run();
+		console.log('TEST DESC - Expected "' + this.expected + '", and result was "' + format(result) + '".');
 	}
 };
 
 test.prototype.inRange = function(range) {
 	var value = this.run();
 	if (value >= range.min && value <= range.max) {
-		this.passMessage('Expected in range "' +  this.format(range) + '".');
+		this.passMessage('Expected in range "' +  format(range) + '".');
 		return true;
 	} else {
-		this.failMessage('Expected in range "' +  this.format(range) + '", however was "' +  this.format(value) + '".');
+		this.failMessage('Expected in range "' +  format(range) + '", however was "' +  format(value) + '".');
 		return false;
 	}
 };
@@ -52,10 +65,10 @@ test.prototype.equal = function(expected) {
 	var value = this.run();
 	
 	if (equal(value, expected)) {
-		this.passMessage('Expected "' +  this.format(expected) + '".');
+		this.passMessage('Expected "' +  format(expected) + '".');
 		return true;
 	} else {
-		this.failMessage('Expected "' +  this.format(expected) + '", however was "' +  this.format(value) + '".');
+		this.failMessage('Expected "' +  format(expected) + '", however was "' +  format(value) + '".');
 		return false;
 	}
 };
@@ -63,29 +76,13 @@ test.prototype.equal = function(expected) {
 test.prototype.ofType = function(expected) {
 	var value = typeof this.run();
 	if (value === expected) {
-		this.passMessage('Expected "' +  this.format(expected) + '".');
+		this.passMessage('Expected "' +  format(expected) + '".');
 		return true;
 	} else {
-		this.failMessage('Expected "' + this.format(expected) + '", however was "' +  this.format(value) + '".');
+		this.failMessage('Expected "' + format(expected) + '", however was "' +  format(value) + '".');
 		return false;
 	}
 };
-
-test.prototype.format = function(value) {
-	if (typeof value === 'object') {
-		str = '{';
-		for (prop in value) {
-			str += prop + ' : ' + value[prop] + ', '
-		}
-		if (str[str.length - 2] === ',')
-			str = str.substr(0, str.length-2);
-		str += '}';
-		return str;
-	} else {
-		return value;
-	}
-};
-
 
 
 

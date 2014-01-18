@@ -25,23 +25,23 @@ var bounds = {x : {min : 0, max : 10}, y : {min : 0, max : 10}};
 var CELL_SIZE = {width : 50, height : 50};
 var GRID_SIZE = {width : 10, height : 10};
 
-log('Test that boundary returns the correct warped coordinate');
+function boundaryTest(ctx, coord) {
+	drawRect(ctx, scaleCoord(coord), CELL_SIZE, '#FF0000');
+	drawRect(ctx, scaleCoord(boundary(coord, bounds)), CELL_SIZE, '#0000FF');
 
-simpleGridRect({x : 4, y : 2}, '#FF0000');
-simpleGridRect(boundary({x : 4, y : 2}, bounds), '#0000FF');
-log('    For {x : 4, y : 2} boundary is {x : ' + boundary({x : 4, y : 2}, bounds).x + ', y : ' + boundary({x : 4, y : 2}, bounds).y + '}');
-
-
-simpleGridRect({x : 10, y : 10}, '#FF0000');
-simpleGridRect(boundary({x : 10, y : 10}, bounds), '#0000FF');
-log('    For {x : 10, y : 10} boundary is {x : ' + boundary({x : 10, y : 10}, bounds).x + ', y : ' + boundary({x : 10, y : 10}, bounds).y + '}');
+	log('    For ' + format(coord) + ' boundary is ' + format(boundary(coord, bounds)));
+}
 
 
-simpleGridRect({x : 10, y : 4}, '#FF0000');
-simpleGridRect(boundary({x : 10, y : 4}, bounds), '#0000FF');
-log('    For {x : 10, y : 4} boundary is {x : ' + boundary({x : 10, y : 4}, bounds).x + ', y : ' + boundary({x : 10, y : 4}, bounds).y + '}');
+window.onload = function () {
 
-
-simpleGridRect({x : 7, y : 10}, '#FF0000');
-simpleGridRect(boundary({x : 7, y : 10}, bounds), '#0000FF');
-log('    For {x : 7, y : 10} boundary is {x : ' + boundary({x : 7, y : 10}, bounds).x + ', y : ' + boundary({x : 7, y : 10}, bounds).y + '}');
+	var ctx = getElement(CANVAS.name).getContext('2d');
+	simpleGrid(ctx);
+	
+	log('Test that boundary returns the correct warped coordinate');
+	
+	boundaryTest(ctx, {x : 4, y : 2});
+	boundaryTest(ctx, {x : 10, y : 10});
+	boundaryTest(ctx, {x : 10, y : 4});
+	boundaryTest(ctx, {x : 7, y : 10});
+};
