@@ -1,35 +1,20 @@
-// ---------- getBlock ----------
+// ---------- function ----------
 
 /**
-* Test case - Test getBlock returns a block of cells the correct size
+* Test case - Test desc
 *
 * Environment:
 *   MAP_BOUNDARY = {x : {min : 0, max : 10}, y : {min : 0, max : 10}}
 *	CELL_SIZE = {width : 50, height : 50};
 *	GRID_SIZE = {width : 10, height : 10};
 *
-* Test data - coord : {x : 5, y : 5}, size : {width : 0, height : 0} [functional value]
-* Expected  - A single block centred at {x : 5, y : 5}
-*
-* Test data - coord : {x : 5, y : 5}, size : {width : 0, height : 0} [functional value]
-* Expected  - A single block centred at {x : 5, y : 5}
+* Test data - testData
+* Expected  - value
 */
 
-var getBlockSizeTest = new testCase('Test getBlock returns a block of cells the correct size');
+var functionTest = new testCase('Test desc');
 
-//getBlockSizeTest.createTest(getBlock, [testData], 'type', {min : 0, max : 100});
-// getBlockSizeTest.testAll();
-//
+//functionTest.createTest(function, [testData], 'type', value);
+//functionTest.testAll();
 
-getBlockSizeTest.summery();
-
-/**
-* Test case - Test getBlock returns a block of cells even when on the egde of the grid
-*
-* Test data - 
-* Expected  - 
-*/
-
-var getBlockSizeTest = new testCase('Test getBlock returns a block of cells the correct size');
-
-
+functionTest.summery();

@@ -11,6 +11,7 @@ var test = function(functionToTest, arguments) {
 	
 	this.callback;
 	this.callbackArgs = [];
+	this.evaluateTo = true;
 };
 
 test.prototype.passMessage = function(msg) {
@@ -21,7 +22,7 @@ test.prototype.passMessage = function(msg) {
 
 test.prototype.failMessage = function(msg) {
 	if (this.showFailMessage)
-		console.error('TEST FAILED - ' + msg);
+		console.warn('TEST FAILED - ' + msg);
 };
 
 // Returns the value of the testing function run with specific args
@@ -39,6 +40,8 @@ test.prototype.run = function() {
 test.prototype.test = function() {
 	if (this.type === 'equal') {
 		return this.equal(this.expected);
+	} else if (this.type === 'exactlyEqual') {
+		return this.exactlyEqual(this.expected);
 	} else if (this.type === 'approx') {
 		return this.approx(this.expected);
 	} else if (this.type === 'range') {
@@ -56,7 +59,7 @@ test.prototype.test = function() {
 
 test.prototype.inRange = function(range) {
 	var value = this.run();
-	if (value >= range.min && value <= range.max) {
+	if ((value >= range.min && value <= range.max) === this.evaluateTo) {
 		this.passMessage('Expected in range "' +  format(range) + '".');
 		return true;
 	} else {
@@ -69,7 +72,20 @@ test.prototype.inRange = function(range) {
 test.prototype.equal = function(expected) {
 	var value = this.run();
 	
-	if (equal(value, expected)) {
+	if (equal(value, expected) === this.evaluateTo) {
+		this.passMessage('Expected "' +  format(expected) + '".');
+		return true;
+	} else {
+		this.failMessage('Expected "' +  format(expected) + '", however was "' +  format(value) + '".');
+		return false;
+	}
+};
+
+// Tests if the testing function returns the expected results
+test.prototype.exactlyEqual = function(expected) {
+	var value = this.run();
+	
+	if ((value === expected) === this.evaluateTo) {
 		this.passMessage('Expected "' +  format(expected) + '".');
 		return true;
 	} else {
@@ -84,7 +100,7 @@ test.prototype.approx = function(expected) {
 	
 	var percentageError = Math.abs(Math.abs(value - expected) / expected);
 	
-	if (percentageError < 0.001) {	// accept 0.1% error
+	if ((percentageError < 0.001) === this.evaluateTo) {	// accept 0.1% error
 		this.passMessage('Expected "' +  format(expected) + '".');
 		return true;
 	} else {
@@ -95,7 +111,7 @@ test.prototype.approx = function(expected) {
 
 test.prototype.ofType = function(expected) {
 	var value = typeof this.run();
-	if (value === expected) {
+	if ((value === expected) === this.evaluateTo) {
 		this.passMessage('Expected "' +  format(expected) + '".');
 		return true;
 	} else {

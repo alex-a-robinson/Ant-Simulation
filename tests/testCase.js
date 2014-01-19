@@ -13,6 +13,8 @@ var testCase = function(discription) {
 	
 	this.callback;
 	this.callbackArgs = [];
+	
+	this.evaluateTo = true;
 };
 
 testCase.prototype.createTest = function(functionToTest, arguments, type, expected, showPassMessage, showFailMessage) {
@@ -29,6 +31,8 @@ testCase.prototype.createTest = function(functionToTest, arguments, type, expect
 		singleTest.callback = this.callback;
 		singleTest.callbackArgs = this.callbackArgs;
 	}
+	
+	singleTest.evaluateTo = this.evaluateTo;
 	
 	this.tests.push(singleTest);
 	this.numberOfTests += 1;
