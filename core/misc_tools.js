@@ -74,13 +74,13 @@ function randProperty(obj) {
 }
 
 /**
-* Returns the distance between two coordinates
+* Returns the shortest distance between two coordinates
 * @param {x : number, y : number} coord1, coord2 - The coordinates
 * @return {number}
 */
 function distance(coord1, coord2) {
-	var x = coord1.x - coord2.x;
-	var y = coord1.y - coord2.y;
+	var x = Math.min(Math.abs(coord1.x - coord2.x), GRID_SIZE.width - Math.abs(coord1.x - coord2.x));	// picks the minimum distance either wraping around the map or directly
+	var y = Math.min(Math.abs(coord1.y - coord2.y), GRID_SIZE.height - Math.abs(coord1.y - coord2.y));
 	return Math.sqrt(x*x + y*y);
 }
 
@@ -196,6 +196,28 @@ function getBlock(coord, size) {
 }
 
 /**
+* Returns the direction/angle of shortest path to get from the coord to the target
+* @param {x : number, y : number} coord, target - The coordinates
+* @return {number} - The angel from the vertical axis clockwise in radians
+*/
+function angleTo(coord, target) {
+	// Find the minimum distance and go in that direction i.e. either directly to target or warping around map
+	if (GRID_SIZE.width - Math.abs(target.x - coord.x) > Math.abs(target.x - coord.x)) {
+		dx = target.x - coord.x;
+	} else {
+		dx = GRID_SIZE.width - (target.x - coord.x);
+	}
+	
+	if (GRID_SIZE.height - Math.abs(target.y - coord.y) > Math.abs(target.y - coord.y)) {
+		dy = target.y - coord.y;
+	} else {
+		dy = GRID_SIZE.height - (target.y - coord.y);
+	}
+	
+	return Math.atan2(dy, dx) + Math.PI/2;	// atan2 find the angle from the horizontal however ants use angle from the vertical
+}
+
+/**
 * Returns an array of cells which lie in the sector of a circle of a particular radius around a specific point
 * @param {x : number, y : number} coord - The coordinate to get the block around
 * @param {integer} radius - The radius of the circle which a sector is being taken from
@@ -234,18 +256,6 @@ function getSector(coord, radius, direction, angle) {
 */
 function turnAround(angle) {
 	return angle + Math.PI;
-}
-
-/**
-* Returns the direction/angle of the target from the coord
-* @param {x : number, y : number} coord, target - The coordinates
-* @return {number} - The angel from the vertical axis clockwise in radians
-*/
-function angleTo(coord, target) {
-	var dx = target.x - coord.x;
-	var dy = target.y - coord.y;
-	
-	return Math.atan2(dy, dx) + Math.PI/2;	// atan2 find the angle from the horizontal however ants use angle from the vertical
 }
 
 /**

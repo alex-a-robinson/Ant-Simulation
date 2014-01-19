@@ -10,6 +10,7 @@ var test = function(functionToTest, arguments) {
 	this.type;	// 'equal' for an equality test or 'range' for a range check 
 	
 	this.callback;
+	this.callbackArgs = [];
 };
 
 test.prototype.passMessage = function(msg) {
@@ -20,15 +21,17 @@ test.prototype.passMessage = function(msg) {
 
 test.prototype.failMessage = function(msg) {
 	if (this.showFailMessage)
-		console.log('TEST FAILED - ' + msg);
+		console.error('TEST FAILED - ' + msg);
 };
 
 // Returns the value of the testing function run with specific args
 test.prototype.run = function() {
 	var result = this.functionToTest.apply(this, this.arguments);
 	
-	if (typeof this.callback === 'function')
-		this.callback(result);
+	if (typeof this.callback === 'function') {
+		this.callbackArgs.push(result);
+		this.callback.apply(this, this.callbackArgs);
+	}
 			
 	return result;
 };
@@ -36,6 +39,8 @@ test.prototype.run = function() {
 test.prototype.test = function() {
 	if (this.type === 'equal') {
 		return this.equal(this.expected);
+	} else if (this.type === 'approx') {
+		return this.approx(this.expected);
 	} else if (this.type === 'range') {
 		return this.inRange(this.expected);
 	} else if (this.type === 'typeOf') {
@@ -65,6 +70,21 @@ test.prototype.equal = function(expected) {
 	var value = this.run();
 	
 	if (equal(value, expected)) {
+		this.passMessage('Expected "' +  format(expected) + '".');
+		return true;
+	} else {
+		this.failMessage('Expected "' +  format(expected) + '", however was "' +  format(value) + '".');
+		return false;
+	}
+};
+
+// Tests if the testing function returns the expected results
+test.prototype.approx = function(expected) {
+	var value = this.run();
+	
+	var percentageError = Math.abs(Math.abs(value - expected) / expected);
+	
+	if (percentageError < 0.001) {	// accept 0.1% error
 		this.passMessage('Expected "' +  format(expected) + '".');
 		return true;
 	} else {
