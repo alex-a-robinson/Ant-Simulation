@@ -12,6 +12,7 @@ var test = function(functionToTest, arguments) {
 	this.callback;
 	this.callbackArgs = [];
 	this.evaluateTo = true;
+	this.callwith = void(0);
 };
 
 test.prototype.passMessage = function(msg) {
@@ -27,11 +28,14 @@ test.prototype.failMessage = function(msg) {
 
 // Returns the value of the testing function run with specific args
 test.prototype.run = function() {
-	var result = this.functionToTest.apply(this, this.arguments);
+	if (typeof this.functionToTest === 'function')
+		var result = this.functionToTest.apply(this.callwith, this.arguments);
+	else	
+		var result = this.functionToTest;
 	
 	if (typeof this.callback === 'function') {
 		this.callbackArgs.push(result);
-		this.callback.apply(this, this.callbackArgs);
+		this.callback.apply(void(0), this.callbackArgs);
 	}
 			
 	return result;

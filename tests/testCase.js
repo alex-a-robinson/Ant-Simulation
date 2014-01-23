@@ -15,6 +15,10 @@ var testCase = function(discription) {
 	this.callbackArgs = [];
 	
 	this.evaluateTo = true;
+	
+	this.callwith = void(0);
+	
+	this.autorun = false;
 };
 
 testCase.prototype.createTest = function(functionToTest, arguments, type, expected, showPassMessage, showFailMessage) {
@@ -26,6 +30,7 @@ testCase.prototype.createTest = function(functionToTest, arguments, type, expect
 	singleTest.showFailMessage = showFailMessage;
 	singleTest.type = type;
 	singleTest.expected = expected;
+	singleTest.callwith = this.callwith;
 	
 	if (typeof this.callback === 'function') {
 		singleTest.callback = this.callback;
@@ -36,6 +41,14 @@ testCase.prototype.createTest = function(functionToTest, arguments, type, expect
 	
 	this.tests.push(singleTest);
 	this.numberOfTests += 1;
+	
+	if (this.autorun) {
+		var result = singleTest.test();
+		if (result === true)
+			this.passed += 1;
+		else if (result === false)
+			this.failed += 1;	
+	}
 	
 	return singleTest;
 };

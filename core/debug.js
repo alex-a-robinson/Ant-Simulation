@@ -35,7 +35,7 @@ function setSpeciesDefualtValue(species) {
 
 function simpleGrid(ctx) {
 
-	createMap();
+	//createMap();
 	
 	clearCanvas(ctx);
 	drawBackground(ctx);
