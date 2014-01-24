@@ -107,7 +107,7 @@ Ant.prototype.takeFood = function(food) {
 		food.amount -= 1;	// Take a single piece of food
 		this.sleep += ANT_FOOD_TAKE_SPEED;
 		
-		if (this.isFood(food))	// If food is all gone remove it from the map
+		if (!this.isFood(food))	// If food is all gone remove it from the map
 			food.removeFromMap();
 		
 		return 1;
@@ -237,7 +237,7 @@ Ant.prototype.wonder = function() {
 	}
 	
 	CoM = {x : Mxy.x / M, y : Mxy.y / M};	// The mean coordinate of all the pheromones of the same species weighed by pheromone concentration (Same as centre of mass equation)
-
+	
 	// Every so often change the prioritize direction
 	if (Math.random() < this.species.chars.exploitativeness)
 		this.prioritizeDirection = randDir();
