@@ -74,14 +74,14 @@ function randProperty(obj) {
 }
 
 /**
-* Returns the distance between two coordinates
+* Returns the shortest distance between two coordinates
 * @param {x : number, y : number} coord1, coord2 - The coordinates
 * @return {number}
 */
 function distance(coord1, coord2) {
-	var x = coord1.x - coord2.x;
-	var y = coord1.y - coord2.y;
-	return Math.sqrt(x*x + y*y);
+	var x = Math.min(Math.abs(coord1.x - coord2.x), GRID_SIZE.width - Math.abs(coord1.x - coord2.x));        // picks the minimum distance either wraping around the map or directly
+    var y = Math.min(Math.abs(coord1.y - coord2.y), GRID_SIZE.height - Math.abs(coord1.y - coord2.y));
+    return Math.sqrt(x*x + y*y);
 }
 
 /**
@@ -133,7 +133,7 @@ function scaleCoord(coord) {
 */
 function visible(coord) {
 	var scaledCoord = scaleCoord(coord);
-	if (scaledCoord.x < GRID_SIZE.width * CELL_SIZE.width && scaledCoord.y < GRID_SIZE.height * CELL_SIZE.height)
+	if (scaledCoord.x >= 0 && scaledCoord.x < GRID_SIZE.width * CELL_SIZE.width && scaledCoord.y >= 0 && scaledCoord.y < GRID_SIZE.height * CELL_SIZE.height)
 		return true;
 	else
 		return false;
@@ -145,7 +145,7 @@ function visible(coord) {
 * @return {integer} - The map index which the coordinate converts to
 */
 function getCellIndex(coord) {
-	var cellCoord = boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
+	var cellCoord = getCellCoord(coord);
 	return coordToIndex(cellCoord);
 }
 
@@ -155,7 +155,7 @@ function getCellIndex(coord) {
 * @return {x : number, y : number} - The coordinate which maps exactly to a single map index
 */
 function getCellCoord(coord) {
-	return boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
+	return boundary({x : Math.floor(coord.x), y : Math.floor(coord.y)}, MAP_BOUNDARY);
 }
 
 /**
@@ -237,15 +237,25 @@ function turnAround(angle) {
 }
 
 /**
-* Returns the direction/angle of the target from the coord
+* Returns the direction/angle of shortest path to get from the coord to the target
 * @param {x : number, y : number} coord, target - The coordinates
 * @return {number} - The angel from the vertical axis clockwise in radians
 */
 function angleTo(coord, target) {
-	var dx = target.x - coord.x;
-	var dy = target.y - coord.y;
+	// Find the minimum distance and go in that direction i.e. either directly to target or warping around map
+	if (GRID_SIZE.width - Math.abs(target.x - coord.x) > Math.abs(target.x - coord.x)) {
+		dx = target.x - coord.x;
+	} else {
+		dx = GRID_SIZE.width - (target.x - coord.x);
+	}
 	
-	return Math.atan2(dy, dx) + Math.PI/2;	// atan2 find the angle from the horizontal however ants use angle from the vertical
+	if (GRID_SIZE.height - Math.abs(target.y - coord.y) > Math.abs(target.y - coord.y)) {
+		dy = target.y - coord.y;
+	} else {
+		dy = GRID_SIZE.height - (target.y - coord.y);
+	}
+	
+	return Math.atan2(dy, dx) + Math.PI/2;        // atan2 find the angle from the horizontal however ants use angle from the vertical
 }
 
 /**

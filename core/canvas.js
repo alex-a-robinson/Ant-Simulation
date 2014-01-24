@@ -33,26 +33,33 @@ function drawRect(ctx, coord, size, fillColour, strokeColour, lineWidth) {
 }
 
 /**
-* Draws a line onto a canvas context
-* @param {canvas context 2d} ctx - The context which the line will be drawn onto
-* @param {x : number, y : number} coord1 - The coordinate of the starting point
-* @param {x : number, y : number} coord2 - The coordinate of the ending point
-* @param {string} strokeColour - The stroke colour of the line
+* Draws an arc onto a canvas context
+* @param {canvas context 2d} ctx - The context which the arc will be drawn onto
+* @param {x : number, y : number} coord - The coordinate of the centre of the arc
+* @param {number} radius - The radius of the arc
+* @param {number} startAngle - The angle from the horizontal to start the arc at
+* @param {number} endAngle - The angle from the horizontal to stop the arc at
+* @param {string} strokeColour - The stroke colour of the arc
 * @param {number} lineWidth - The width of the stroke
+* @param {string} fillColour - The colour of the arc
 */
-function drawLine(ctx, coord1, coord2, strokeColour, lineWidth) {
-	// Drawing straight lines only
-	
-	// Only boarder if width is > 0
-	if (lineWidth > 0) {
-		ctx.strokeStyle = strokeColour;
-		ctx.lineWidth = lineWidth;
-		ctx.beginPath();
-		ctx.moveTo(coord1.x, coord1.y);
-		ctx.lineTo(coord2.x, coord2.y);
-		ctx.closePath();
-		ctx.stroke();
-	}
+function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour, lineWidth, fillColour) {
+        if (lineWidth > 0) {
+                ctx.beginPath();
+                ctx.arc(coord.x, coord.y, radius, startAngle, endAngle, false);
+                ctx.closePath();
+                
+                if (typeof strokeColour !== 'unefined') {
+                        ctx.strokeStyle = strokeColour;
+                        ctx.lineWidth = lineWidth;
+                        ctx.stroke();
+                }
+                
+                if (typeof fillColour !== 'unefined') {
+                        ctx.fillStyle = fillColour;
+                        ctx.fill();
+                }
+        }
 }
 
 /**
@@ -65,7 +72,7 @@ function drawLine(ctx, coord1, coord2, strokeColour, lineWidth) {
 * @param {string} strokeColour - The stroke colour of the arc
 * @param {number} lineWidth - The width of the stroke
 */
-function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour, lineWidth) {
+function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour, lineWidth, fillColour) {
 	if (lineWidth > 0) {
 		ctx.strokeStyle = strokeColour;
 		ctx.lineWidth = lineWidth;

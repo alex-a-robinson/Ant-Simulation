@@ -107,7 +107,7 @@ Ant.prototype.takeFood = function(food) {
 		food.amount -= 1;	// Take a single piece of food
 		this.sleep += ANT_FOOD_TAKE_SPEED;
 		
-		if (this.isFood(food))	// If food is all gone remove it from the map
+		if (!this.isFood(food))	// If food is all gone remove it from the map
 			food.removeFromMap();
 		
 		return 1;
