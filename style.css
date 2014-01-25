@@ -19,6 +19,8 @@ body {
 	text-align : center;
 }
 
+
+
 #test {
 	width : 1000px;
 	margin : auto;
@@ -58,6 +60,7 @@ td#canvas {
 canvas {
 	float : right;
 	border: 1px solid black;
+	cursor: move;
 }
 
 td#data {
@@ -77,6 +80,7 @@ td.species {
 
 td#config {
 	width: 250px;
+	cursor: help;
 }
 
 #input-container {

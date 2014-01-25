@@ -20,7 +20,7 @@
 	
 */
 
-// Define file scope varibles
+// Define file scope variables
 var canvasDOM;
 var canvasCTX;
 
@@ -202,7 +202,7 @@ window.onload = function() {
 		}
 	};
 	
-	canvasDOM.onmouseup = function(e) {
+	window.onmouseup = function(e) {
 		draging = false;
 	};
 	
