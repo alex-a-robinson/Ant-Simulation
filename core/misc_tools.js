@@ -145,7 +145,7 @@ function visible(coord) {
 * @return {integer} - The map index which the coordinate converts to
 */
 function getCellIndex(coord) {
-	var cellCoord = getCellCoord(coord);
+	var cellCoord = boundary({x: Math.round(coord.x), y: Math.round(coord.y)}, MAP_BOUNDARY);
 	return coordToIndex(cellCoord);
 }
 
