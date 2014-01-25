@@ -123,7 +123,7 @@ function indexToCoord(index) {
 * @return {x : number, y : number} - The scaled coordinate
 */
 function scaleCoord(coord) {
-	return {x : coord.x * CELL_SIZE.width + START_COORD.x , y : coord.y * CELL_SIZE.height + START_COORD.y};
+	return {x : coord.x * CELL_SIZE.width + START_COORD.x, y : coord.y * CELL_SIZE.height + START_COORD.y};
 }
 
 /**

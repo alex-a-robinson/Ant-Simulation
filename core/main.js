@@ -45,7 +45,7 @@ function tick() {
 function drawMap(ctx) {
 	if (RUNNING) {
 		clearCanvas(canvasCTX);
-		drawBackground(canvasCTX)
+		drawBackground(canvasCTX);
 		
 		// Update all of the ants in the sytem
 		for (var i = 0; i < ANTS_LIST.length; i++)
@@ -54,7 +54,7 @@ function drawMap(ctx) {
 		// Update each cell on the map
 		for (var i = 0; i < NUM_OF_CELLS; i++) {		
 			var coord = indexToCoord(i);
-			if (visible(coord)) {
+			if (1 || visible(coord)) {
 				
 				// Update and draw the pheromones in the cell
 				for (var k = 0; k < MAP[i].pheromone.length; k++) {
@@ -87,7 +87,7 @@ function createEnviroment() {
 	ANTS_LIST = [];
 	RUNNING = true;
 	
-	// Remove previouse data about old species
+	// Remove previous data about old species
 	var speciesClass = document.getElementsByClassName('species');
 	for (var i = 0; i < speciesClass.length; i++) {
 		var DOM = speciesClass[i];
@@ -100,18 +100,6 @@ function createEnviroment() {
 	// Create food system & add food
 	FOOD = new FoodSystem();
 	
-	/*FOOD.addRandFood({x: 40, y: 40}, 5);
-	FOOD.addRandFood({x: 40, y: 10}, 4);
-	FOOD.addRandFood({x: 15, y: 40}, 2);
-	FOOD.addRandFood({x: 10, y: 20}, 3);
-	
-	FOOD.addRandFood({x: 80, y: 60}, 10);
-	FOOD.addRandFood({x: 20, y: 75}, 15);
-	FOOD.addRandFood({x: 45, y: 90}, 6);
-	FOOD.addRandFood({x: 70, y: 70}, 8);
-	FOOD.addRandFood({x: 5, y: 80}, 5);
-	FOOD.addRandFood({x: 5, y: 80}, 5);
-	FOOD.addRandFood({x: 25, y: 40}, 10);*/
 	FOOD.addFood();
 	
 	// Create the users species
@@ -152,6 +140,8 @@ var BUTTONS = {
 	restart : createEnviroment
 };
 
+var draging = false;
+
 // Once the HTML is loaded
 window.onload = function() {
 
@@ -185,6 +175,35 @@ window.onload = function() {
 				zoom(-1 *ZOOM_AMOUNT)
 				break;
 		}
+	};
+	
+	canvasDOM.addEventListener("mousewheel", function(e) {
+		// cross-browser wheel delta
+		var e = window.event || e; // old IE support
+		var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+		
+		zoom(delta * ZOOM_AMOUNT);
+	}, false);
+	
+	canvasDOM.onmousedown = function(e) {
+		draging = true;
+		start = {x : e.pageX, y : e.pageY};
+	};
+	
+	var start = {x : 250, y : 310};
+	var end = {x : 0, y : 0};
+	
+	canvasDOM.onmousemove = function(e) {
+		if (draging) {
+			end = {x : e.pageX, y : e.pageY};
+			START_COORD.x = START_COORD.x + (end.x - start.x);
+			START_COORD.y = START_COORD.y + (end.y - start.y);
+			start = {x : e.pageX, y : e.pageY};
+		}
+	};
+	
+	canvasDOM.onmouseup = function(e) {
+		draging = false;
 	};
 	
 	createEnviroment();

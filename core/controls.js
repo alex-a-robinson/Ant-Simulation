@@ -1,9 +1,11 @@
 function start() {
 	RUNNING = true;
+	getElement('button-run').innerHTML = 'pause';
 }
 
 function pause() {
 	RUNNING = false;
+	getElement('button-run').innerHTML = 'run';
 }
 
 function toggleRunning() {
@@ -26,12 +28,12 @@ function step() {
 * Toggles RUNNING and updates the pause/run button
 * @param {HTML element} button - The pause/run buttons HTML element 
 */
-function runPauseButton(button) {
+function runPauseButton() {
 	toggleRunning();
 	if (RUNNING)
-		button.innerHTML = 'pause';
+		getElement('button-run').innerHTML = 'pause';
 	else
-		button.innerHTML = 'run';
+		getElement('button-run').innerHTML = 'run';
 }
 
 /**

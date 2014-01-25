@@ -33,32 +33,34 @@
 		<script src="core/main.js" type="text/javascript"></script>
 	</head>
 	<body>
-		<div id='header'>Simulation</div>
-<table class='fixed'>
-			<tr>
-				<td id='canvas' class='fixed'>
-					<div>
-						<canvas id='simulation' width='500px' height='500px'></canvas>
-					</div>
-					<div class='nav'>
-						<button id='button-run' onclick='BUTTONS.run(this)'>run</button>
-						<button id='button-step' onclick='BUTTONS.step(this)'>step</button>
-						<button id='button-restart' onclick='BUTTONS.restart(this)'>restart</button>
-					</div>
-				</td>
-				<td id='data' class='fixed'>
-				</td>
-				<td id='config' class='fixed'>
-					<div id='title' class='config'>Config</div>    
-					
-					<button id='button-reset' onclick='BUTTONS.reset()'>reset</button>
-					<button id='button-random' onclick='BUTTONS.random()'>random</button>
-					<button id='button-update' onclick='BUTTONS.update()'>update</button>
-					<hr />
-					<div class='ant-health'>Ant Health</div>
-					<div class='ant-health'>1032</div>
-				</td>
-			</tr>
-		</table>
+		<div id='header'>Ant Simulation</div>
+		<div id='test'>
+			<table class='fixed'>
+				<tr>
+					<td id='canvas' class='fixed'>
+						<div>
+							<canvas id='simulation' width='500px' height='500px'></canvas>
+						</div>
+						<div class='nav'>
+							<button id='button-run' onclick='BUTTONS.run(this)'>pause</button>
+							<button id='button-step' onclick='BUTTONS.step(this)'>step</button>
+							<button id='button-restart' onclick='BUTTONS.restart(this)'>restart</button>
+						</div>
+					</td>
+					<td id='data' class='fixed'>
+					</td>
+					<td id='config' class='fixed'>
+						<div id='title' class='config'>Config</div>    
+						
+						<button id='button-reset' onclick='BUTTONS.reset()'>reset</button>
+						<button id='button-random' onclick='BUTTONS.random()'>random</button>
+						<button id='button-update' onclick='BUTTONS.update()'>update</button>
+						<hr />
+						<div class='ant-health'>Ant Health</div>
+						<div class='ant-health'>1032</div>
+					</td>
+				</tr>
+			</table>
+		</div>
 	</body>
 </html>
