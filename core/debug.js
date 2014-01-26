@@ -39,7 +39,11 @@ function simpleGrid(ctx) {
 	
 	clearCanvas(ctx);
 	drawBackground(ctx);
+<<<<<<< HEAD
 			
+=======
+		
+>>>>>>> origin/Testing
 	drawGrid(ctx);
 }
 
@@ -47,13 +51,24 @@ function format(value) {
 	if (typeof value === 'object') {
 		str = '{';
 		for (prop in value) {
+<<<<<<< HEAD
 				str += prop + ' : ' + format(value[prop]) + ', '
 		}
 		if (str[str.length - 2] === ',')
 				str = str.substr(0, str.length-2);
+=======
+			str += prop + ' : ' + format(value[prop]) + ', '
+		}
+		if (str[str.length - 2] === ',')
+			str = str.substr(0, str.length-2);
+>>>>>>> origin/Testing
 		str += '}';
 		return str;
 	} else {
 		return value;
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> origin/Testing
