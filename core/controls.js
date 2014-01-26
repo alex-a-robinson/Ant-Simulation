@@ -253,12 +253,13 @@ function createSpeciesData(species) {
 	
 	// Create a new row for the title and visibility button
 	var titleRow = newElement('tr', [{type : 'class', value : className}, {type : 'id', value : id + '-label-row'}]);	// Given a specific ID so does not turn invisible when visibility is toggled
+	titleRow.style.color = species.colour.nest;
 	
 	var title = newElement('td', [{type : 'class', value : className}, {type : 'onclick', value : 'select(this)'}]);
 	title.innerHTML = 'Species: ' + id;
 	
 	var toggleVisibility = newElement('td', [{type : 'class', value : className + ' toggleVisibility'}, {type : 'onclick', value : 'toggleClassVisibility(this)'}]);
-	toggleVisibility.innerHTML = '-';	// Default expanded
+	toggleVisibility.innerHTML = '-';	// Default not expanded
 	
 	// Create a data row for colour
 	var colourRow = createDataRow(className, id + '-colour', 'colour', '');
@@ -269,6 +270,9 @@ function createSpeciesData(species) {
 	
 	// Create a data row for number of nests
 	var nestNumRow = createDataRow(className, id + '-nestNum', 'Number of Nests', species.nests.length);
+	
+	// Create a data row for average food intake
+	var avgFoodIntakeNumRow = createDataRow(className, id + '-avgFoodIntake', 'Average Food intake', species.averageFoodIntake);
 	
 	// Create a data row for amount of food
 	var foodAmount = 0;
@@ -284,10 +288,15 @@ function createSpeciesData(species) {
 	table.appendChild(colourRow);
 	table.appendChild(antNumRow);
 	table.appendChild(nestNumRow);
+	table.appendChild(avgFoodIntakeNumRow);
 	table.appendChild(foodAmountRow);
 	
 	// Append the table to the data panel
 	getElement('data').appendChild(table);
+	
+	// Minimize the species
+	var button = document.getElementsByClassName(className)[0].getElementsByClassName('toggleVisibility')[0];
+	toggleClassVisibility(button);
 }
 
 /**
@@ -314,11 +323,22 @@ function updateSpeciesData() {
 		// Update the amount of food
 		var foodAmountDataElement = getElement(id + '-foodAmount-data');
 		
+		// Update the amount of food
+		var foodAmountDataElement = getElement(id + '-foodAmount-data');
+		
 		var foodAmount = 0;
 		for (var k = 0; k < species.nests.length; k++)
 			foodAmount += species.nests[k].health;
 	
 		foodAmountDataElement.innerHTML = foodAmount.toFixed(NUMBER_OF_FIXED_PLACES);
+		
+		// Update the amount of food
+		if (TICK % AVERAGE_SAMPLE_RATE === 0) {
+			console.log(TICK);
+			var avgFoodIntakeDataElement = getElement(id + '-avgFoodIntake-data');
+			avgFoodIntakeDataElement.innerHTML = (foodAmount / (foodAmount - species.averageFoodIntake) * 100).toFixed(NUMBER_OF_FIXED_PLACES) + '%';
+			species.averageFoodIntake = (foodAmount - species.averageFoodIntake);
+		}
 	}
 }
 

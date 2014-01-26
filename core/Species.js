@@ -69,6 +69,8 @@ var Species = function(id) {
 	};
 	
 	this.mutationRate = 0.5;
+	
+	this.averageFoodIntake = 0;
 };
 
 /**
@@ -78,10 +80,6 @@ var Species = function(id) {
 */
 Species.prototype.mutateChar = function(characteristic) {
 	var charRange = CHARS[characteristic];
-	
-	console.log(characteristic);
-	console.log(charRange);
-	
 	
 	// Depending on type of value needed return an random integer or random float in a specific range
 	if (charRange.type === VALUE_TYPE.integerValue)

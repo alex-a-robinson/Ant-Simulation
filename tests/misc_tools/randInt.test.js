@@ -25,7 +25,7 @@ randIntTest.createTest(randInt, [{min : 20, max : 40}], 'range', {min : 20, max 
 randIntTest.createTest(randInt, [{min : -20, max : 20}], 'range', {min : -20, max : 20});
 randIntTest.createTest(randInt, [{min : 0, max : 1}], 'range', {min : 0, max : 1});
 
-var numOfRuns = 1000;	// The number of runs of the function to test the range
+var numOfRuns = 100;	// The number of runs of the function to test the range
 
 for (var i = 0; i < numOfRuns; i++) {
 	randIntTest.testAll();

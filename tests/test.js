@@ -17,13 +17,17 @@ var test = function(functionToTest, arguments) {
 
 test.prototype.passMessage = function(msg) {
 	if (this.showPassMessage)
-		console.log('TEST PASSED - ' + msg);
+		return 'TEST PASSED - ' + msg;
+	else
+		return '';
 };
 
 
 test.prototype.failMessage = function(msg) {
 	if (this.showFailMessage)
-		console.warn('TEST FAILED - ' + msg);
+		return 'TEST FAILED - ' + msg;
+	else
+		return '';
 };
 
 // Returns the value of the testing function run with specific args
@@ -54,48 +58,40 @@ test.prototype.test = function() {
 		return this.ofType(this.expected);
 	} else if (this.type === 'none') {
 		this.run();
-		return void(0);
+		return [void(0)];
 	} else if (this.type === 'desc') {
 		var result = this.run();
-		console.log('TEST DESC - Expected "' + this.expected + '", and result was "' + format(result) + '".');
+		return ['desc', 'TEST DESC - Expected ' + this.expected + ', and result was ' + format(result) + '.'];
 	}
 };
 
 test.prototype.inRange = function(range) {
 	var value = this.run();
-	if ((value >= range.min && value <= range.max) === this.evaluateTo) {
-		this.passMessage('Expected in range "' +  format(range) + '".');
-		return true;
-	} else {
-		this.failMessage('Expected in range "' +  format(range) + '", however was "' +  format(value) + '".');
-		return false;
-	}
+	
+	if ((value >= range.min && value <= range.max) === this.evaluateTo)
+		return [true, this.passMessage('Expected in range ' +  format(range) + ' and was ' + format(value) + '.')];
+	else
+		return [false, this.failMessage('Expected in range ' +  format(range) + ', however was ' +  format(value) + '.')];
 };
 
 // Tests if the testing function returns the expected results
 test.prototype.equal = function(expected) {
 	var value = this.run();
 	
-	if (equal(value, expected) === this.evaluateTo) {
-		this.passMessage('Expected "' +  format(expected) + '".');
-		return true;
-	} else {
-		this.failMessage('Expected "' +  format(expected) + '", however was "' +  format(value) + '".');
-		return false;
-	}
+	if (equal(value, expected) === this.evaluateTo)
+		return [true, this.passMessage('Expected ' +  format(expected) + ' and was ' + format(value) + '.')];
+	else
+		return [false, this.failMessage('Expected ' +  format(expected) + ', however was ' +  format(value) + '.')];
 };
 
 // Tests if the testing function returns the expected results
 test.prototype.exactlyEqual = function(expected) {
 	var value = this.run();
 	
-	if ((value === expected) === this.evaluateTo) {
-		this.passMessage('Expected "' +  format(expected) + '".');
-		return true;
-	} else {
-		this.failMessage('Expected "' +  format(expected) + '", however was "' +  format(value) + '".');
-		return false;
-	}
+	if ((value === expected) === this.evaluateTo)
+		return [true, this.passMessage('Expected ' +  format(expected) + ' and was ' + format(value) + '.')];
+	else
+		return [false, this.failMessage('Expected ' +  format(expected) + ', however was ' +  format(value) + '.')];
 };
 
 // Tests if the testing function returns the expected results
@@ -104,22 +100,19 @@ test.prototype.approx = function(expected) {
 	
 	var percentageError = Math.abs(Math.abs(value - expected) / expected);
 	
-	if ((percentageError < 0.001) === this.evaluateTo) {	// accept 0.1% error
-		this.passMessage('Expected "' +  format(expected) + '".');
-		return true;
-	} else {
-		this.failMessage('Expected "' +  format(expected) + '", however was "' +  format(value) + '".');
-		return false;
-	}
+	if ((percentageError < 0.001) === this.evaluateTo)	// accept 0.1% error
+		return [true, this.passMessage('Expected ' +  format(expected) + ' and was ' + format(value) + '.')];
+	else
+		return [false, this.failMessage('Expected ' +  format(expected) + ', however was ' +  format(percentageError.toFixed(3)) + '% different.')];
 };
 
 test.prototype.ofType = function(expected) {
 	var value = typeof this.run();
 	if ((value === expected) === this.evaluateTo) {
-		this.passMessage('Expected "' +  format(expected) + '".');
+		this.passMessage('Expected ' +  format(expected) + ' and was ' + format(value) + '.');
 		return true;
 	} else {
-		this.failMessage('Expected "' + format(expected) + '", however was "' +  format(value) + '".');
+		this.failMessage('Expected ' + format(expected) + ', however was ' +  format(value) + '.');
 		return false;
 	}
 };

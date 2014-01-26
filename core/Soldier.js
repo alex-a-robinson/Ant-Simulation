@@ -29,6 +29,7 @@ function Soldier(id, coord) {
 	this.steps = randInt({min : 0, max : 5});
 	this.guardTarget;
 	this.nearNest = false;
+	this.nearFood = false;
 };
 
 Soldier.prototype.doTask = function() {
@@ -49,6 +50,7 @@ Soldier.prototype.doTask = function() {
 			
 		case GOAL.attack:
 			this.nearNest = false;
+			this.foodNest = false;
 			this.moving = true;
 			this.follow();
 			this.attack();
@@ -125,7 +127,10 @@ Soldier.prototype.guardPheromone = function() {
 Soldier.prototype.guardFood = function() {
 	if (this.seeFood() && !this.soldiersInView()) {
 		this.moving = false;
+		this.nearFood = true;
+		this.direction += 0.02;
 	} else {
+		this.nearFood = false;
 		this.wonder();
 		this.moving = true;
 	}

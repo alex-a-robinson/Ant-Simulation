@@ -39,26 +39,29 @@ function drawMap(ctx) {
 	
 	// Update all of the ants in the sytem
 	if (RUNNING) {
+		TICK += 1;
 		for (var i = 0; i < ANTS_LIST.length; i++)
 			ANTS_LIST[i].update();
 	}
 	
 	// Update each cell on the map
 	for (var i = 0; i < NUM_OF_CELLS; i++) {		
-		var coord = indexToCoord(i);
 			
-		// Update and draw the pheromones in the cell
-		for (var k = 0; k < MAP[i].pheromone.length; k++) {
-			var pheromone = MAP[i].pheromone[k];
-			if (RUNNING)
+		if (RUNNING) {			
+			// Update and draw the pheromones in the cell
+			for (var k = 0; k < MAP[i].pheromone.length; k++) {
+				var pheromone = MAP[i].pheromone[k];
 				pheromone.update();
-			pheromone.draw(ctx);
+			}	
 		}
 		
 		// Draw only the first ant
 		if (MAP[i].ant.length > 0) {
 			var ant = MAP[i].ant[0];
 			ant.draw(ctx);
+		} else if (MAP[i].pheromone.length > 0) {
+			var pheromone = MAP[i].pheromone[0];
+			pheromone.draw(ctx);
 		} else if (MAP[i].food !== void(0)) {		// Don't want to draw food on top of ants
 			var food = MAP[i].food;
 			food.draw(ctx);

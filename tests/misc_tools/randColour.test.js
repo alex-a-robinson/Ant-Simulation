@@ -6,9 +6,11 @@
 * Expected  - To see random colours being generated
 */
 
-log('Test randColour generates random colours (3 times)');
-log('    ' + randColour());
-log('    ' + randColour());
-log('    ' + randColour());
+var randColourTest = new testCase('Test randColour generates random colours');
+randColourTest.createTest(randColour, [], 'desc', 'A HEX colour');
+randColourTest.createTest(randColour, [], 'desc', 'A HEX colour');
+randColourTest.createTest(randColour, [], 'desc', 'A HEX colour');
 
+randColourTest.testAll();
+randColourTest.summery();
 

@@ -289,9 +289,16 @@ Ant.prototype.wonder = function() {
 		this.prioritizeDirection = this.direction;
 		this.followingPheromone = false;
 	} else if (pheromones && Math.random() < this.species.chars.pheromoneInfluence) {	// If there are pheromones to follow, go towards them however there is a chance this will not happen depending on how influential pheromones are (pheromoneInfluence)
-		this.direction = angleTo(this.coord, CoM);
-		this.prioritizeDirection = this.direction;
-		this.followingPheromone = true;
+		var angle = angleTo(this.coord, CoM);
+		if (angle > this.direction - Math.PI/4 && angle < this.direction + Math.PI/4) {	// will only join pheromones which lie in a certin angle <>><><><><><
+			this.direction = angle;
+			this.prioritizeDirection = this.direction;
+			this.followingPheromone = true;
+		} else {
+			this.direction = this.prioritizeDirection;
+			this.followingPheromone = false;
+		}
+		
 	} else {	// Otherwise head in the prioritized direction
 		this.direction = this.prioritizeDirection;
 		this.followingPheromone = false;

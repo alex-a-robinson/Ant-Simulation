@@ -1,5 +1,16 @@
 // ---------- visible ----------
 
+function drawBlocks(blocks) {
+	window.onload = function () {
+		var ctx = getElement(CANVAS.name).getContext('2d');
+		simpleGrid(ctx);
+	
+		for (var i = 0; i < blocks.length; i++) {
+			drawRect(ctx, scaleCoord(blocks[i]), CELL_SIZE, '#0000FF');
+		}		
+	}
+}
+
 /**
 * Test case - Test that visible function correctly determines whether a cell is visible or not
 *
@@ -28,22 +39,15 @@ CELL_SIZE = {width : 50, height : 50};
 GRID_SIZE = {width : 10, height : 10};
 START_COORD = {x : 0, y : 0};
 
-log('Test that visible scales coordinates correctly');
+var visibleTest = new testCase('Test that visible function correctly determines whether a cell is visible or not');
+visibleTest.createTest(visible, [{x : 4, y : 2}], 'equal', true);
+visibleTest.createTest(visible, [{x : 0, y : 0}], 'equal', true);
+visibleTest.createTest(visible, [{x : -3, y : -2}], 'equal', false);
+visibleTest.createTest(visible, [{x : 15, y : 12}], 'equal', false);
+visibleTest.createTest(visible, [{x : 9, y : 9}], 'equal', true);
 
-simpleGridRect({x : 4, y : 2}, '#FF0000');
-log('    For {x : 4, y : 2} visible is ' + visible({x : 4, y : 2}));
-
-simpleGridRect({x : 0, y : 0}, '#FF0000');
-log('    For {x : 0, y : 0} visible is ' + visible({x : 0, y : 0}));
-
-simpleGridRect({x : -3, y : -2}, '#FF0000');
-log('    For {x : -3, y : -2} visible is ' + visible({x : -3, y : -2}));	// Originally failed
-
-simpleGridRect({x : 15, y : 12}, '#FF0000');
-log('    For {x : 15, y : 12} visible is ' + visible({x : 15, y : 12}));
-
-simpleGridRect({x : 9, y : 9}, '#FF0000');
-log('    For {x : 9, y : 9} visible is ' + visible({x : 9, y : 9}));
+visibleTest.testAll();
+visibleTest.summery();
 
 /* Old visible function
 function visible(coord) {

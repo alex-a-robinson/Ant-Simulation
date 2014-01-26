@@ -1,4 +1,5 @@
 // ---------- MISC ----------
+var TICK = 0;
 var PAN_AMOUNT = 15;
 var ZOOM_AMOUNT = 0.5;
 var VALUE_TYPE = {		// Used to signify if a variable is an integer or float
@@ -28,7 +29,8 @@ var CANVAS = {			// Used to define characteristics about the simulations canvas
 
 
 // ---------- CONTROLS ----------
-var NUMBER_OF_FIXED_PLACES = 2;		// The number of numbers after the decimal place to display
+var AVERAGE_SAMPLE_RATE = 100;		// The number of ticks to wait been sampling for averages
+var NUMBER_OF_FIXED_PLACES = 0;		// The number of numbers after the decimal place to display
 var SELECTED_SPECIES;
 var SELECTED_COLOUR = '#A5C7D9';
 var UNSELECTED_COLOUR = '#FFFFFF';
@@ -142,7 +144,7 @@ var CHARS = {	// Holds properties of all characteristics species
 	reproductionWorkerFoodCost : {min : 0, max : 50, type : VALUE_TYPE.floatValue, id : 'char-reproductionWorkerFoodCost', neatName : 'Worker ant food cost', desc : 'The amount of food required to create a worker ant (The ant starts with this amount of health)', step : 0.1, healthModifier : 0, defaultValue : 5, value : 5, editable : true, inputType : INPUT_TYPE.slider},
 	reproductionSoldierProb : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-reproductionSoldierProb', neatName : 'Soldier ant probibility', desc : 'The probability of a soldier ant being born compared with other types of ants', step : 0.05, healthModifier : 0, defaultValue : 0.1, value : 0.1, editable : true, inputType : INPUT_TYPE.slider},
 	reproductionSoldierFoodCost : {min : 0, max : 50, type : VALUE_TYPE.floatValue, id : 'char-reproductionSoldierFoodCost', neatName : 'Soldier ant food cost', desc : 'The amount of food required to create a soldier ant (The ant starts with this amount of health)', step : 0.1, healthModifier : 0, defaultValue : 8, value : 8, editable : true, inputType : INPUT_TYPE.slider},
-	reproductionQueenProb : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-reproductionQueenProb', neatName : 'Queen ant probibility', desc : 'The probability of a queen ant being born compared with other types of ants', step : 0.05, healthModifier : 0, defaultValue : 0.01, value : 0.01, editable : true, inputType : INPUT_TYPE.slider},
+	reproductionQueenProb : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-reproductionQueenProb', neatName : 'Queen ant probibility', desc : 'The probability of a queen ant being born compared with other types of ants', step : 0.05, healthModifier : 0, defaultValue : 0.05, value : 0.05, editable : true, inputType : INPUT_TYPE.slider},
 	reproductionQueenFoodCost : {min : 0, max : 50, type : VALUE_TYPE.floatValue, id : 'char-reproductionQueenFoodCost', neatName : 'Queen ant food cost', desc : 'The amount of food required to create a queen ant (The ant starts with this amount of health)', step : 0.1, healthModifier : 0, defaultValue : 25, value : 25, editable : true, inputType : INPUT_TYPE.slider},
 	queenStepsMin : {min : 0, max : 2000, type : VALUE_TYPE.integerValue, id : 'char-queenStepsMin', neatName : 'Minimum number of Queen steps', desc : 'The minimum number of steps a queen will take until it reaches its new nest site', step : 1, healthModifier : 0, defaultValue : 200, value : 200, editable : true, inputType : INPUT_TYPE.slider},
 	queenStepsMax : {min : 0, max : 2000, type : VALUE_TYPE.integerValue, id : 'char-queenStepsMax', neatName : 'Maximum number of Queen steps', desc : 'The maximum number of steps a queen will take until it reaches its new nest site', step : 1, healthModifier : 0, defaultValue : 800, value : 800, editable : true, inputType : INPUT_TYPE.slider},

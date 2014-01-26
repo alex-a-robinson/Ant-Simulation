@@ -7,11 +7,13 @@
 * Expected  - either 'a', 'b' or 'c'
 */
 
-var randPropertyTest = new testCase('Test randInt returns a value within a specific range');
+var randPropertyTest = new testCase('Test randProperty returns a random property from an object literal');
+randPropertyTest.createTest(randProperty, [{a : 0, b : 1, c : 2}], 'desc', 'A random property from an object literal');
+randPropertyTest.createTest(randProperty, [{a : 0, b : 1, c : 2}], 'desc', 'A random property from an object literal');
+randPropertyTest.createTest(randProperty, [{a : 0, b : 1, c : 2}], 'desc', 'A random property from an object literal');
+randPropertyTest.createTest(randProperty, [{a : 0, b : 1, c : 2}], 'desc', 'A random property from an object literal');
+randPropertyTest.createTest(randProperty, [{a : 0, b : 1, c : 2}], 'desc', 'A random property from an object literal');
 
-log('Test randProperty returns a random property from an object literal');
-log('    ' + randProperty({a : 0, b : 1, c : 2}));
-log('    ' + randProperty({a : 0, b : 1, c : 2}));
-log('    ' + randProperty({a : 0, b : 1, c : 2}));
-
+randPropertyTest.testAll();
+randPropertyTest.summery();
 

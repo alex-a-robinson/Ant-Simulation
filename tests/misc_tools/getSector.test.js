@@ -37,9 +37,9 @@ var getSectorRadiusTest = new testCase('Test getSector returns sector of correct
 getSectorRadiusTest.callback = drawBlocks;
 getSectorRadiusTest.callbackArgs = [{x : 25, y : 25}];
 
-getSectorRadiusTest.createTest(getSector, [{x : 25, y : 25}, 15, 0, 2 * Math.PI], 'none', 'A circle of radius 15 centred at {x : 25, y : 25}');
+getSectorRadiusTest.createTest(getSector, [{x : 25, y : 25}, 15, 0, 2 * Math.PI], 'desc', 'A circle of radius 15 centred at {x : 25, y : 25}');
 
-getSectorRadiusTest.createTest(getSector, [{x : 25, y : 25}, 6, 0, 2 * Math.PI], 'none', 'A circle of radius 6 centred at {x : 25, y : 25}');
+getSectorRadiusTest.createTest(getSector, [{x : 25, y : 25}, 6, 0, 2 * Math.PI], 'desc', 'A circle of radius 6 centred at {x : 25, y : 25}');
 
 getSectorRadiusTest.testAll();
 getSectorRadiusTest.summery();
@@ -67,9 +67,9 @@ var getSectorAngleTest = new testCase('Test getSector returns sector at the corr
 getSectorAngleTest.callback = drawBlocks;
 getSectorAngleTest.callbackArgs = [{x : 25, y : 25}];
 
-getSectorAngleTest.createTest(getSector, [{x : 25, y : 25}, 15, 0, Math.PI], 'none', 'A sector of radius 15 centred at {x : 25, y : 25} with an angle of Math.PI i.e. a semi circle');
+getSectorAngleTest.createTest(getSector, [{x : 25, y : 25}, 15, 0, Math.PI], 'desc', 'A sector of radius 15 centred at {x : 25, y : 25} with an angle of Math.PI i.e. a semi circle');
 
-getSectorAngleTest.createTest(getSector, [{x : 25, y : 25}, 15, 0, Math.PI / 4], 'none', 'A sector of radius 15 centred at {x : 25, y : 25} with an angle of Math.PI/4');
+getSectorAngleTest.createTest(getSector, [{x : 25, y : 25}, 15, 0, Math.PI / 4], 'desc', 'A sector of radius 15 centred at {x : 25, y : 25} with an angle of Math.PI/4');
 
 getSectorAngleTest.testAll();
 getSectorAngleTest.summery();
@@ -96,15 +96,15 @@ var MAP_BOUNDARY = {x : {min : 0, max : 50}, y : {min : 0, max : 50}}
 var CELL_SIZE = {width : 10, height : 10};
 var GRID_SIZE = {width : 50, height : 50};
 
-var getSectorDirectionTest = new testCase('Test getSector returns sector at the correct angle');
+var getSectorDirectionTest = new testCase('Test getSector returns sector in correct direction');
 getSectorDirectionTest.callback = drawBlocks;
 getSectorDirectionTest.callbackArgs = [{x : 25, y : 25}];
 
-getSectorDirectionTest.createTest(getSector, [{x : 25, y : 25}, 15, Math.PI, Math.PI/4], 'none', 'A sector of radius 15 centred at {x : 25, y : 25} with an angle of Math.PI/4 pointing downwards');
+getSectorDirectionTest.createTest(getSector, [{x : 25, y : 25}, 15, Math.PI, Math.PI/4], 'desc', 'A sector of radius 15 centred at {x : 25, y : 25} with an angle of Math.PI/4 pointing downwards');
 
-getSectorDirectionTest.createTest(getSector, [{x : 25, y : 25}, 15, 6 * Math.PI / 4, Math.PI/4], 'none', 'A sector of radius 15 centred at {x : 25, y : 25} with an angle of Math.PI/4 pointing along the centre line of the 4th and 3rd  quadrants');
+getSectorDirectionTest.createTest(getSector, [{x : 25, y : 25}, 15, 6 * Math.PI / 4, Math.PI/4], 'desc', 'A sector of radius 15 centred at {x : 25, y : 25} with an angle of Math.PI/4 pointing along the centre line of the 4th and 3rd  quadrants');
 
-getSectorDirectionTest.createTest(getSector, [{x : 25, y : 25}, 15, 3.657, Math.PI/4], 'none', 'A sector of radius 15 centred at {x : 25, y : 25} with an angle of Math.PI/4 pointing along the center line of 3.657 radians');
+getSectorDirectionTest.createTest(getSector, [{x : 25, y : 25}, 15, 3.657, Math.PI/4], 'desc', 'A sector of radius 15 centred at {x : 25, y : 25} with an angle of Math.PI/4 pointing along the center line of 3.657 radians');
 
 getSectorDirectionTest.testAll();
 getSectorDirectionTest.summery();

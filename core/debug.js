@@ -44,6 +44,9 @@ function simpleGrid(ctx) {
 }
 
 function format(value) {
+	
+	return JSON.stringify(value);
+	/*
 	if (typeof value === 'object') {
 		str = '{';
 		for (prop in value) {
@@ -60,4 +63,5 @@ function format(value) {
 	} else {
 		return value;
 	}
+	*/
 }
