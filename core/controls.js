@@ -324,6 +324,7 @@ function updateSpeciesData() {
 		var foodAmountDataElement = getElement(id + '-foodAmount-data');
 		
 		// Update the amount of food
+		if (TICK % AVERAGE_FOOD_SAMPLE_RATE === 0) {
 		var foodAmountDataElement = getElement(id + '-foodAmount-data');
 		
 		var foodAmount = 0;
@@ -331,10 +332,15 @@ function updateSpeciesData() {
 			foodAmount += species.nests[k].health;
 	
 		foodAmountDataElement.innerHTML = foodAmount.toFixed(NUMBER_OF_FIXED_PLACES);
+		}
 		
 		// Update the amount of food
-		if (TICK % AVERAGE_SAMPLE_RATE === 0) {
-			console.log(TICK);
+		if (TICK % AVERAGE_DELTA_FOOD_SAMPLE_RATE === 0) {
+			
+			var foodAmount = 0;
+			for (var k = 0; k < species.nests.length; k++)
+				foodAmount += species.nests[k].health;
+			
 			var avgFoodIntakeDataElement = getElement(id + '-avgFoodIntake-data');
 			avgFoodIntakeDataElement.innerHTML = (foodAmount / (foodAmount - species.averageFoodIntake) * 100).toFixed(NUMBER_OF_FIXED_PLACES) + '%';
 			species.averageFoodIntake = (foodAmount - species.averageFoodIntake);

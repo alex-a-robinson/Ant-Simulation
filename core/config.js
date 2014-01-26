@@ -29,7 +29,8 @@ var CANVAS = {			// Used to define characteristics about the simulations canvas
 
 
 // ---------- CONTROLS ----------
-var AVERAGE_SAMPLE_RATE = 100;		// The number of ticks to wait been sampling for averages
+var AVERAGE_DELTA_FOOD_SAMPLE_RATE = 100;		// The number of ticks to wait been sampling for averages
+var AVERAGE_FOOD_SAMPLE_RATE = 10;		// The number of ticks to wait been sampling for averages
 var NUMBER_OF_FIXED_PLACES = 0;		// The number of numbers after the decimal place to display
 var SELECTED_SPECIES;
 var SELECTED_COLOUR = '#A5C7D9';
