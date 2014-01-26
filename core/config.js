@@ -55,8 +55,8 @@ var BACKGROUND_COLOUR = '#C2AB8A';//'#C2AB8A';
 var OUT_OF_BOUNDS_COLOUR = '#FFFFFF';	// Used if panning around off map
 var GRID_LINE_WIDTH = 0.2;
 var CELL_SIZE = {	// The size in pixels of a single cell on the grid
-	width : 10,
-	height : 10
+	width : 6,
+	height : 6
 };
 var GRID_SIZE = {	// The size in number of cells of the grid (actual size displayed depends on CELL_SIZE)
 	width : 250,
@@ -79,6 +79,7 @@ var FOOD_CHANCE = 0.0004;	// The probability of a food source spawning in a cell
 var STARTING_QUEEN_ANT_NUMBER = 1;
 var ANT_FOOD_DROP_SPEED = 1;	// The number of ticks it takes for an ant to drop a single piece of food
 var ANT_FOOD_TAKE_SPEED = 1;	// The number of ticks it takes for an ant to take a single piece of food
+var DAMAGE_MULTIPLIER = 100;	// DAMAGE_MULTIPLIER * species.chars.jawStrenght -> The amount of health a solider ant takes from ants its attacking
 
 var GOAL = {	// Ant goals used to determine ant actions
 	none : -1,	// No current goal, results to default for particular ant
@@ -125,17 +126,25 @@ var CHARS = {	// Holds properties of all characteristics species
 				// value - The actual value of the HTML input
 				// editable - Determines if a characteristic can be edited
 
-	speed : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-speed', neatName : 'Speed', desc : 'speed charcteristic ...', step : 0.01, healthModifier : 21, defaultValue : 0.4, value : 0.4, editable : true, inputType : INPUT_TYPE.slider},
-	exoSkeletonThickness : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-exoSkeletonThickness', neatName : 'Exoskeleton Thickness', desc : '...', step : 1, healthModifier : 21, defaultValue : 1, value : 1, editable : true, inputType : INPUT_TYPE.slider},
-	jawStrength : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-jawStrength', neatName : 'Jaw Strength', desc : '...', step : 1, healthModifier : 21, defaultValue : 1, value : 1, editable : true, inputType : INPUT_TYPE.slider},
-	jawSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-jawSize', neatName : 'Jaw Size', desc : '...', step : 1, healthModifier : 21, defaultValue : 1, value : 1, editable : true, inputType : INPUT_TYPE.slider},
-	stingSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-stingSize', neatName : 'Sting Size', desc : '...', step : 1, healthModifier : 21, defaultValue : 1, value : 1, editable : true, inputType : INPUT_TYPE.slider},
-	eyesight : {min : 0, max : 50, type : VALUE_TYPE.integerValue, id : 'char-eyeSight', neatName : 'Eye Sight', desc : '...', step : 1, healthModifier : 21, defaultValue : 5, value : 5, editable : true, inputType : INPUT_TYPE.slider},
-	eyeAngle : {min : 0, max : Math.PI*2, type : VALUE_TYPE.floatValue, id : 'char-eyeAngle', neatName : 'Eye Angle', desc : '...', step : 0.01, healthModifier : 21, defaultValue : Math.PI/2, value : Math.PI/2, editable : true, inputType : INPUT_TYPE.slider},
-	antennaSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-antennaSize', neatName : 'Antenna Size', desc : 'Antenna charcteristic ...', step : 1, healthModifier : 21, defaultValue : 5, value : 5, editable : true, inputType : INPUT_TYPE.slider},
-	antennaAngle : {min : 0, max : Math.PI*2, type : VALUE_TYPE.floatValue, id : 'char-antennaAngle', neatName : 'Antenna Angle', desc : '...', step : 0.01, healthModifier : 21, defaultValue : Math.PI/2, value : Math.PI/2, editable : true, inputType : INPUT_TYPE.slider},
-	pheromoneConcentration : {min : 0, max : 2, type : VALUE_TYPE.floatValue, id : 'char-pheromoneConcentration', neatName : 'Pheromone Concentration', desc : '...', step : 0.01, healthModifier : 21, defaultValue : 0.4, value : 0.4, editable : true, inputType : INPUT_TYPE.slider},
-	nestCoordMemory : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-nestCoordMemory', neatName : 'Nest Coordinate Memory', desc : '...', step : 0.01, healthModifier : 0, defaultValue : 0.1, value : 0.1, editable : false, inputType : INPUT_TYPE.slider},
-	exploitativeness : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-exploitativeness', neatName : 'Exploitativeness', desc : '...', step : 0.01, healthModifier : 0, defaultValue : 0.05, value : 0.05, editable : false, inputType : INPUT_TYPE.slider},
-	pheromoneInfluence : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-pheromoneInfluence', neatName : 'Pheromone Influence', desc : '...', step : 0.01, healthModifier : 0, defaultValue : 0.95, value : 0.95, editable : false, inputType : INPUT_TYPE.slider}
+	speed : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-speed', neatName : 'Speed', desc : 'The speed that an ant can move', step : 0.01, healthModifier : 50, defaultValue : 0.25, value : 0.25, editable : true, inputType : INPUT_TYPE.slider},
+	jawStrength : {min : 0, max : 25, type : VALUE_TYPE.integerValue, id : 'char-jawStrength', neatName : 'Jaw Strength', desc : 'The stength of the ants jaw (determins how much food the ant can carry)', step : 1, healthModifier : 4, defaultValue : 10, value : 10, editable : true, inputType : INPUT_TYPE.slider},
+	jawSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-jawSize', neatName : 'Jaw Size', desc : 'The amount of damage a soldier ant does when attack', step : 1, healthModifier : 5, defaultValue : 1, value : 1, editable : true, inputType : INPUT_TYPE.slider},
+	stingSize : {min : 0, max : 5, type : VALUE_TYPE.integerValue, id : 'char-stingSize', neatName : 'Sting Size', desc : 'The range which a soldier ant can attack', step : 1, healthModifier : 5, defaultValue : 1, value : 1, editable : true, inputType : INPUT_TYPE.slider},
+	eyesight : {min : 0, max : 10, type : VALUE_TYPE.integerValue, id : 'char-eyeSight', neatName : 'Eye Sight', desc : 'The range of cells an ant can see around it', step : 1, healthModifier : 10, defaultValue : 5, value : 5, editable : true, inputType : INPUT_TYPE.slider},
+	eyeAngle : {min : 0, max : Math.PI*2, type : VALUE_TYPE.floatValue, id : 'char-eyeAngle', neatName : 'Eye Angle', desc : 'The angle at which an ant can see', step : 0.01, healthModifier : 10, defaultValue : Math.PI/2, value : Math.PI/2, editable : true, inputType : INPUT_TYPE.slider},
+	antennaSize : {min : 0, max : 10, type : VALUE_TYPE.integerValue, id : 'char-antennaSize', neatName : 'Antenna Size', desc : 'The angle at which an ant can detect pheromones', step : 1, healthModifier : 2, defaultValue : 5, value : 5, editable : true, inputType : INPUT_TYPE.slider},
+	antennaAngle : {min : 0, max : Math.PI*2, type : VALUE_TYPE.floatValue, id : 'char-antennaAngle', neatName : 'Antenna Angle', desc : 'The range of cells an ant can detect pheromones', step : 0.01, healthModifier : 10, defaultValue : Math.PI/2, value : Math.PI/2, editable : true, inputType : INPUT_TYPE.slider},
+	pheromoneConcentration : {min : 0, max : 2, type : VALUE_TYPE.floatValue, id : 'char-pheromoneConcentration', neatName : 'Pheromone Concentration', desc : 'The concentration of pheromones an ant can secrete', step : 0.01, healthModifier : 15, defaultValue : 0.4, value : 0.4, editable : true, inputType : INPUT_TYPE.slider},
+	nestCoordMemory : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-nestCoordMemory', neatName : 'Nest Coordinate Memory', desc : 'A measure of how well the ant knows where the nest is, used when navigating to the nest, represents memory of familiarly landmarks near the nest', step : 0.01, healthModifier : 50, defaultValue : 0.1, value : 0.1, editable : true, inputType : INPUT_TYPE.slider},
+	exploitativeness : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-exploitativeness', neatName : 'Exploitativeness', desc : 'The likelihood of an ant changing direction rather then continue going in the direction its facing', step : 0.01, healthModifier : 0, defaultValue : 0.05, value : 0.05, editable : true, inputType : INPUT_TYPE.slider},
+	pheromoneInfluence : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-pheromoneInfluence', neatName : 'Pheromone Influence', desc : 'How likely it is that an ant will follow a pheromones', step : 0.01, healthModifier : 0, defaultValue : 0.90, value : 0.90, editable : true, inputType : INPUT_TYPE.slider},
+	reproductionWorkerProb : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-reproductionWorkerProb', neatName : 'Worker ant probibility', desc : 'The probability of a worker ant being born compared with other types of ants', step : 0.05, healthModifier : 0, defaultValue : 0.5, value : 0.5, editable : true, inputType : INPUT_TYPE.slider},
+	reproductionWorkerFoodCost : {min : 0, max : 50, type : VALUE_TYPE.floatValue, id : 'char-reproductionWorkerFoodCost', neatName : 'Worker ant food cost', desc : 'The amount of food required to create a worker ant (The ant starts with this amount of health)', step : 0.1, healthModifier : 0, defaultValue : 5, value : 5, editable : true, inputType : INPUT_TYPE.slider},
+	reproductionSoldierProb : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-reproductionSoldierProb', neatName : 'Soldier ant probibility', desc : 'The probability of a soldier ant being born compared with other types of ants', step : 0.05, healthModifier : 0, defaultValue : 0.1, value : 0.1, editable : true, inputType : INPUT_TYPE.slider},
+	reproductionSoldierFoodCost : {min : 0, max : 50, type : VALUE_TYPE.floatValue, id : 'char-reproductionSoldierFoodCost', neatName : 'Soldier ant food cost', desc : 'The amount of food required to create a soldier ant (The ant starts with this amount of health)', step : 0.1, healthModifier : 0, defaultValue : 8, value : 8, editable : true, inputType : INPUT_TYPE.slider},
+	reproductionQueenProb : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-reproductionQueenProb', neatName : 'Queen ant probibility', desc : 'The probability of a queen ant being born compared with other types of ants', step : 0.05, healthModifier : 0, defaultValue : 0.01, value : 0.01, editable : true, inputType : INPUT_TYPE.slider},
+	reproductionQueenFoodCost : {min : 0, max : 50, type : VALUE_TYPE.floatValue, id : 'char-reproductionQueenFoodCost', neatName : 'Queen ant food cost', desc : 'The amount of food required to create a queen ant (The ant starts with this amount of health)', step : 0.1, healthModifier : 0, defaultValue : 25, value : 25, editable : true, inputType : INPUT_TYPE.slider},
+	queenStepsMin : {min : 0, max : 2000, type : VALUE_TYPE.integerValue, id : 'char-queenStepsMin', neatName : 'Minimum number of Queen steps', desc : 'The minimum number of steps a queen will take until it reaches its new nest site', step : 1, healthModifier : 0, defaultValue : 200, value : 200, editable : true, inputType : INPUT_TYPE.slider},
+	queenStepsMax : {min : 0, max : 2000, type : VALUE_TYPE.integerValue, id : 'char-queenStepsMax', neatName : 'Maximum number of Queen steps', desc : 'The maximum number of steps a queen will take until it reaches its new nest site', step : 1, healthModifier : 0, defaultValue : 800, value : 800, editable : true, inputType : INPUT_TYPE.slider},
+	reproductionRate : {min : 0, max : 1, type : VALUE_TYPE.floatValue, id : 'char-reproductionRate', neatName : 'Reproduction Rate', desc : 'The chance each tick of a new ant being born', step : 0.05, healthModifier : 0, defaultValue : 0.05, value : 0.05, editable : true, inputType : INPUT_TYPE.slider}
 };

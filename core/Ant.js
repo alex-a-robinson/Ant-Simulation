@@ -18,9 +18,6 @@ var Ant = function(id, coord) {
 	 * @property {integer} this.hungerThreshold - The value of health bellow which the ant is determined to be hungry (default: 300)
 	 * @property {number} this.healthRate - The rate at which the ants health decreases per tick
 	 * @property {boolean} this.alive - (default: true)
-	 * @property {integer} this.carrying - The amount of food the ant is carrying (default: 0) 
-	 * @property {integer} this.carryingThreshold - If an ant is carrying more food then this value and cannot see any food near it, ant will return to the nest to deposit the food (default: 4)
-	 * @property {integer} this.carryingMax - The maximum amount of food an ant can carry (default: 10)
 	 * @property {integer} this.goal - The current goal which the ant is trying to accomplish (default: GOAL.none); 
 	 * @property {x : number, y : number} this.target - The coordinate of a target the ant has choose, type of target depends on ant e.g. worker ants have coordinates of food as their target (default: void(0))
 	 * @property {ants : [Ant object], food : [food object]} this.itemsInView - Arrays of the different items of interest in the ants view (default: {ants : [], food : []})
@@ -39,14 +36,10 @@ var Ant = function(id, coord) {
 	this.nest;
 	this.colour;
 	
-	this.health = 500;
-	this.hungerThreshold = 300;		
-	this.healthRate = 0.5;	
+	this.health;
+	this.hungerThreshold = 100;		
+	this.healthRate = 0.1;	
 	this.alive = true;
-
-	this.carrying = 0;	
-	this.carryingThreshold = 4;	
-	this.carryingMax = 10;	
 	
 	this.goal = GOAL.none;		
 	this.target = void(0);
@@ -85,6 +78,15 @@ Ant.prototype.isHungry = function() {
 		return true;
 	else
 		return false;
+};
+
+/**
+* Updates the this.sleep variable to simulate time passing during sleep
+*/ 
+Ant.prototype.updateSleep = function() {
+	if (this.sleep > 0) {
+		this.sleep -= 1;
+	}
 };
 
 /**
@@ -144,6 +146,45 @@ Ant.prototype.seeNest = function() {
 	}
 	
 	return false;
+};
+
+/**
+* Choose the target piece of food the worker should go for
+*/
+Ant.prototype.findFoodTarget = function() {
+	var leastEffort = 999999;		// Large number to guarantee a number will be less then this
+	
+	// Go through each piece of food and pick the piece which involves the least amount of effort to collect. Effort is determined by the distance to the piece of food by the amount of food which is in the piece
+	for (var i = 0; i < this.itemsInView.food.length; i++) {
+		var effort = calcEffort(this.coord, this.itemsInView.food[i].coord, this.itemsInView.food[i].amount);
+		if (effort < leastEffort) {
+			leastEffort = effort;
+			this.target = this.itemsInView.food[i].coord;
+		}
+	}
+};
+
+/**
+* Walk towards food until on top of it and then pick it up
+*/
+Ant.prototype.getFood = function() {
+	this.direction = angleTo(this.coord, this.target);	// Point towards the food
+	if (getCellIndex(this.coord) === coordToIndex(this.target)) {	// If on the food pick it up. As this.coord is a number, work out which cell the ant is mostly in using getCellIndex
+		this.useFood();
+	}
+};
+
+/**
+* Determines the best use of food - Eating it or Carrying it
+*/
+Ant.prototype.useFood = function() {
+	var index = getCellIndex(this.coord);
+	var food = MAP[index].food;
+	
+	if (this.isFood(food))	// Eat the food (this.ifFood(food) needed to check the food still exists as another ant may have taken it)
+		this.health += this.takeFood(food) * FOOD_HEALTH_RATIO;
+	else	// Food is not there/cannot be carried
+		this.target = void(0);
 };
 
 /**
@@ -240,7 +281,7 @@ Ant.prototype.wonder = function() {
 
 	// Every so often change the prioritize direction
 	if (Math.random() < this.species.chars.exploitativeness)
-		this.prioritizeDirection = randDir();
+		this.prioritizeDirection = randFloat({min : this.direction - Math.PI/2, max : this.direction + Math.PI/2})//randDir();
 	
 	
 	if (this.followingPheromone && this.pheromonesInRange.length <= 0 && (this.atNest() || this.seeNest())) {	// If looking for food and following a pheromone and end up at the nest, turn around

@@ -22,27 +22,26 @@ var Species = function(id) {
 		/**
 		* @property {number} speed - The speed the ant moves, 1 = 1 Cell per tick
 		* @property {integer} antennaSize - The range the ant can smell pheromones
-		* @property {integer} exoSkeletonThickness - N/A
-		* @property {integer} jawStrength - N/A
-		* @property {integer} jawSize - N/A
-		* @property {integer} stingSize - N/A
-		* @property {integer} stingSize - N/A
+		* @property {integer} jawStrength - The strength of the ants jaw (determines how much food the ant can carry)
+		* @property {integer} jawSize - The amount of damage a soldier ant does when attack
+		* @property {integer} stingSize - The range which the soldier ant can attack
 		* @property {integer} eyesight - The range the ant can see items in front of it
 		* @property {number} eyeAngle - The angle of the sector the ant can see in front of it
 		* @property {number} antennaAngle - The angle of the sector the ant can smell pheromones in front of it
 		* @property {number} pheromoneConcentration - The concentration of pheromones secreted
 		* @property {number} nestCoordMemory - A measure of how well the ant knows where the nest is, used when navigating to the nest, represents memory of familiarly landmarks near the nest
-		* @property {number} exploitativeness - N/A
+		* @property {number} exploitativeness - The likelihood of an ant changing direction rather then continue going in the direction its facing
 		* @property {number} pheromoneInfluence - How likely it is that an ant will follow a pheromones
-		* @property {min : integer, max : integer} queenSteps - The range of steps the queen will take when navigating to a new nest site i.e. lower values mean closer nests
-		* @property {object} reproduction
+		* @property {integer} queenStepsMin, queenStepsMax - The range of steps the queen will take when navigating to a new nest site i.e. lower values mean closer nests
+		* @property {number} reproductionWorkerProb, reproductionQueenProb, reproductionSoldierProb - The probability a particular type of ant will be born compared with others
+		* @property {integer} reproductionWorkerFoodCost, reproductionQueenFoodCost, reproductionSoldierFoodCost - The amount of food required to create this type of ant (This is the amount of food the ant will start with)
+		* @property {number} reproductionRate - The chance each tick of creating a new ant
 		*/
 		speed : 0,
 		antennaSize : 0,
-		exoSkeletonThickness : 0,
 		jawStrength : 0,
 		jawSize : 0,
-		stingSize : 0,
+		stingSize : 1,
 		eyesight : 0,
 		eyeAngle : 0,
 		antennaAngle : 0,
@@ -50,28 +49,23 @@ var Species = function(id) {
 		nestCoordMemory : 0.1,
 		exploitativeness : 0.05,
 		pheromoneInfluence : 0.95,
-		queenSteps : {
-			min : 150,
-			max : 300
-		},
-		reproduction : {
-			/**
-			* @property {prob : number, foodCost : number} worker, soldier, queen  - The probability of creating each type of ant, and the food cost for each type of ant i.e. the amount of food needed to create the ant
-			* @property {number} rate - The chance each tick of creating a new ant
-			*/
-			worker : {prob : 0.5, foodCost : 5},
-			soldier : {prob : 0.00, foodCost : 0},
-			queen : {prob : 0.1, foodCost : 25},
-			rate : 0.05
-		}
+		queenStepsMin : 300,
+		queenStepsMax : 500,
+		reproductionWorkerProb : 0.5,
+		reproductionWorkerFoodCost : 5,
+		reproductionQueenProb : 0.1,
+		reproductionQueenFoodCost : 25,
+		reproductionSoldierProb : 0.1,
+		reproductionSoldierFoodCost : 10,
+		reproductionRate : 0.05
 	};
 	
 	this.colour = {
 		worker : '#1C1C1C',
-		soldier : '#0000FF',
-		queen : '#FF0000',
+		soldier : '#1C1C1C',
+		queen : '#1C1C1C',
 		nest : '#1C1C1C',
-		pheromone : '#D9D366'
+		pheromone : '#1C1C1C'
 	};
 	
 	this.mutationRate = 0.5;
@@ -84,6 +78,10 @@ var Species = function(id) {
 */
 Species.prototype.mutateChar = function(characteristic) {
 	var charRange = CHARS[characteristic];
+	
+	console.log(characteristic);
+	console.log(charRange);
+	
 	
 	// Depending on type of value needed return an random integer or random float in a specific range
 	if (charRange.type === VALUE_TYPE.integerValue)
@@ -99,18 +97,14 @@ Species.prototype.mutateChar = function(characteristic) {
 Species.prototype.mutate = function() {
 	if (Math.random() <= this.mutationRate) {
 		var altChars = clone(this.chars);	// Clone the current characteristics
-		var altCharacteristic = randProperty(altChars);
-		if (altCharacteristic !== 'reproduction') {		// Altering reproduction rates requires extra logic
-			var altValue = this.mutateChar(altCharacteristic);
-		
-			altChars[altCharacteristic] = altValue;
-			var species = this.createSpecies(altChars);
-			return species;
-		} else {
-			return this;
-		}
+		var altCharacteristic = randProperty(altChars);	// pick a random characteristic to alter
+		var altValue = this.mutateChar(altCharacteristic);
+	
+		altChars[altCharacteristic] = altValue;
+		var species = this.createSpecies(altChars);
+		return species;
 	} else {
-		return this;
+		return this;	// Otherwise return an non mutated version
 	}
 };
 

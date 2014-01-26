@@ -19,6 +19,8 @@ function Worker (id, coord) {
 	* @property {ANT_TYPE : integer} this.type - The type of ant i.e. Queen ant (default: ANT_TYPE.queen)
 	* @property {number} this.direction - The direction in radians from the vertical axis clockwise (default: *random direction*)
 	* @property {number} this.prioritizeDirection - The direction the ant will general move, used to get straighter more realistic paths (default: *random direction*)
+	* @property {integer} this.carrying - The amount of food the ant is carrying (default: 0) 
+	* @property {integer} this.carryingThreshold - If an ant is carrying more food then this value and cannot see any food near it, ant will return to the nest to deposit the food (default: 4)
 	*/
 	this.id = id;
 	this.coord = coord;
@@ -26,17 +28,9 @@ function Worker (id, coord) {
 	
 	this.direction = randDir();
 	this.prioritizeDirection = randDir();
-};
-
-/**
-* Walk towards food until on top of it and then pick it up
-*/
-Worker.prototype.getFood = function() {
-	this.direction = angleTo(this.coord, this.target);	// Point towards the food
-	if (getCellIndex(this.coord) === coordToIndex(this.target)) {	// If on the food pick it up. As this.coord is a number, work out which cell the ant is mostly in using getCellIndex
-		this.useFood();
-		this.followOwnPheromone = false;
-	}
+	
+	this.carrying = 0;	
+	this.carryingThreshold = 0.4;	
 };
 
 /**
@@ -44,7 +38,7 @@ Worker.prototype.getFood = function() {
 * @return {boolean}
 */
 Worker.prototype.canCarry = function() {
-	if (this.carrying < this.carryingMax)
+	if (this.carrying < this.species.chars.jawStrength)
 		return true;
 	else
 		return false;
@@ -89,7 +83,7 @@ Worker.prototype.dropFood = function(nest) {
 /**
 * Determines the best use of food - Eating it or Carrying it
 */
-Ant.prototype.useFood = function() {
+Worker.prototype.useFood = function() {
 	var index = getCellIndex(this.coord);
 	var food = MAP[index].food;
 	
@@ -123,22 +117,6 @@ Worker.prototype.doTask = function() {
 };
 
 /**
-* Choose the target piece of food the worker should go for
-*/
-Worker.prototype.findFoodTarget = function() {
-	var leastEffort = 999999;		// Large number to guarantee a number will be less then this
-	
-	// Go through each piece of food and pick the piece which involves the least amount of effort to collect. Effort is determined by the distance to the piece of food by the amount of food which is in the piece
-	for (var i = 0; i < this.itemsInView.food.length; i++) {
-		var effort = calcEffort(this.coord, this.itemsInView.food[i].coord, this.itemsInView.food[i].amount);
-		if (effort < leastEffort) {
-			leastEffort = effort;
-			this.target = this.itemsInView.food[i].coord;
-		}
-	}
-};
-
-/**
 * Determines if a goal has been completed or not and updates the next goal for the ant
 */
 Worker.prototype.updateGoal = function() {
@@ -154,7 +132,7 @@ Worker.prototype.updateGoal = function() {
 			break;
 
 		case GOAL.getFood:
-			if (this.carrying >= this.carryingThreshold) {	// If have enough food, drop it off at the nest
+			if (this.carrying >= Math.floor(this.carryingThreshold * this.species.chars.jawStrength)) {	// If have enough food, drop it off at the nest
 				this.goal = GOAL.dropFood;
 				this.target = void(0);
 			} else if (this.target === void(0)) {	// If the food has been taken by another ant, go back to looking for food
@@ -183,6 +161,24 @@ Worker.prototype.updateHealth = function() {
 };
 
 /**
+* Draw the ant onto the canvas context 
+*/ 
+Worker.prototype.draw = function(ctx) {
+	var scaledCoord = scaleCoord(this.coord);	// Scale the coordinates so they map to pixels rather then cells
+	
+	ctx.save();
+	
+	// Translate and rotate the canvas (done so can draw at an angle)
+	ctx.translate(scaledCoord.x + this.size.width/2, scaledCoord.y + this.size.height/2);
+	ctx.rotate(this.direction);
+	drawRect(ctx, {x: -this.size.width/2, y:-this.size.height/2}, this.size, this.colour);	
+	if (this.carrying > 0) {
+		drawRect(ctx, {x: -this.size.width/4, y:-this.size.height/4}, {width : this.size.width / 2, height : this.size.height / 2}, '#FFFFFF');	
+	}
+	ctx.restore();
+};
+
+/**
 * Update the ant each tick
 */
 Worker.prototype.update = function() {
@@ -200,9 +196,7 @@ Worker.prototype.update = function() {
 	this.doTask();
 	this.updateGoal();
 	
-	// If performing an action which takes multiple ticks this.sleep will be > 0
-	if (this.sleep > 0)	
-		this.sleep -= 1;
+	this.updateSleep();
 	
 	this.move();
 

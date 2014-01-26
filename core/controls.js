@@ -55,6 +55,14 @@ function updateValue(element, value) {
 	// Update the characteristics value in settings as well as the input 
 	getElement(characteristic.id + '-value').innerHTML = value;
 	setValue(characteristic.id, value);
+	
+	// Re calculate the species cost
+	var specieCost = 0;
+	for (prop in CHARS) {
+		specieCost += CHARS[prop].healthModifier * CHARS[prop].value;
+	}
+	
+	getElement('ant-health').innerHTML = specieCost.toFixed(0);
 }
 
 /**
@@ -188,6 +196,9 @@ function createCharacteristicInputs() {
 function updateUserSpecies() {
 	// Return the button to its original colour showing no pending updates need to be pushed to the species
 	getElement('button-update').style.color = BUTTON_NO_UPDATE_COLOUR;
+	
+	var specieCost = 0;
+	
 	for (var prop in CHARS) {
 		var characteristic = CHARS[prop];
 		
@@ -199,7 +210,11 @@ function updateUserSpecies() {
 		
 		// Update the selected species characteristics to this new value
 		SELECTED_SPECIES.chars[prop] = value;
+		
+		specieCost += CHARS[prop].healthModifier * value;
 	}
+	
+	getElement('ant-health').innerHTML = specieCost.toFixed(0);
 }
 
 /**
@@ -252,6 +267,9 @@ function createSpeciesData(species) {
 	// Create a data row for number of ants
 	var antNumRow = createDataRow(className, id + '-antNum', 'Number of ants', species.ants.length);
 	
+	// Create a data row for number of nests
+	var nestNumRow = createDataRow(className, id + '-nestNum', 'Number of Nests', species.nests.length);
+	
 	// Create a data row for amount of food
 	var foodAmount = 0;
 	for (var i = 0; i < species.nests.length; i++)
@@ -265,6 +283,7 @@ function createSpeciesData(species) {
 	table.appendChild(titleRow);
 	table.appendChild(colourRow);
 	table.appendChild(antNumRow);
+	table.appendChild(nestNumRow);
 	table.appendChild(foodAmountRow);
 	
 	// Append the table to the data panel
@@ -288,6 +307,10 @@ function updateSpeciesData() {
 		var antNumDataElement = getElement(id + '-antNum-data');
 		antNumDataElement.innerHTML = species.ants.length;
 		
+		// Update the number of Nests
+		var nestNumDataElement = getElement(id + '-nestNum-data');
+		nestNumDataElement.innerHTML = species.nests.length;
+		
 		// Update the amount of food
 		var foodAmountDataElement = getElement(id + '-foodAmount-data');
 		
@@ -297,6 +320,16 @@ function updateSpeciesData() {
 	
 		foodAmountDataElement.innerHTML = foodAmount.toFixed(NUMBER_OF_FIXED_PLACES);
 	}
+}
+
+/**
+* Removes a species data i.e. when it has died out
+* been clicked
+* @param {number} id - The id of the species to remove
+*/
+function removeSpeciesData(id) {
+	document.getElementsByClassName(id)[0].innerHTML = '';
+	console.log('Deleteing species' + id);
 }
 
 /**
@@ -370,6 +403,10 @@ function select(title) {
 	for (var prop in CHARS) {
 		var characteristic = CHARS[prop];
 		updateValue(getElement(characteristic.id), SELECTED_SPECIES.chars[prop]);
+	}
+	if (SELECTED_SPECIES.nests.length > 0) {
+		START_COORD.x = -SELECTED_SPECIES.nests[0].coord.x * CELL_SIZE.width + CANVAS.width/2;
+		START_COORD.y = -SELECTED_SPECIES.nests[0].coord.y * CELL_SIZE.width + CANVAS.width/2;
 	}
 }
 		

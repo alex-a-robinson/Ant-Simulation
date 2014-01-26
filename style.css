@@ -13,104 +13,44 @@ body {
     background-color: #00FF00;
     width: 100%;
     height: 64px;
-	font-size : 3em;
+	font-size: 3em;
 	font-family: 'Averia Sans Libre', cursive;
-	color : #FFFFFF;
-	text-align : center;
+	color: #FFFFFF;
+	text-align: center;
 }
 
-
-
-#test {
-	width : 1000px;
-	margin : auto;
+#page-container {	/* Keeps the body of the page centred with a fixed width */
+	width: 996px;
+	margin: auto;
 }
 
-table {
-    border: 1px solid black;
-	width: 100%;
-	float : right;
-}
 td {
     border: 1px solid black;
 	vertical-align: top;
-	width: 1px;
-}
-tr {
-    border: 1px solid black;
-}
-input {
-    width: 100%;
 }
 
-table.fixed {
-	width: 100%;
-    height: 100%;
-	table-layout:fixed;
-}
-
-td.fixed {
-    overflow: hidden;
-}
-
-td#canvas {
-	width: 500px;
-}
-
-canvas {
-	float : right;
+canvas {	/* Styles the canvas the simulation runs on */
 	border: 1px solid black;
 	cursor: move;
 }
 
+.controls {
+	width: 170px;
+	height: 30px;
+	border: 1px solid black;
+	margin : auto;
+}
+
 td#data {
 	width: 200px;
-	table-layout:fixed;
 }
 
-table.species {
+table.species {	/* Keeps constant width of data for individual species */
 	width : 100%;
-	table-layout:fixed;
 }
 
-td.species {
+td.species {	/* Keeps constant width of rows for species data */
 	width: 50%;
-}
-
-
-td#config {
-	width: 250px;
-	cursor: help;
-}
-
-#input-container {
-	width: 100%;
-}
-
-table.config {
-	margin: 5px;
-	text-align: center;
-}
-
-td.config {
-	width : 1px;
-}
-
-input.config {
-	display: block;
-	width: 100%;
-}
-
-tr.config {
-    height: 32px;
-}
-
-td#title {
-    color: red;
-}
-
-div.ant-health {
-    display: inline;
 }
 
 .toggleVisibility {
@@ -118,9 +58,24 @@ div.ant-health {
 	border: none;
 }
 
-.nav {
-	width: 170px;
-	height: 30px;
-	border: 1px solid black;
-	margin : auto;
+td#config {		
+	width: 250px;
+	cursor: help;
+}
+
+#input-container {	/* Keeps constant width of input */
+	width: 100%;
+}
+
+td.config {
+	width : 1px;
+}
+
+input.config {	/* Keeps constant width of config*/
+	display: block;
+	width: 100%;
+}
+
+div.ant-health {
+    display: inline;
 }

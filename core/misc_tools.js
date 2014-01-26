@@ -286,15 +286,17 @@ function createAnt(species, coord, nest, startingHealth, type) {
 	}
 	
 	// Only possible to mutate queens (due to the nature of ant reproduction)
-	if (type === ANT_TYPE.queen)
+	if (type === ANT_TYPE.queen) {
 		ant.species = species.mutate();
-	else
+	} else {
 		ant.species = species;
+	}
 	
 	ant.nest = nest;
+	ant.species.ants.push(ant);
+	
 	ant.health = startingHealth;
 	
-	species.ants.push(ant);
 	ANTS_LIST.push(ant);
 	ant.addToMap();
 }

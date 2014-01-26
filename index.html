@@ -34,22 +34,21 @@
 	</head>
 	<body>
 		<div id='header'>Ant Simulation</div>
-		<div id='test'>
-			<table class='fixed'>
+		<div id='page-container'>
+			<table>
 				<tr>
-					<td id='canvas' class='fixed'>
+					<td id='canvas'>
 						<div>
 							<canvas id='simulation' width='500px' height='500px'></canvas>
 						</div>
-						<div class='nav'>
+						<div class='controls'>
 							<button id='button-run' onclick='BUTTONS.run(this)'>pause</button>
 							<button id='button-step' onclick='BUTTONS.step(this)'>step</button>
 							<button id='button-restart' onclick='BUTTONS.restart(this)'>restart</button>
 						</div>
 					</td>
-					<td id='data' class='fixed'>
-					</td>
-					<td id='config' class='fixed'>
+					<td id='data'></td>
+					<td id='config'>
 						<div id='title' class='config'>Config</div>    
 						
 						<button id='button-reset' onclick='BUTTONS.reset()'>reset</button>
@@ -57,7 +56,7 @@
 						<button id='button-update' onclick='BUTTONS.update()'>update</button>
 						<hr />
 						<div class='ant-health'>Ant Health</div>
-						<div class='ant-health'>1032</div>
+						<div class='ant-health' id='ant-health'>1032</div>
 					</td>
 				</tr>
 			</table>

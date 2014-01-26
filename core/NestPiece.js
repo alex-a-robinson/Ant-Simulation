@@ -40,6 +40,18 @@ NestPiece.prototype.removeFromMap = function() {
 };
 
 /**
+* Removes the piece from the map
+*/
+NestPiece.prototype.die = function() {
+	var index = this.nest.pieces.indexOf(this);
+	this.nest.pieces.splice(index, 1);
+	
+	if (this.nest.pieces.length <= 0) {
+		this.nest.die();
+	}
+};
+
+/**
 * Draws the piece onto the canvas context
 * @param {canvas context 2d} ctx - The context which the piece will be drawn onto
 */

@@ -76,7 +76,7 @@ Queen.prototype.updateGoal = function() {
 */
 Queen.prototype.pickDirection = function() {
 	this.direction = randDir();
-	this.steps = randInt(this.species.chars.queenSteps);
+	this.steps = randInt({min : this.species.chars.queenStepsMin, max : this.species.chars.queenStepsMax});
 };
 
 Queen.prototype.createNest = function() {
@@ -85,8 +85,21 @@ Queen.prototype.createNest = function() {
 	nest.colour = nest.species.colour.nest;
 	nest.createNest();
 	
+	var index = this.species.ants.indexOf(this);
+	this.species.ants.splice(index, 1);
+	
 	nest.species.nests.push(nest);
 	ANTS_LIST.push(nest);
+};
+
+
+/**
+* Draw the ant onto the canvas context 
+*/ 
+Queen.prototype.draw = function(ctx) {
+	var scaledCoord = scaleCoord(this.coord);	// Scale the coordinates so they map to pixels rather then cells
+	
+	drawCircle(ctx, scaledCoord, this.size.width/2, this.colour);
 };
 
 /**
