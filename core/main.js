@@ -24,12 +24,21 @@
 var canvasDOM;
 var canvasCTX;
 
+var lastLoop = new Date;
+
 // What is done each tick
 function tick() {
+	var thisLoop = new Date;
 	drawMap(canvasCTX);
 	
 	updateSpeciesData();
-	setTimeout(tick, TICK_TIME);
+	
+	var tickTime = TICK_TIME - (thisLoop - lastLoop);
+	tickTime = (tickTime <= 0)?0:tickTime;
+	
+	setTimeout(tick, tickTime);
+	getElement('fps').innerHTML = (1000 / (thisLoop - lastLoop)).toFixed(0);
+	lastLoop = thisLoop;
 }
 
 // Draw all objects
@@ -167,9 +176,19 @@ window.onload = function() {
 			case MINUS_KEY:
 				zoom(-1 *ZOOM_AMOUNT)
 				break;
+			case SPACE_BAR_KEY:
+				runPauseButton(getElement('button-run'));
+				e.preventDefault();
+				break;
+			case R_KEY:
+				createEnviroment();
+				break;
+			case S_KEY:
+				step(getElement('button-step'));
 		}
 	};
 	
+	// Chrome, IE
 	canvasDOM.addEventListener('mousewheel', function(e) {
 		// cross-browser wheel delta
 		var e = window.event || e; // old IE support
@@ -178,7 +197,22 @@ window.onload = function() {
 		e.preventDefault();		// prevent scrolling the page while zooming
 	}, false);
 	
+	// FireFox
+	canvasDOM.addEventListener('DOMMouseScroll', function(e) {
+		// cross-browser wheel delta
+		var e = window.event || e; // old IE support
+		var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
+		zoom(delta * ZOOM_AMOUNT);
+		e.preventDefault();		// prevent scrolling the page while zooming
+	}, false);
+	
+	
 	canvasDOM.onmousedown = function(e) {
+		draging = true;
+		start = {x : e.pageX, y : e.pageY};
+	};
+	
+	canvasDOM.touchstart = function(e) {
 		draging = true;
 		start = {x : e.pageX, y : e.pageY};
 	};
@@ -195,7 +229,20 @@ window.onload = function() {
 		}
 	};
 	
+	canvasDOM.touchmove = function(e) {
+		if (draging) {
+			end = {x : e.pageX, y : e.pageY};
+			START_COORD.x = START_COORD.x + (end.x - start.x);
+			START_COORD.y = START_COORD.y + (end.y - start.y);
+			start = {x : e.pageX, y : e.pageY};
+		}
+	};
+	
 	window.onmouseup = function(e) {
+		draging = false;
+	};
+	
+	window.touchend = function(e) {
 		draging = false;
 	};
 	

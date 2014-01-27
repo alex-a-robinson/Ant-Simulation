@@ -31,7 +31,7 @@ var CANVAS = {			// Used to define characteristics about the simulations canvas
 // ---------- CONTROLS ----------
 var AVERAGE_DELTA_FOOD_SAMPLE_RATE = 100;		// The number of ticks to wait been sampling for averages
 var AVERAGE_FOOD_SAMPLE_RATE = 10;		// The number of ticks to wait been sampling for averages
-var NUMBER_OF_FIXED_PLACES = 0;		// The number of numbers after the decimal place to display
+var NUMBER_OF_FIXED_PLACES = 2;		// The number of numbers after the decimal place to display
 var SELECTED_SPECIES;
 var SELECTED_COLOUR = '#A5C7D9';
 var UNSELECTED_COLOUR = '#FFFFFF';
@@ -43,6 +43,9 @@ var UP_ARROW_KEY = 38;
 var DOWN_ARROW_KEY = 40;
 var PLUS_KEY = 107;
 var MINUS_KEY = 109;
+var SPACE_BAR_KEY = 32;
+var R_KEY = 82;
+var S_KEY = 83;
 var MIN_ZOOM = 1;
 var MAX_ZOOM = 14;
 var START_COORD = {			// The offset coordinate for the current view when panning around
