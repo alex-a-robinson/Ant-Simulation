@@ -16,7 +16,6 @@ function toggleRunning() {
 /**
  * Steps through a single tick
  */
-
 function step() {
     start();
     tick();
@@ -27,7 +26,6 @@ function step() {
  * Toggles RUNNING and updates the pause/run button
  * @param {HTML element} button - The pause/run buttons HTML element
  */
-
 function runPauseButton() {
     toggleRunning();
     if (RUNNING) getElement('button-run').innerHTML = 'pause';
@@ -39,7 +37,6 @@ function runPauseButton() {
  * @param {HTML element} element - An element of a input in the settings panel
  * @param {*} value - The new value of the characteristic
  */
-
 function updateValue(element, value) {
     // Update the button colour to show an update needs to be pushed to the species
     getElement('button-update').style.color = BUTTON_UPDATE_COLOUR;
@@ -51,23 +48,55 @@ function updateValue(element, value) {
     if (characteristic.type === VALUE_TYPE.floatValue)
         value = parseFloat(value).toFixed(NUMBER_OF_FIXED_PLACES);
 
-    // Update the characteristics value in settings as well as the input 
-    getElement(characteristic.id + '-value').innerHTML = value;
-    setValue(characteristic.id, value);
-
     // Re calculate the species cost
     var specieCost = 0;
     for (prop in CHARS) {
         specieCost += CHARS[prop].healthModifier * CHARS[prop].value;
     }
+	
+	var workerFoodCost = CHARS.reproductionWorkerFoodCost.value * FOOD_HEALTH_RATIO;
+	var queenFoodCost = CHARS.reproductionQueenFoodCost.value * FOOD_HEALTH_RATIO;
+	var soldierFoodCost = CHARS.reproductionSoldierFoodCost.value * FOOD_HEALTH_RATIO;
+	
+	if (workerFoodCost - specieCost < 0) {
+		window.alert('Warning - The speciesCost (' + specieCost.toFixed(0) + ') is greater then \
+		the worker\'s food cost (' + workerFoodCost + '. This means that worker ants \
+		will die immediatly when born, to fix, reduce your values for characteristics.');
+	}
+	
+	if (queenFoodCost - specieCost < 0) {
+		window.alert('Warning - The speciesCost (' + specieCost.toFixed(0) + ') is greater then \
+		the queen\'s food cost (' + queenFoodCost + '. This means that queen ants \
+		will die immediatly when born, to fix, reduce your values for characteristics.');
+	}
+	
+	if (soldierFoodCost - specieCost < 0) {
+		window.alert('Warning - The speciesCost (' + specieCost.toFixed(0) + ') is greater then \
+		the soldier\'s food cost (' + soldierFoodCost + '. This means that soldier ants \
+		will die immediatly when born, to fix, reduce your values for characteristics.');
+	}
+	
+	var queenStepsMax = parseInt(CHARS.queenStepsMax.value);
+	var queenStepsMin = parseInt(CHARS.queenStepsMin.value);
+	
+	if (characteristic === 'queenStepsMin' || characteristic === 'queenStepsMax') {
+		if (queenStepsMin > queenStepsMax) {
+			window.alert('Error - The minimum number of Queen steps (' +  queenStepsMin + ') is greater \
+			then the maximum (' +  queenStepsMax + '). Please reduce the minimum number or increase the maximum.');
+		}
+	}
 
+	// Update the characteristics value in settings as well as the input 
+    getElement(characteristic.id + '-value').innerHTML = value;
+    setValue(characteristic.id, value);
+	
+	// Update the species cost
     getElement('ant-health').innerHTML = specieCost.toFixed(0);
 }
 
 /**
  * Updates the value of all characteristics to their default values
  */
-
 function updateDefaultValues() {
     for (var prop in CHARS) {
         var characteristic = CHARS[prop];
@@ -78,7 +107,6 @@ function updateDefaultValues() {
 /**
  * Updates the value of all characteristics a random value
  */
-
 function updateRandomValues() {
     for (var prop in CHARS) {
         var characteristic = CHARS[prop];
@@ -102,7 +130,6 @@ function updateRandomValues() {
  *                                                      add to the new element
  * @return {HTML element}
  */
-
 function newElement(tag, attributes) {
     var element = document.createElement(tag);
     for (var i = 0; i < attributes.length; i++)
@@ -116,7 +143,6 @@ function newElement(tag, attributes) {
  * @param {*} prop - The property of CHARS which the characteristic refers to
  * @return {HTML element}
  */
-
 function createInputType(characteristic, prop) {
 
     // Create the intial input tag
@@ -159,7 +185,6 @@ function createInputType(characteristic, prop) {
  * @param {string} prop - The property of CHARS which the characteristic refers to
  * @return {HTML element}
  */
-
 function createInput(characteristic, prop) {
     // Row
     var row = newElement('tr', [{
@@ -214,7 +239,6 @@ function createInput(characteristic, prop) {
  * inputs for characteristics
  * And appends them to a table in the config panel
  */
-
 function createCharacteristicInputs() {
     var configPanel = getElement('config');
     var table = newElement('table', {
@@ -233,7 +257,6 @@ function createCharacteristicInputs() {
 /**
  * Updates the selected species with the new values selected in the config panel
  */
-
 function updateUserSpecies() {
     // Return the button to its original colour showing no pending updates 
     // need to be pushed to the species
@@ -268,7 +291,6 @@ function updateUserSpecies() {
  * @param {string} dataValue - The data which will be displayed
  * @return {HTML element}
  */
-
 function createDataRow(className, id, labelValue, dataValue) {
     var row = newElement('tr', [{
         type: 'class',
@@ -300,7 +322,6 @@ function createDataRow(className, id, labelValue, dataValue) {
  * @param {species object} species - The species whose data you want to create 
  *                                      a data display for
  */
-
 function createSpeciesData(species) {
 
     var id = species.id;
@@ -352,10 +373,6 @@ function createSpeciesData(species) {
     var nestNumRow = createDataRow(className, id + '-nestNum', 'Number of Nests',
                                     species.nests.length);
 
-    // Create a data row for average food intake
-    var avgFoodIntakeNumRow = createDataRow(className, id + '-avgFoodIntake',
-                                                'Average Food intake', species.averageFoodIntake);
-
     // Create a data row for amount of food
     var foodAmount = 0;
     for (var i = 0; i < species.nests.length; i++)
@@ -371,7 +388,6 @@ function createSpeciesData(species) {
     table.appendChild(colourRow);
     table.appendChild(antNumRow);
     table.appendChild(nestNumRow);
-    table.appendChild(avgFoodIntakeNumRow);
     table.appendChild(foodAmountRow);
 
     // Append the table to the data panel
@@ -385,7 +401,6 @@ function createSpeciesData(species) {
 /**
  * Updates data for all of the species currently in the simulation
  */
-
 function updateSpeciesData() {
     for (var i = 0; i < SPECIES_LIST.length; i++) {
         var species = SPECIES_LIST[i];
@@ -417,20 +432,6 @@ function updateSpeciesData() {
 
             foodAmountDataElement.innerHTML = foodAmount.toFixed(NUMBER_OF_FIXED_PLACES);
         }
-
-        // Update the amount of food
-        if (TICK % AVERAGE_DELTA_FOOD_SAMPLE_RATE === 0) {
-
-            var foodAmount = 0;
-            for (var k = 0; k < species.nests.length; k++)
-            foodAmount += species.nests[k].health;
-
-            var avgFoodIntakeDataElement = getElement(id + '-avgFoodIntake-data');
-            var percent = (foodAmount / (foodAmount - species.averageFoodIntake) * 100);
-            var msg = percent.toFixed(NUMBER_OF_FIXED_PLACES) + '%'; 
-            avgFoodIntakeDataElement.innerHTML = msg;
-            species.averageFoodIntake = (foodAmount - species.averageFoodIntake);
-        }
     }
 }
 
@@ -439,7 +440,6 @@ function updateSpeciesData() {
  * been clicked
  * @param {number} id - The id of the species to remove
  */
-
 function removeSpeciesData(id) {
     document.getElementsByClassName(id)[0].innerHTML = '';
     console.log('Deleteing species' + id);
@@ -452,7 +452,6 @@ function removeSpeciesData(id) {
  * @param {HTML element} button - A reference to the toggle visibility button
  * @return {string} - The value of the display styling
  */
-
 function nextVisibility(button) {
     if (button.innerHTML === '+') return 'table-row'; // Show the element
     else return 'none'; // Hide the element
@@ -462,7 +461,6 @@ function nextVisibility(button) {
  * Toggles the text in the visibility button
  * @param {HTML element} button - A reference to the toggle visibility button
  */
-
 function toggleVisibilityButton(button) {
     if (button.innerHTML === '-') button.innerHTML = '+';
     else button.innerHTML = '-';
@@ -472,7 +470,6 @@ function toggleVisibilityButton(button) {
  * Maximises and Minimises the data for a particular species
  * @param {HTML element} button - A reference to the toggle visibility button
  */
-
 function toggleClassVisibility(button) {
     var id = button.className.split(' ')[1]; // The second class name is the species id
 
@@ -497,7 +494,6 @@ function toggleClassVisibility(button) {
  * Selects a new species allowing the user to alter that species characteristics
  * @param {HTML element} title - A reference to the title element of the species data
  */
-
 function select(title) {
     // De colour previous selected table
     document.getElementsByClassName(SELECTED_SPECIES.id)[0].style.backgroundColor = UNSELECTED_COLOUR;

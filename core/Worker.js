@@ -178,6 +178,7 @@ Worker.prototype.updateHealth = function() {
 Worker.prototype.draw = function(ctx) {
     var scaledCoord = scaleCoord(this.coord); // Scale the coordinates so they
                                                 // map to pixels rather then cells
+						
     ctx.save();
 
     // Translate and rotate the canvas (done so can draw at an angle)

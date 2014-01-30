@@ -35,10 +35,8 @@ var CANVAS = { // Used to define characteristics about the simulations canvas
 /**
  * Input/Output configuration
  */
-const AVERAGE_DELTA_FOOD_SAMPLE_RATE = 100; // The number of ticks to wait between
-                                                // sampling for averages
 const AVERAGE_FOOD_SAMPLE_RATE = 10;        // The number of ticks to wait between
-                                                // sampling for averages
+                                                // sampling for averages of food
 const NUMBER_OF_FIXED_PLACES = 2;           // The number of numbers after the 
                                                 // decimal place to display
 var SELECTED_SPECIES;                       // Holds the species whose
@@ -84,11 +82,11 @@ const INPUT_TYPE = {        // Used for creating custom inputs
  * Map configuration
  */
 var MAP = [];               // Holds all objects displayed on map
-const GRID_SIZE = {         // Size in number of cells
+var GRID_SIZE = {         // Size in number of cells
     width: 250,
     height: 250
 };
-const MAP_BOUNDARY = {      // Used to tell if ant is out of bounds
+var MAP_BOUNDARY = {      // Used to tell if ant is out of bounds
     x: {
         min: 0,
         max: GRID_SIZE.width
@@ -98,7 +96,7 @@ const MAP_BOUNDARY = {      // Used to tell if ant is out of bounds
         max: GRID_SIZE.height
     }
 };
-const NUM_OF_CELLS = GRID_SIZE.width * GRID_SIZE.height; // The total number of cells
+var NUM_OF_CELLS = GRID_SIZE.width * GRID_SIZE.height; // The total number of cells
 
 /**
  * Food configuration
@@ -110,7 +108,7 @@ const FOOD_CHANCE = 0.0004;             // The probability of a food source in a
 /**
  * Ant configuration
  */
-const STARTING_QUEEN_ANT_NUMBER = 1;            // The number of queen ants at
+var STARTING_QUEEN_ANT_NUMBER = 1;            // The number of queen ants at
                                                     // the start of the simulation
 const ANT_FOOD_DROP_SPEED = 1;                    // The number of ticks for an ant
                                                     // to drop a piece of food

@@ -49,11 +49,12 @@ function arrowTo(coord1, angle, blocks) {
 */
 
 var AntWonderDirectionTest = new testCase('Test that ant picks correct direction given some amount of pheromones');
+AntWonderDirectionTest.autorun = true;
 
-var testAntSpecies = {chars : {antennaSize : 10, antennaAngle : 2*Math.PI, exploitativeness : 1, pheromoneInfluence : 1}}	// simulate a species
+var testAntSpecies = {chars : {antennaSize : 10, antennaAngle : 2*Math.PI, exploitativeness : 0, pheromoneInfluence : 1}}	// simulate a species
 var testAnt = new Ant(1, {x : 25, y : 25});
 testAnt.species = testAntSpecies;
-testAnt.direction = 0;
+testAnt.direction = Math.PI * 2 - Math.PI / 4;
 
 AntWonderDirectionTest.callwith = testAnt;
 AntWonderDirectionTest.autorun = true;
@@ -74,7 +75,7 @@ AntWonderDirectionTest.createTest(testAnt.direction, [], 'equal', testAnt.priori
 arrowTo({x : 25, y : 25}, testAnt.direction, []);
 
 // 2
-
+testAnt.direction = Math.PI / 2;
 createMap();
 
 // Simulate the dummy pheromones
@@ -82,11 +83,11 @@ MAP[coordToIndex({x : 27, y : 22})].pheromone = [{coord : {x : 27, y : 22}, spec
 
 testAnt.smell();
 testAnt.wonder();
-
+AntWonderDirectionTest.createTest(testAnt.direction, [], 'desc', 'Ant points in the direction of the pheromone');
 arrowTo({x : 25, y : 25}, testAnt.direction, [{x : 27, y : 22}]);
 
 // 3
-
+testAnt.direction = Math.PI * 2 - Math.PI / 4;
 createMap();
 
 // Simulate the dummy pheromones
@@ -97,4 +98,8 @@ MAP[coordToIndex({x : 18, y : 28})].pheromone = [{coord : {x : 18, y : 28}, spec
 testAnt.smell();
 testAnt.wonder();
 
+AntWonderDirectionTest.createTest(testAnt.direction, [], 'desc', 'Ant points in the direction of the pheromone');
 arrowTo({x : 25, y : 25}, testAnt.direction, [{x : 18, y : 22}, {x : 18, y : 20}, {x : 18, y : 28}]);
+
+
+AntWonderDirectionTest.summery();

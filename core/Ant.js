@@ -42,6 +42,11 @@ var Ant = function(id, coord) {
          * 		multiple ticks (default: 0)
          * @property {boolean} this.followingPheromone - Used to tell if an ant 
          * 		is following a pheromone (default: false)
+		 * @property {number} this.direction - The direction in radians from the 
+		 *              vertical axis clockwise (default: *random direction*)
+		 * @property {number} this.prioritizeDirection - The direction the ant will 
+		 *              general move, used to get straighter more realistic paths 
+		 *              (default: *random direction*)
          */
         this.size = CELL_SIZE;
         this.coord = coord;
@@ -50,7 +55,7 @@ var Ant = function(id, coord) {
         this.species;
         this.type;
         this.nest;
-        this.colour;
+        this.colour = '#1C1C1C';
         this.health;
         this.hungerThreshold = 100;
         this.healthRate = 0.1;
@@ -64,6 +69,8 @@ var Ant = function(id, coord) {
         this.pheromonesInRange = [];
         this.sleep = 0;
         this.followingPheromone = false;
+		this.direction = randDir();
+		this.prioritizeDirection = randDir();
     };
 /**
  * Adds the current position of the ant to the map
@@ -114,7 +121,7 @@ Ant.prototype.takeFood = function(food) {
         food.amount -= 1; // Take a single piece of food
         this.sleep += ANT_FOOD_TAKE_SPEED;
         if (!this.isFood(food)) // If food is all gone remove it from the map
-        food.removeFromMap();
+			food.removeFromMap();
         return 1;
     } else {
         return 0;
@@ -151,19 +158,9 @@ Ant.prototype.seeNest = function() {
  * Choose the target piece of food the worker should go for
  */
 Ant.prototype.findFoodTarget = function() {
-    var leastEffort = 999999; // Large number to guarantee a number will be 
-                              // less then this
-    // Go through each piece of food and pick the piece which involves the 
-    // least amount of effort to collect. Effort is determined by the distance
-    // to the piece of food by the amount of food which is in the piece
-    for (var i = 0; i < this.itemsInView.food.length; i++) {
-        var effort = calcEffort(this.coord, this.itemsInView.food[i].coord, 
-                                this.itemsInView.food[i].amount);
-        if (effort < leastEffort) {
-            leastEffort = effort;
-            this.target = this.itemsInView.food[i].coord;
-        }
-    }
+	// Ant will pick the first piece of food it sees
+	if (this.itemsInView.food.length > 0)
+		this.target = this.itemsInView.food[0].coord;
 };
 /**
  * Walk towards food until on top of it and then pick it up
@@ -285,23 +282,26 @@ Ant.prototype.wonder = function() {
 
     // Every so often change the prioritize direction
     if (Math.random() < this.species.chars.exploitativeness) 
-        this.prioritizeDirection = randFloat({min: this.direction - Math.PI / 2,
-                                                max: this.direction + Math.PI / 2});
+        this.prioritizeDirection = randDir();
     if (this.followingPheromone && this.pheromonesInRange.length <= 0 && 
         (this.atNest() || this.seeNest())) { // If at nest turn around
         this.direction = turnAround(this.direction);
         this.prioritizeDirection = this.direction;
         this.followingPheromone = false;
+		console.log('turn around')
     } else if (pheromones && Math.random() < this.species.chars.pheromoneInfluence) {
             // If there are pheromones to follow, go towards them however 
             // there is a chance this will not happen depending on how 
             // influential pheromones are (pheromoneInfluence)
         var angle = angleTo(this.coord, CoM);
-        if (angle > this.direction - Math.PI / 4 && angle < this.direction + Math.PI / 4) { 
-            // will only join pheromones which lie in a certin angle
+		angle = validateDirection(angle);
+        if (angle > this.direction - Math.PI / 3 && angle < this.direction + Math.PI / 3) { 
+            // will only join pheromones which lie in a cretin angle i.e. simulating
+			// that ants will not turn directly around
             this.direction = angle;
             this.prioritizeDirection = this.direction;
             this.followingPheromone = true;
+			
         } else {
             this.direction = this.prioritizeDirection;
             this.followingPheromone = false;

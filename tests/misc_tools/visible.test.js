@@ -17,7 +17,7 @@ function drawBlocks(blocks) {
 * Environment:
 * 	CELL_SIZE = {width : 50, height : 50};
 * 	GRID_SIZE = {width : 10, height : 10};
-*	START_COORD = {x : 0, y : 0};
+*	CANVAS_OFFSET = {x : 0, y : 0};
 *
 * Test data - {x : 4, y : 2}	[functional value]
 * Expected  - true
@@ -37,7 +37,7 @@ function drawBlocks(blocks) {
 
 CELL_SIZE = {width : 50, height : 50};
 GRID_SIZE = {width : 10, height : 10};
-START_COORD = {x : 0, y : 0};
+CANVAS_OFFSET = {x : 0, y : 0};
 
 var visibleTest = new testCase('Test that visible function correctly determines whether a cell is visible or not');
 visibleTest.createTest(visible, [{x : 4, y : 2}], 'equal', true);
