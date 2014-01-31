@@ -322,7 +322,7 @@ var CHARS = {       // Holds properties of all characteristics species
         max: 1,
         type: VALUE_TYPE.floatValue,
         id: 'char-nestCoordMemory',
-        neatName: 'Nest Coordinate Memory',
+        neatName: 'Nest Position Memory',
         desc: 'A measure of how well the ant knows where the nest is, used when navigating \
 				to the nest, represents memory of familiarly landmarks near the nest',
         step: 0.01,
@@ -332,12 +332,12 @@ var CHARS = {       // Holds properties of all characteristics species
         editable: true,
         inputType: INPUT_TYPE.slider
     },
-    exploitativeness: {
+    explorativeInfluence: {
         min: 0,
         max: 1,
         type: VALUE_TYPE.floatValue,
-        id: 'char-exploitativeness',
-        neatName: 'Exploitativeness',
+        id: 'char-explorativeInfluence',
+        neatName: 'Explorative Influence',
         desc: 'The likelihood of an ant changing direction rather then continue going in the \
 				direction its facing',
         step: 0.01,

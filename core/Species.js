@@ -48,7 +48,7 @@ var Species = function(id) {
              *              knows where the nest is, used when navigating to the
              *              nest, represents memory of familiarly landmarks
              *              near the nest
-             * @property {number} exploitativeness - The likelihood of an ant 
+             * @property {number} explorativeInfluence - The likelihood of an ant 
              *              changing direction rather then continue going in
              *              the direction its facing
              * @property {number} pheromoneInfluence - How likely it is that an
@@ -75,7 +75,7 @@ var Species = function(id) {
             antennaAngle: Math.PI / 2,
             pheromoneConcentration: 0.4,
             nestCoordMemory: 0.1,
-            exploitativeness: 0.05,
+            explorativeInfluence: 0.05,
             pheromoneInfluence: 0.90,
             queenStepsMin: 200,
             queenStepsMax: 800,

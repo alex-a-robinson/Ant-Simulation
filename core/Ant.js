@@ -281,7 +281,7 @@ Ant.prototype.wonder = function() {
     // pheromones of the same species weighed by pheromone concentration
 
     // Every so often change the prioritize direction
-    if (Math.random() < this.species.chars.exploitativeness) 
+    if (Math.random() < this.species.chars.explorativeInfluence) 
         this.prioritizeDirection = randDir();
     if (pheromones && Math.random() < this.species.chars.pheromoneInfluence) {
 		// If there are pheromones to follow, go towards them however 
