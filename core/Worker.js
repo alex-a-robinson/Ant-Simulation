@@ -92,7 +92,7 @@ Worker.prototype.dropFood = function(nest) {
  * Determines the best use of food - Eating it or Carrying it
  */
 Worker.prototype.useFood = function() {
-    var index = getCellIndex(this.coord);
+    var index = coordToIndex(this.coord);
     var food = MAP[index].food;
 
     if (this.hungry && this.isFood(food)) // Eat the food (this.ifFood(food) 

@@ -76,14 +76,14 @@ var Ant = function(id, coord) {
  * Adds the current position of the ant to the map
  */
 Ant.prototype.addToMap = function() {
-    if (this.alive) MAP[getCellIndex(this.coord)].ant.push(this);
+    if (this.alive) MAP[coordToIndex(this.coord)].ant.push(this);
 };
 /**
  * Removes the current position of the ant from the map
  */
 Ant.prototype.removeFromMap = function() {
-    var index = MAP[getCellIndex(this.coord)].ant.indexOf(this);
-    MAP[getCellIndex(this.coord)].ant.splice(index, 1);
+    var index = MAP[coordToIndex(this.coord)].ant.indexOf(this);
+    MAP[coordToIndex(this.coord)].ant.splice(index, 1);
 };
 /**
  * Determines whether the ant is hungry or not
@@ -133,8 +133,8 @@ Ant.prototype.takeFood = function(food) {
  * @return {boolean}
  */
 Ant.prototype.atNest = function() {
-    for (var i = 0; i < MAP[getCellIndex(this.coord)].ant.length; i++) {
-        var a = MAP[getCellIndex(this.coord)].ant[i]
+    for (var i = 0; i < MAP[coordToIndex(this.coord)].ant.length; i++) {
+        var a = MAP[coordToIndex(this.coord)].ant[i]
         if (a.type === ANT_TYPE.nest && a.nest === this.nest) {
             return true;
         }
@@ -168,8 +168,8 @@ Ant.prototype.findFoodTarget = function() {
 Ant.prototype.getFood = function() {
     this.direction = angleTo(this.coord, this.target); // Point towards the food
     // If on the food pick it up. As this.coord is a number, work out which 
-    // cell the ant is mostly in using getCellIndex
-    if (getCellIndex(this.coord) === coordToIndex(this.target)) {
+    // cell the ant is mostly in using coordToIndex
+    if (coordToIndex(this.coord) === coordToIndex(this.target)) {
         this.useFood();
     }
 };
@@ -177,7 +177,7 @@ Ant.prototype.getFood = function() {
  * Determines the best use of food - Eating it or Carrying it
  */
 Ant.prototype.useFood = function() {
-    var index = getCellIndex(this.coord);
+    var index = coordToIndex(this.coord);
     var food = MAP[index].food;
     if (this.isFood(food)) // check the food still exists i.e. already eaten
 		this.health += this.takeFood(food) * FOOD_HEALTH_RATIO;
@@ -224,7 +224,7 @@ Ant.prototype.smell = function() {
     // Go through each block and add pheromones to the pheromonesInRange object
     for (var i = 0; i < block.length; i++) {
         var index = coordToIndex(block[i]);
-        if (index === getCellIndex(this.coord)) // don't smell own square
+        if (index === coordToIndex(this.coord)) // don't smell own square
 			continue;
         for (var k = 0; k < MAP[index].pheromone.length; k++) {
             this.pheromonesInRange.push(MAP[index].pheromone[k]);
@@ -235,7 +235,7 @@ Ant.prototype.smell = function() {
  * Secrete pheromones
  */
 Ant.prototype.secrete = function() {
-    var index = getCellIndex(this.coord);
+    var index = coordToIndex(this.coord);
     var pheromones = MAP[index].pheromone;
     // Check if there are already pheromones in the cell
     for (var i = 0; i < pheromones.length; i++) {

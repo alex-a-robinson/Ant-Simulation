@@ -74,28 +74,31 @@ function distance(coord1, coord2) {
     var y = Math.min(Math.abs(coord1.y - coord2.y), GRID_SIZE.height - Math.abs(coord1.y - coord2.y));
     return Math.sqrt(x * x + y * y);
 }
-
 /**
- * Calculates the effort by finding the distance between two points and dividing 
- * by a weighted value
- * @param {x : number, y : number} coord1, coord2 - The coordinates
- * @param {number} value - The weighted value
- * @return {number}
+ * Scale a coordinate to its location in pixels
+ * @param {x : number, y : number} coord - The coordinate to scale
+ * @return {x : number, y : number} - The scaled coordinate
  */
-function calcEffort(coord1, coord2, value) {
-    var dist = distance(coord1, coord2);
-    return dist / value;
+function scaleCoord(coord) {
+    return {
+        x: coord.x * CELL_SIZE.width + CANVAS_OFFSET.x,
+        y: coord.y * CELL_SIZE.height + CANVAS_OFFSET.y
+    };
 }
 
 /**
- * Converts a coordinate to a map index i.e. the index in the MAP array which 
- * is the cell where the coordinate lies
+ * Converts a coordinate to a map index, it can be used with coordinates which
+ * don't map exactly to a single index and will work out which cell the coordinate
+ * lies in mostly.
  * @param {x : number, y : number} coord - The coordinate which will be converted
  * @return {integer} - The map index which the coordinate converts to
  */
 function coordToIndex(coord) {
-    // Translates (x, y) coordinate to linear position in map
-    return coord.x + coord.y * GRID_SIZE.width;
+    var cellCoord = boundary({
+        x: Math.round(coord.x),
+        y: Math.round(coord.y)
+    }, MAP_BOUNDARY);
+    return cellCoord.x + cellCoord.y * GRID_SIZE.width;
 }
 
 /**
@@ -114,49 +117,7 @@ function indexToCoord(index) {
 }
 
 /**
- * Scale a coordinate to its location in pixels
- * @param {x : number, y : number} coord - The coordinate to scale
- * @return {x : number, y : number} - The scaled coordinate
- */
-function scaleCoord(coord) {
-    return {
-        x: coord.x * CELL_SIZE.width + CANVAS_OFFSET.x,
-        y: coord.y * CELL_SIZE.height + CANVAS_OFFSET.y
-    };
-}
-
-/**
- * Determines whether a coordinate is visible on the canvas i.e. if it is 
- * off screen when panned or zoomed
- * @param {x : number, y : number} coord - The coordinate
- * @return {boolean}
- */
-function visible(coord) {
-    var scaledCoord = scaleCoord(coord);
-    if (scaledCoord.x >= 0 && scaledCoord.x < GRID_SIZE.width * CELL_SIZE.width &&
-            scaledCoord.y >= 0 && scaledCoord.y < GRID_SIZE.height * CELL_SIZE.height)
-        return true;
-    else 
-        return false;
-}
-
-/**
- * Converts a coordinate to a map index differs from coordToIndex as it can 
- * be used with coordinates which don't map exactly to a single index and will 
- * work out which cell the coordinate lies in mostly.
- * @param {x : number, y : number} coord - The coordinate which will be converted
- * @return {integer} - The map index which the coordinate converts to
- */
-function getCellIndex(coord) {
-    var cellCoord = boundary({
-        x: Math.round(coord.x),
-        y: Math.round(coord.y)
-    }, MAP_BOUNDARY);
-    return coordToIndex(cellCoord);
-}
-
-/**
- * Smiler to getCellIndex however returns the *neat* coordinate i.e. a coordinate 
+ * Smiler to coordToIndex however returns the *neat* coordinate i.e. a coordinate 
  * which maps exactly to a single map index by finding the cell which the 
  * coordinate lies in mostly
  * @param {x : number, y : number} coord - The coordinate
@@ -243,12 +204,12 @@ function getSector(coord, radius, direction, angle) {
             if (validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle / 2) &&
                 validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle / 2) &&
                 distance(coord, searchCoord) <= radius) {
-                block.push(getCellCoord(searchCoord));
+					block.push(getCellCoord(searchCoord));
             } else if ((validateDirection(direction) <= angle / 2 || validateDirection(direction) >= Math.PI * 2 - angle / 2) &&
                 (validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle / 2) ||
                 validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle / 2)) &&
                 distance(coord, searchCoord) <= radius) {
-                block.push(getCellCoord(searchCoord));
+					block.push(getCellCoord(searchCoord));
             }
         }
     }
