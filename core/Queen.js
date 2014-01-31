@@ -89,6 +89,9 @@ Queen.prototype.pickDirection = function() {
     });
 };
 
+/**
+ * Creates a nest object and deletes the queen
+ */
 Queen.prototype.createNest = function() {
     var nest = new Nest(genID(), this.coord);
     nest.species = this.species;

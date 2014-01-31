@@ -93,27 +93,6 @@ function drawCircle(ctx, coord, radius, fillColour) {
     ctx.fill();
 }
 /**
- * Draws an arc onto a canvas context
- * @param {canvas context 2d} ctx - The context which the arc will be drawn onto
- * @param {x : number, y : number} coord - The coordinate of the centre of the arc
- * @param {number} radius - The radius of the arc
- * @param {number} startAngle - The angle from the horizontal to start the arc at
- * @param {number} endAngle - The angle from the horizontal to stop the arc at
- * @param {string} strokeColour - The stroke colour of the arc
- * @param {number} lineWidth - The width of the stroke
- */
-function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour,
-                    lineWidth, fillColour) {
-    if (lineWidth > 0) {
-        ctx.strokeStyle = strokeColour;
-        ctx.lineWidth = lineWidth;
-        ctx.beginPath();
-        ctx.arc(coord.x, coord.y, radius, startAngle, endAngle, false);
-        ctx.closePath();
-        ctx.stroke();
-    }
-}
-/**
  * Draws a rectangle over the entire canvas effectively wiping it to a single colour
  * @param {canvas context 2d} ctx - The context which the rectangle will be drawn onto
  */

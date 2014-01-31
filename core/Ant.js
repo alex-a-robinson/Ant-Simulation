@@ -79,7 +79,7 @@ Ant.prototype.addToMap = function() {
     if (this.alive) MAP[getCellIndex(this.coord)].ant.push(this);
 };
 /**
- * Removes the current position of the ant to the map
+ * Removes the current position of the ant from the map
  */
 Ant.prototype.removeFromMap = function() {
     var index = MAP[getCellIndex(this.coord)].ant.indexOf(this);
@@ -155,7 +155,7 @@ Ant.prototype.seeNest = function() {
     return false;
 };
 /**
- * Choose the target piece of food the worker should go for
+ * Choose the target piece of food the ant should go for
  */
 Ant.prototype.findFoodTarget = function() {
 	// Ant will pick the first piece of food it sees

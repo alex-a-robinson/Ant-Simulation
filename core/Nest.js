@@ -44,6 +44,7 @@ var Nest = function(id, coord) {
 
 /**
  * Create a single nest piece
+ * @param {x : number, y : number} coord - The coordinate of the nest piece to add
  */
 Nest.prototype.addNestPiece = function(coord) {
     var nestPiece = new NestPiece(genID(), coord, this);
@@ -136,7 +137,6 @@ Nest.prototype.viable = function(type) {
 /**
  * Creates a new ant
  * @param {ANT_TYPE} type - Represents a specific type of ant
- * @param {number} cost - Specifies how much health the ant requires to be created
  */
 Nest.prototype.createAnt = function(type) {
     var cost = this.getCost(type);
