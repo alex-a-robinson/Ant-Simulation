@@ -45,16 +45,9 @@ function randColour() {
  * @return {number}
  */
 function validateDirection(dir) {
-    var newDir = dir;
-    while (newDir >= Math.PI * 2) { // if over the range
-        newDir -= Math.PI * 2;
-    }
+	var newAngle = dir - Math.PI * 2 * Math.floor(dir / (Math.PI * 2));
 
-    while (newDir < 0) { // if under the range	
-        newDir += Math.PI * 2;
-    }
-
-    return newDir;
+    return newAngle;
 }
 
 /**

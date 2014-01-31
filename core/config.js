@@ -121,8 +121,10 @@ const NEST_GUARD_RADIUS = 100;                    // The number of steps ants ta
                                                     // once seeing the nest
                                                     // i.e. the sentry radius
 const SOLDIER_ANT_MAX_TARGET_DISTANCE = 25;       // The maximum distance between
-                                                    // an ant and its target befor
+                                                    // an ant and its target before
                                                     // losing interest
+const TURN_RATE = 0.02;							  // The rate at which ants turn when
+                                                    // on guarding
 
 const GOAL = { // Ant goals used to determine ant actions
     none: -1,           // No current goal, results to default for particular ant

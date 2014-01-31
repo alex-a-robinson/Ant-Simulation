@@ -158,7 +158,7 @@ Soldier.prototype.guardNest = function() {
     if (this.nearNest) { // If the ant is close to the nest
         if (this.steps <= 0 && !this.soldiersInView()) { // and no soldiers in view
             this.moving = false;
-            this.direction += 0.02; // slowly turn i.e. observing surroundings
+            this.direction += TURN_RATE; // slowly turn i.e. observing surroundings
         } else if (this.soldiersInView()) { // If soldiers in view, keep moving
             this.nearNest = false;
         }
@@ -189,7 +189,7 @@ Soldier.prototype.guardFood = function() {
                                                         // soldiers in view
         this.moving = false;
         this.nearFood = true;
-        this.direction += 0.02; // slowly turn i.e. observing surroundings
+        this.direction += TURN_RATE; // slowly turn i.e. observing surroundings
     } else { // Otherwise, keep looking
         this.nearFood = false;
         this.wonder();

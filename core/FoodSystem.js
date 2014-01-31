@@ -23,7 +23,7 @@ var FoodSystem = function() {
  *                              the centre coord
  */
 FoodSystem.prototype.addRandFood = function(coord, radius) {
-    var affectedCells = getSector(coord, radius, 0, 2 * Math.PI) // All cells in a circle
+    var affectedCells = getSector(coord, radius, 0, 2 * Math.PI); // All cells in a circle
 
     // For each cell, calculate the amount it should have
     for (var i = 0; i < affectedCells.length; i++) {
