@@ -283,16 +283,10 @@ Ant.prototype.wonder = function() {
     // Every so often change the prioritize direction
     if (Math.random() < this.species.chars.exploitativeness) 
         this.prioritizeDirection = randDir();
-    if (this.followingPheromone && this.pheromonesInRange.length <= 0 && 
-        (this.atNest() || this.seeNest())) { // If at nest turn around
-        this.direction = turnAround(this.direction);
-        this.prioritizeDirection = this.direction;
-        this.followingPheromone = false;
-		console.log('turn around')
-    } else if (pheromones && Math.random() < this.species.chars.pheromoneInfluence) {
-            // If there are pheromones to follow, go towards them however 
-            // there is a chance this will not happen depending on how 
-            // influential pheromones are (pheromoneInfluence)
+    if (pheromones && Math.random() < this.species.chars.pheromoneInfluence) {
+		// If there are pheromones to follow, go towards them however 
+		// there is a chance this will not happen depending on how 
+		// influential pheromones are (pheromoneInfluence)
         var angle = angleTo(this.coord, CoM);
 		angle = validateDirection(angle);
         if (angle > this.direction - Math.PI / 3 && angle < this.direction + Math.PI / 3) { 
