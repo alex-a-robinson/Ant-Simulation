@@ -362,7 +362,7 @@ function createSpeciesData(species) {
     toggleVisibility.innerHTML = '-'; // Default not expanded
 
     // Create a data row for colour
-    var colourRow = createDataRow(className, id + '-colour', 'colour', '');
+    var colourRow = createDataRow(className, id + '-colour', 'Colour', '');
     colourRow.childNodes[1].style.backgroundColor = species.colour.nest;
 
     // Create a data row for number of ants

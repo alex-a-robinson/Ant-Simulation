@@ -112,7 +112,7 @@ var STARTING_QUEEN_ANT_NUMBER = 1;            // The number of queen ants at
                                                     // the start of the simulation
 const ANT_FOOD_DROP_SPEED = 1;                    // The number of ticks for an ant
                                                     // to drop a piece of food
-const ANT_FOOD_TAKE_SPEED = 1;                    // The number of ticks for an ant
+const ANT_FOOD_TAKE_SPEED = 30;                    // The number of ticks for an ant
                                                     // to take a piece of food
 const DAMAGE_MULTIPLIER = 100;                    // DAMAGE_MULTIPLIER * species.chars.jawStrenght
                                                     // The amount of health a solider

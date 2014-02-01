@@ -8,6 +8,7 @@ body {
 	-webkit-user-select: none;
 	user-select: none;
 	background-color: #99E8BA;/*#5DE395;*/
+	font-family: Helvetica;
 }
 
 #header {
@@ -22,11 +23,14 @@ body {
 }
 
 #page-container {	/* Keeps the body of the page centred with a fixed width */
+	
 	padding : 6px;
 	width: 964px;
 	margin: auto;
+	margin-top: 16px;
+	margin-bottom: 16px;
 	background-color: #FFFFFF;
-	box-shadow:0px 16px 16px #000;
+	box-shadow:0px 4px 4px #000;
 }
 
 td {
@@ -91,4 +95,11 @@ input.config {	/* Keeps constant width of config*/
 
 div.ant-health {
     display: inline;
+}
+#center {
+	width: 130px;
+	margin: auto;
+}
+#ant-health {
+	font-weight: bold;
 }
