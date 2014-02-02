@@ -59,30 +59,34 @@ function updateValue(element, value) {
 	var soldierFoodCost = CHARS.reproductionSoldierFoodCost.value * FOOD_HEALTH_RATIO;
 	
 	if (workerFoodCost - specieCost < 0) {
-		window.alert('Warning - The speciesCost (' + specieCost.toFixed(0) + ') is greater then \
+		window.alert('Warning #1:\nThe speciesCost (' + specieCost.toFixed(0) + ') is greater then \
 		the worker\'s food cost (' + workerFoodCost + '. This means that worker ants \
-		will die immediatly when born, to fix, reduce your values for characteristics.');
+		will die immediatly when born.\n\n Try reduceing your values for characteristics to fix \
+		the problem.');
 	}
 	
 	if (queenFoodCost - specieCost < 0) {
-		window.alert('Warning - The speciesCost (' + specieCost.toFixed(0) + ') is greater then \
+		window.alert('Warning #2:\nThe speciesCost (' + specieCost.toFixed(0) + ') is greater then \
 		the queen\'s food cost (' + queenFoodCost + '. This means that queen ants \
-		will die immediatly when born, to fix, reduce your values for characteristics.');
+		will die immediatly when born.\n\n Try reduceing your values for characteristics to fix \
+		the problem.');
 	}
 	
 	if (soldierFoodCost - specieCost < 0) {
-		window.alert('Warning - The speciesCost (' + specieCost.toFixed(0) + ') is greater then \
+		window.alert('Warning #3:\nThe speciesCost (' + specieCost.toFixed(0) + ') is greater then \
 		the soldier\'s food cost (' + soldierFoodCost + '. This means that soldier ants \
-		will die immediatly when born, to fix, reduce your values for characteristics.');
+		will die immediatly when born.\n\n Try reduceing your values for characteristics to fix \
+		the problem.');
 	}
 	
 	var queenStepsMax = parseInt(CHARS.queenStepsMax.value);
 	var queenStepsMin = parseInt(CHARS.queenStepsMin.value);
 	
-	if (characteristic === 'queenStepsMin' || characteristic === 'queenStepsMax') {
+	if (element.name === 'queenStepsMin' || element.name === 'queenStepsMax') {
 		if (queenStepsMin > queenStepsMax) {
-			window.alert('Error - The minimum number of Queen steps (' +  queenStepsMin + ') is greater \
-			then the maximum (' +  queenStepsMax + '). Please reduce the minimum number or increase the maximum.');
+			window.alert('Error #1:\nThe minimum number of Queen steps (' +  queenStepsMin + ') is greater \
+			then the maximum (' +  queenStepsMax + '). \n\nPlease reduce the minimum number or increase the\
+			maximum to fix the problem.');
 		}
 	}
 
