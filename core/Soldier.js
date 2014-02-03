@@ -67,12 +67,13 @@ function Soldier(id, coord) {
  * @return {boolean}
  */
 Soldier.prototype.soldiersInView = function() {
-    for (var i = 0; i < this.itemsInView.ants.length; i++)
-    if (this.itemsInView.ants[i].type === ANT_TYPE.soldier && 
-            this.itemsInView.ants[i].species === this.species && 
-                this.itemsInView.ants[i] !== this) {
-        return true;
-    }
+    for (var i = 0; i < this.itemsInView.ants.length; i++) {
+		if (this.itemsInView.ants[i].type === ANT_TYPE.soldier && 
+				this.itemsInView.ants[i].species === this.species && 
+					this.itemsInView.ants[i] !== this) {
+			return true;
+		}
+	}
 
     return false;
 };

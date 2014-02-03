@@ -326,16 +326,3 @@ Ant.prototype.die = function() {
     this.species.ants.splice(index, 1);
     this.alive = false;
 };
-/**
- * Draw the ant onto the canvas context
- */
-Ant.prototype.draw = function(ctx) {
-    var scaledCoord = scaleCoord(this.coord); // Scale the coordinates so they 
-                                                // map to pixels rather then cells
-    ctx.save();
-    // Translate and rotate the canvas (done so can draw at an angle)
-    ctx.translate(scaledCoord.x + this.size.width / 2, scaledCoord.y + this.size.height / 2);
-    ctx.rotate(this.direction);
-    drawRect(ctx, {x: -this.size.width / 2, y: -this.size.height / 2}, this.size, this.colour);
-    ctx.restore();
-};

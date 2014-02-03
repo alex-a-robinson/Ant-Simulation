@@ -1,0 +1,63 @@
+# Testing
+
+## Misc
+* Cross broswer tests - to get working version numbers
+    * Chrome (two versions)
+	* Firefox (two versions)
+	* Internet explorer (two versions)
+* Button tests i.e. test that buttons do what they say they do
+    * run
+	* run (via 'r' key press) 
+	* step
+	* step (via 's' key press)
+	* restart
+	* restart (via 'r' key press)
+	* expand/contract species data
+	* select species data
+	* reset
+	* random
+	* update
+	* characteritics inputs + range checks
+	* moving around the simulation with mouse
+	* moving around the simulation with arrow keys
+	* zooming in the simulation with mouse
+	* zooming in the simulation with +/- keys
+
+## Black box unit tests
+Note: extreme values are biologically extreme
+* FoodSystem
+ * addRandFood
+* Nest
+ * calcSpeciesCost
+ * reproduce
+* Species
+ * mutateChar
+* Worker
+ * dropFood
+ * useFood
+	
+
+## White box testing
+* Ant.wonder
+* Nest.reproduce
+* Worker
+ * find food
+ * get food
+ * drop food
+* Soldier
+ * guarding the nest
+ * guarding pheromones
+ * guarding food
+ * attacking
+ * finding food
+* Queen
+ * finding a nest and creating a nest site
+* Main
+ * Ants and pheromones update each tick
+ * update cycles for all objects updated each tick
+
+## Integration testing
+* Life cycle of a single worker ant
+* Life cycle of a single queen ant
+* Life cycle of a single soldier ant
+* Life cycle of a single nest
