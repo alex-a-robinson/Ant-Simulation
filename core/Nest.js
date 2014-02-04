@@ -21,8 +21,6 @@ var Nest = function(id, coord) {
          * @property {boolean} this.hungry - If hungry ant tries to preserve food
          * @property {boolean} this.alive - If the ant is alive or not, needed if ant
          *              dies mid execution so does not keep acting as if it is alive
-         * @property {number} this.specieCost - The cost of the characteristics 
-         *              due to the species
          */
 
         this.nestSize = NEST_SIZE;
@@ -38,8 +36,6 @@ var Nest = function(id, coord) {
         this.healthRate = 0.1;
         this.hungry = false;
         this.alive = true;
-
-        this.specieCost = void(0);
     };
 
 /**
@@ -111,14 +107,12 @@ Nest.prototype.getCost = function(type) {
  * @return {number} - The health cost
  */
 Nest.prototype.calcSpeciesCost = function() {
-    if (this.specieCost === void(0)) {
-        this.specieCost = 0;
-        for (prop in CHARS) {
-            this.specieCost += CHARS[prop].healthModifier * this.species.chars[prop];
-        }
-    }
+	var specieCost = 0;
+	for (prop in CHARS) {
+		specieCost += CHARS[prop].healthModifier * this.species.chars[prop];
+	}
 
-    return this.specieCost;
+    return specieCost;
 };
 
 /**

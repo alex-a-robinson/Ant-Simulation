@@ -22,7 +22,7 @@ var FoodSystem = function() {
  * @param {integer} radius - The maximum distance a piece of food can be from 
  *                              the centre coord
  */
-FoodSystem.prototype.addRandFood = function(coord, radius) {
+FoodSystem.prototype.addFoodBlob = function(coord, radius) {
     var affectedCells = getSector(coord, radius, 0, 2 * Math.PI); // All cells in a circle
 
     // For each cell, calculate the amount it should have
@@ -40,7 +40,7 @@ FoodSystem.prototype.addRandFood = function(coord, radius) {
 FoodSystem.prototype.addFood = function() {
     for (var i = 0; i < NUM_OF_CELLS; i++) {
         if (Math.random() < FOOD_CHANCE) {
-            this.addRandFood(indexToCoord(i), randInt(this.variation));
+            this.addFoodBlob(indexToCoord(i), randInt(this.variation));
         }
     }
 };
