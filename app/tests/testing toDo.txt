@@ -4,22 +4,13 @@
 Note: extreme values are biologically extreme
 
 ## White box testing
-* Ant.wonder
-* Nest.reproduce
-* Worker
- * find food
- * get food
- * drop food
 * Soldier
- * guarding the nest
  * guarding pheromones
- * guarding food
- * attacking
  * finding food
 * Queen
  * finding a nest and creating a nest site
 * Main
- * Ants and pheromones update each tick
+ * All Ants and pheromones update each tick
  * update cycles for all objects updated each tick
 
 ## Integration testing

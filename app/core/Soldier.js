@@ -68,12 +68,12 @@ function Soldier(id, coord) {
  */
 Soldier.prototype.soldiersInView = function() {
     for (var i = 0; i < this.itemsInView.ants.length; i++) {
-		if (this.itemsInView.ants[i].type === ANT_TYPE.soldier && 
-				this.itemsInView.ants[i].species === this.species && 
-					this.itemsInView.ants[i] !== this) {
-			return true;
-		}
-	}
+	    if (this.itemsInView.ants[i].type === ANT_TYPE.soldier && 
+		            this.itemsInView.ants[i].species === this.species && 
+		        this.itemsInView.ants[i] !== this) {
+            return true;
+        }
+    }
 
     return false;
 };
@@ -189,10 +189,8 @@ Soldier.prototype.guardFood = function() {
     if (this.seeFood() && !this.soldiersInView()) { // If close to food and no other 
                                                         // soldiers in view
         this.moving = false;
-        this.nearFood = true;
         this.direction += TURN_RATE; // slowly turn i.e. observing surroundings
     } else { // Otherwise, keep looking
-        this.nearFood = false;
         this.wonder();
         this.moving = true;
     }
@@ -229,8 +227,6 @@ Soldier.prototype.doTask = function() {
         break;
 
     case GOAL.attack:
-        this.nearNest = false;
-        this.foodNest = false;
         this.moving = true;
         this.follow();
         this.attack();

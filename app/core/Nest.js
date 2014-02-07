@@ -152,9 +152,11 @@ Nest.prototype.reproduce = function() {
     // Normalize probabilities and then sort into ascending order
     var sum = chars.reproductionQueenProb + chars.reproductionSoldierProb + 
                 chars.reproductionWorkerProb;
-    var queenProb = chars.reproductionQueenProb / sum;
-    var soldierProb = chars.reproductionSoldierProb / sum;
-    var workerProb = chars.reproductionWorkerProb / sum;
+	if (sum > 0) {
+		var queenProb = chars.reproductionQueenProb / sum;
+		var soldierProb = chars.reproductionSoldierProb / sum;
+		var workerProb = chars.reproductionWorkerProb / sum;
+	}
 
     var ordered = [{
         prob: queenProb,
