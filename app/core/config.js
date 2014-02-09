@@ -110,11 +110,11 @@ const FOOD_CHANCE = 0.0004;             // The probability of a food source in a
  */
 var STARTING_QUEEN_ANT_NUMBER = 1;            // The number of queen ants at
                                                     // the start of the simulation
-const ANT_FOOD_DROP_SPEED = 1;                    // The number of ticks for an ant
+const ANT_FOOD_DROP_SPEED = 15;                    // The number of ticks for an ant
                                                     // to drop a piece of food
 const ANT_FOOD_TAKE_SPEED = 30;                    // The number of ticks for an ant
                                                     // to take a piece of food
-const DAMAGE_MULTIPLIER = 100;                    // DAMAGE_MULTIPLIER * species.chars.jawStrenght
+const DAMAGE_MULTIPLIER = 100;                    // DAMAGE_MULTIPLIER * species.chars.jawStrength
                                                     // The amount of health a solider
                                                     // ant takes from ants its attacking
 const NEST_GUARD_RADIUS = 100;                    // The number of steps ants take

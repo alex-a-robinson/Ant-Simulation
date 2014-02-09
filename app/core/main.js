@@ -111,15 +111,15 @@ function createEnviroment() {
             min: 0,
             max: GRID_SIZE.height - 1
         });
-        var a = new Queen(genID(), {
+        var ant = new Queen(genID(), {
             x: x,
             y: y
         });
-        a.addToMap();
-        a.species = USER_SPECIES;
-        a.colour = USER_SPECIES.colour.worker;
-        a.species.ants.push(a);
-        ANTS_LIST.push(a);
+        ant.addToMap();
+        ant.species = USER_SPECIES;
+        ant.colour = USER_SPECIES.colour.worker;
+        ant.species.ants.push(ant);
+        ANTS_LIST.push(ant);
 
         // Start centred with the ant
         CANVAS_OFFSET.x = -x * CELL_SIZE.width + CANVAS.width / 2;

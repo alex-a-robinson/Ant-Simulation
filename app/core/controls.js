@@ -136,7 +136,7 @@ function updateRandomValues() {
 function newElement(tag, attributes) {
     var element = document.createElement(tag);
     for (var i = 0; i < attributes.length; i++)
-    element.setAttribute(attributes[i].type, attributes[i].value);
+    	element.setAttribute(attributes[i].type, attributes[i].value);
     return element;
 }
 
@@ -422,10 +422,7 @@ function updateSpeciesData() {
         var nestNumDataElement = getElement(id + '-nestNum-data');
         nestNumDataElement.innerHTML = species.nests.length;
 
-        // Update the amount of food
-        var foodAmountDataElement = getElement(id + '-foodAmount-data');
-
-        // Update the amount of food
+        // Update the amount of food however every AVERAGE_FOOD_SAMPLE_RATE ticks
         if (TICK % AVERAGE_FOOD_SAMPLE_RATE === 0) {
             var foodAmountDataElement = getElement(id + '-foodAmount-data');
 
@@ -440,12 +437,10 @@ function updateSpeciesData() {
 
 /**
  * Removes a species data i.e. when it has died out
- * been clicked
  * @param {number} id - The id of the species to remove
  */
 function removeSpeciesData(id) {
     document.getElementsByClassName(id)[0].innerHTML = '';
-    console.log('Deleteing species' + id);
 }
 
 /**
