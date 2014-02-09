@@ -1,5 +1,5 @@
 /**
- * Resizes an HTML element to a specific size
+ * Resizes a HTML element to a specific size
  * @param {HTML element} element - The element to be resized
  * @param {width : number, height : number} size - The new size of the element
  */

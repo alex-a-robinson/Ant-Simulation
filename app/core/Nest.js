@@ -18,8 +18,7 @@ var Nest = function(id, coord) {
          *              the nest is hungry and tries to preserve food
          * @property {number} this.healthRate - The rate at which the nests health 
          *              reduces each tick
-         * @property {boolean} this.hungry - If hungry ant tries to preserve food
-         * @property {boolean} this.alive - If the ant is alive or not, needed if ant
+         * @property {boolean} this.alive - If the nest is alive or not, needed if nest
          *              dies mid execution so does not keep acting as if it is alive
          */
 
@@ -34,7 +33,6 @@ var Nest = function(id, coord) {
         this.health = 10000;
         this.hungerThreshold = 1000;
         this.healthRate = 0.1;
-        this.hungry = false;
         this.alive = true;
     };
 
@@ -58,7 +56,7 @@ Nest.prototype.createNest = function() {
 };
 
 /**
- * Kills a this ant by removing it from the ants list, it will therefore not be 
+ * Removing nest from the ants list, it will therefore not be 
  * updated and JavaScripts garbage collection should delete the object
  */
 Nest.prototype.die = function() {
@@ -189,7 +187,7 @@ Nest.prototype.updateHealth = function() {
 };
 
 /**
- * Updates the ant each tick
+ * Updates the nest each tick
  */
 Nest.prototype.update = function() {
     this.updateHealth();

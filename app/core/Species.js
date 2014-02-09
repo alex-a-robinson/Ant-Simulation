@@ -97,8 +97,6 @@ var Species = function(id) {
         };
 
         this.mutationRate = 0.5;
-
-        this.averageFoodIntake = 0;
     };
 
 /**

@@ -235,15 +235,15 @@ function angleTo(coord, target) {
     // Find the minimum distance and go in that direction i.e. either 
     // directly to target or warping around map
     if (GRID_SIZE.width - Math.abs(target.x - coord.x) > Math.abs(target.x - coord.x)) {
-        dx = target.x - coord.x;
+        var dx = target.x - coord.x;
     } else {
-        dx = GRID_SIZE.width - (target.x - coord.x);
+        var dx = GRID_SIZE.width - (target.x - coord.x);
     }
 
     if (GRID_SIZE.height - Math.abs(target.y - coord.y) > Math.abs(target.y - coord.y)) {
-        dy = target.y - coord.y;
+        var dy = target.y - coord.y;
     } else {
-        dy = GRID_SIZE.height - (target.y - coord.y);
+        var dy = GRID_SIZE.height - (target.y - coord.y);
     }
 
     return Math.atan2(dy, dx) + Math.PI / 2; // atan2 find the angle from the horizontal 
@@ -304,8 +304,8 @@ function genID() {
 
 /**
  * Clones a object needed as JavaScript passes everything by reference
- * @param {object} obj - The obj which will be cloned
- * @return {object} - A copy of obj
+ * @param {object} obj - The object which will be cloned
+ * @return {object} - A copy of object
  *
  * Credit:
  * http://stackoverflow.com/questions/7574054/javascript-how-to-pass-object-by-value
@@ -315,7 +315,7 @@ function clone(obj) {
 
     var temp = new obj.constructor();
     for (var key in obj)
-    temp[key] = clone(obj[key]);
+		temp[key] = clone(obj[key]);
 
     return temp;
 }
@@ -323,6 +323,7 @@ function clone(obj) {
 /**
  * Returns the html element an ID responds to
  * @param {string} id - HTML id
+ * @return {HTML element} - The HTML element
  */
 function getElement(id) {
     return document.getElementById(id);
@@ -335,13 +336,4 @@ function getElement(id) {
  */
 function setValue(id, value) {
     document.getElementById(id).value = value;
-}
-
-/**
- * Sets the inner html of a html element
- * @param {string} id - HTML id
- * @param {string} html - the new html content
- */
-function setInnerHTML(element, html) {
-    element.innerHTML = html;
 }

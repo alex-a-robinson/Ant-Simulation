@@ -24,7 +24,6 @@ function step() {
 
 /**
  * Toggles RUNNING and updates the pause/run button
- * @param {HTML element} button - The pause/run buttons HTML element
  */
 function runPauseButton() {
     toggleRunning();

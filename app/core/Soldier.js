@@ -54,10 +54,7 @@ function Soldier(id, coord) {
     this.targetAnt = void(0);
 
     this.moving = true;
-    this.steps = randInt({
-        min: 0,
-        max: 5
-    });
+    this.steps = 0;
     this.nearNest = false;
     this.nearFood = false;
 }

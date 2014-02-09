@@ -6,12 +6,10 @@
  */
 var Ant = function(id, coord) {
         /**
-         * @property {width : integer, y : integer} this.size - The size of 
+         * @property {width : integer, height : integer} this.size - The size of 
          * 		the ant in pixels (default: CELL_SIZE)
          * @property {x : number, y : number} this.coord - The coordinate of 
          * 		the ant
-         * @property {number} this.direction - The direction in radians from 
-         * 		the vertical axis clockwise
          * @property {integer} this.id - The unique ant id
          * @property {Species object} this.species - The ants species which 
          * 		determines its characteristics
@@ -56,7 +54,7 @@ var Ant = function(id, coord) {
         this.type;
         this.nest;
         this.colour = '#1C1C1C';
-        this.health;
+        this.health = 0;
         this.hungerThreshold = 100;
         this.healthRate = 0.1;
         this.alive = true;

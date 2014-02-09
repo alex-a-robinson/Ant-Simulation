@@ -7,9 +7,10 @@
  */
 var Food = function(foodSystem, amount, coord) {
         /**
-         * @property {FoodSystem object} this.foodSystem - A parent food system 
+         * @property {FoodSystem object} this.foodSystem - The food system which 
+		 * 													controls the food pieces 
          * @property {width : number, height : number} this.size - The size in pixels
-         * @property {string} this.amount - The concentration of food the piece has  
+         * @property {integer} this.amount - The concentration of food the piece has  
          * @property {x : number, y : number} this.coord - The coordinate of the
          *                                                      piece of food
          */
