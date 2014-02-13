@@ -10,7 +10,7 @@ var FoodSystem = function() {
          */
 
         this.variation = {
-            min: 1,
+            min: 0,
             max: 15
         };
         this.colour = FOOD_COLOUR;
@@ -44,3 +44,23 @@ FoodSystem.prototype.addFood = function() {
         }
     }
 };
+
+FoodSystem.prototype.growFood = function() {
+	if (Math.random() < FOOD_GROW_RATE) {
+		for (var i = 0; i < FOOD_GROW_AMOUNT; i++) {
+			// Pick a random index
+			var index = randInt({
+				min: 0,
+				max: NUM_OF_CELLS - 1});
+				
+			var food = MAP[index].food;
+			
+			// Determine if it has food
+			if (food !== void(0)) {
+				food.grow();
+			} else {
+				continue;
+			}
+		}
+	}
+}

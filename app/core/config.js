@@ -10,6 +10,7 @@ const VALUE_TYPE = {    // Used to signify if a variable is an integer or float
  * Main simulation loop configuration
  */
 const TICK = 10;        // The time between ticks
+var CURRENT_TICK = 0;	// The current tick number
 var CURRENT_ID = 0;     // Used to keep track of the latest unique ID
 var ANTS_LIST = [];     // Holds all ant objects
 var SPECIES_LIST = [];  // Holds all species objects
@@ -18,9 +19,9 @@ var RUNNING = false;    // Determines whether the simulation is running or not
 /**
  * Canvas configuration
  */
-const GRID_COLOUR = '#000000';              // The colour of the maps grid
+const GRID_COLOUR = '#DDDDDD';              // The colour of the maps grid
 const GRID_LINE_WIDTH = 0.2;                // The width of the grid lines
-const BACKGROUND_COLOUR = '#C2AB8A';        // The canvas background colour;
+const BACKGROUND_COLOUR = '#E3DAB3';        // The canvas background colour;
 const OUT_OF_BOUNDS_COLOUR = '#FFFFFF';     // Used if panning around off map
 var CELL_SIZE = {                           // Size in pixels of a cell
     width: 6,
@@ -35,13 +36,13 @@ var CANVAS = { // Used to define characteristics about the simulations canvas
 /**
  * Input/Output configuration
  */
-const AVERAGE_FOOD_SAMPLE_RATE = 10;        // The number of ticks to wait between
+const AVERAGE_FOOD_SAMPLE_RATE = 40;        // The number of ticks to wait between
                                                 // sampling for averages of food
 const NUMBER_OF_FIXED_PLACES = 2;           // The number of numbers after the 
                                                 // decimal place to display
 var SELECTED_SPECIES;                       // Holds the species whose
                                                 // characteristics can be changed
-const SELECTED_COLOUR = '#A5C7D9';            // The colour of a selected species
+const SELECTED_COLOUR = '#8AC1DE';            // The colour of a selected species
 const UNSELECTED_COLOUR = '#FFFFFF';          // default colour for unselected
 const BUTTON_UPDATE_COLOUR = '#FF0000';       // The colour of a button when settings 
                                                 // have changed and the update needs 
@@ -83,8 +84,8 @@ const INPUT_TYPE = {        // Used for creating custom inputs
  */
 var MAP = [];               // Holds all objects displayed on map
 var GRID_SIZE = {         // Size in number of cells
-    width: 250,
-    height: 250
+    width: 500,
+    height: 500
 };
 var MAP_BOUNDARY = {      // Used to tell if ant is out of bounds
     x: {
@@ -102,8 +103,10 @@ var NUM_OF_CELLS = GRID_SIZE.width * GRID_SIZE.height; // The total number of ce
  * Food configuration
  */
 const FOOD_COLOUR = '#00FF00';          // The colour of food
-const FOOD_HEALTH_RATIO = 50;           // food : health i.e. 1 food worth 50 health
+const FOOD_HEALTH_RATIO = 100;           // food : health i.e. 1 food worth 50 health
 const FOOD_CHANCE = 0.0004;             // The probability of a food source in a cell
+const FOOD_GROW_AMOUNT = 100;			// The 
+const FOOD_GROW_RATE = 0.01;
 
 /**
  * Ant configuration
@@ -158,9 +161,9 @@ const ANT_TYPE = {  // Used to show the type of ant
 /**
  * Pheromone configuration
  */
-const PHEROMONE_EVAPERATION_RATE = 0.005; // The global amount all pheromone 
+const PHEROMONE_EVAPERATION_RATE = 0.001; // The global amount all pheromone 
                                             // concentrations reduce by each tick
-const MAX_PHEROMONE_CONCENTRATION = 1;  // The maximum concentration a pheromone can have
+const MAX_PHEROMONE_CONCENTRATION = 1.2;  // The maximum concentration a pheromone can have
 
 /**
  * Species configuration
@@ -193,15 +196,15 @@ var CHARS = {       // Holds properties of all characteristics species
      
     speed: {
         min: 0,
-        max: 1,
+        max: 0.2,
         type: VALUE_TYPE.floatValue,
         id: 'char-speed',
         neatName: 'Speed',
         desc: 'The speed that an ant can move',
         step: 0.01,
-        healthModifier: 50,
-        defaultValue: 0.25,
-        value: 0.25,
+        healthModifier: 1000,
+        defaultValue: 0.1,
+        value: 0.1,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -213,9 +216,9 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Jaw Strength',
         desc: 'The stength of the ants jaw (determins how much food the ant can carry)',
         step: 1,
-        healthModifier: 4,
-        defaultValue: 10,
-        value: 10,
+        healthModifier: 5,
+        defaultValue: 15,
+        value: 15,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -227,7 +230,7 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Jaw Size',
         desc: 'The amount of damage a soldier ant does when attack',
         step: 1,
-        healthModifier: 5,
+        healthModifier: 30,
         defaultValue: 1,
         value: 1,
         editable: true,
@@ -241,7 +244,7 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Sting Size',
         desc: 'The range which a soldier ant can attack',
         step: 1,
-        healthModifier: 5,
+        healthModifier: 10,
         defaultValue: 1,
         value: 1,
         editable: true,
@@ -255,9 +258,9 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Eye Sight',
         desc: 'The range of cells an ant can see around it',
         step: 1,
-        healthModifier: 10,
-        defaultValue: 5,
-        value: 5,
+        healthModifier: 15,
+        defaultValue: 3,
+        value: 3,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -269,9 +272,9 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Eye Angle',
         desc: 'The angle at which an ant can see',
         step: 0.01,
-        healthModifier: 10,
-        defaultValue: Math.PI / 2,
-        value: Math.PI / 2,
+        healthModifier: 30,
+        defaultValue: Math.PI / 3,
+        value: Math.PI / 3,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -283,8 +286,8 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Antenna Size',
         desc: 'The angle at which an ant can detect pheromones',
         step: 1,
-        healthModifier: 2,
-        defaultValue: 5,
+        healthModifier: 3,
+        defaultValue: 3,
         value: 5,
         editable: true,
         inputType: INPUT_TYPE.slider
@@ -297,9 +300,9 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Antenna Angle',
         desc: 'The range of cells an ant can detect pheromones',
         step: 0.01,
-        healthModifier: 10,
-        defaultValue: Math.PI / 2,
-        value: Math.PI / 2,
+        healthModifier: 30,
+        defaultValue: Math.PI / 3,
+        value: Math.PI / 3,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -311,7 +314,7 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Pheromone Concentration',
         desc: 'The concentration of pheromones an ant can secrete',
         step: 0.01,
-        healthModifier: 15,
+        healthModifier: 25,
         defaultValue: 0.4,
         value: 0.4,
         editable: true,
@@ -326,9 +329,9 @@ var CHARS = {       // Holds properties of all characteristics species
         desc: 'A measure of how well the ant knows where the nest is, used when navigating \
 				to the nest, represents memory of familiarly landmarks near the nest',
         step: 0.01,
-        healthModifier: 50,
-        defaultValue: 0.1,
-        value: 0.1,
+        healthModifier: 500,
+        defaultValue: 0.05,
+        value: 0.05,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -340,10 +343,10 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Explorative Influence',
         desc: 'The likelihood of an ant changing direction rather then continue going in the \
 				direction its facing',
-        step: 0.01,
+        step: 0.001,
         healthModifier: 0,
-        defaultValue: 0.05,
-        value: 0.05,
+        defaultValue: 0.005,
+        value: 0.005,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -356,8 +359,8 @@ var CHARS = {       // Holds properties of all characteristics species
         desc: 'How likely it is that an ant will follow a pheromones',
         step: 0.01,
         healthModifier: 0,
-        defaultValue: 0.90,
-        value: 0.90,
+        defaultValue: 0.1,
+        value: 0.1,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -366,7 +369,7 @@ var CHARS = {       // Holds properties of all characteristics species
         max: 1,
         type: VALUE_TYPE.floatValue,
         id: 'char-reproductionWorkerProb',
-        neatName: 'Worker ant probibility',
+        neatName: 'Worker ant probability',
         desc: 'The probability of a worker ant being born compared with other types of ants',
         step: 0.05,
         healthModifier: 0,
@@ -395,12 +398,12 @@ var CHARS = {       // Holds properties of all characteristics species
         max: 1,
         type: VALUE_TYPE.floatValue,
         id: 'char-reproductionSoldierProb',
-        neatName: 'Soldier ant probibility',
+        neatName: 'Soldier ant probability',
         desc: 'The probability of a soldier ant being born compared with other types of ants',
         step: 0.05,
         healthModifier: 0,
-        defaultValue: 0.1,
-        value: 0.1,
+        defaultValue: 0.05,
+        value: 0.05,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -424,12 +427,12 @@ var CHARS = {       // Holds properties of all characteristics species
         max: 1,
         type: VALUE_TYPE.floatValue,
         id: 'char-reproductionQueenProb',
-        neatName: 'Queen ant probibility',
+        neatName: 'Queen ant probability',
         desc: 'The probability of a queen ant being born compared with other types of ants',
         step: 0.05,
         healthModifier: 0,
-        defaultValue: 0.05,
-        value: 0.05,
+        defaultValue: 0.1,
+        value: 0.1,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -443,8 +446,8 @@ var CHARS = {       // Holds properties of all characteristics species
 				amount of health)',
         step: 0.1,
         healthModifier: 0,
-        defaultValue: 25,
-        value: 25,
+        defaultValue: 15,
+        value: 15,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -457,7 +460,7 @@ var CHARS = {       // Holds properties of all characteristics species
         desc: 'The minimum number of steps a queen will take until it reaches its new nest site',
         step: 1,
         healthModifier: 0,
-        defaultValue: 200,
+        defaultValue: 400,
         value: 200,
         editable: true,
         inputType: INPUT_TYPE.slider
@@ -478,15 +481,15 @@ var CHARS = {       // Holds properties of all characteristics species
     },
     reproductionRate: {
         min: 0,
-        max: 1,
+        max: 0.2,
         type: VALUE_TYPE.floatValue,
         id: 'char-reproductionRate',
         neatName: 'Reproduction Rate',
         desc: 'The chance each tick of a new ant being born',
-        step: 0.05,
+        step: 0.0001,
         healthModifier: 0,
-        defaultValue: 0.05,
-        value: 0.05,
+        defaultValue: 0.01,
+        value: 0.01,
         editable: true,
         inputType: INPUT_TYPE.slider
     }

@@ -195,7 +195,7 @@ Worker.prototype.draw = function(ctx) {
         }, {
             width: this.size.width / 2,
             height: this.size.height / 2
-        }, '#FFFFFF');
+        }, FOOD_COLOUR);
     }
     ctx.restore();
 };

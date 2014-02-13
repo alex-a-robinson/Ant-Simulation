@@ -97,6 +97,7 @@ Queen.prototype.createNest = function() {
     nest.species = this.species;
     nest.colour = nest.species.colour.nest;
     nest.createNest();
+	nest.health = this.health;
 
     var index = this.species.ants.indexOf(this);
     this.species.ants.splice(index, 1);

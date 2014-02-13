@@ -286,6 +286,8 @@ Soldier.prototype.draw = function(ctx) {
                                                 // map to pixels rather then cells
 
     ctx.save();
+	
+	var crossColour = (this.goal === GOAL.attack)?'#FF0000':'#FFFFFF';
 
     // Translate and rotate the canvas (done so can draw at an angle)
     ctx.translate(scaledCoord.x + this.size.width / 2, scaledCoord.y + this.size.height / 2);
@@ -304,14 +306,14 @@ Soldier.prototype.draw = function(ctx) {
     }, {
         x: this.size.width / 4,
         y: this.size.height / 4
-    }, '#FFFFFF', 1);
+    }, crossColour, 1);
     drawLine(ctx, {
         x: -this.size.width / 4,
         y: this.size.height / 4
     }, {
         x: this.size.width / 4,
         y: -this.size.height / 4
-    }, '#FFFFFF', 1);
+    }, crossColour, 1);
 
     ctx.restore();
 };

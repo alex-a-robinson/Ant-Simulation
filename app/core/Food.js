@@ -46,3 +46,17 @@ Food.prototype.draw = function(ctx) {
     drawRect(ctx, scaleCoord(this.coord), this.size, this.foodSystem.colour);
     ctx.globalAlpha = 1; // reset opacity
 };
+
+Food.prototype.grow = function() {
+	this.amount++;
+	var block = getBlock(this.coord, {width: 1, height: 1});
+	
+	for (var i = 0; i < block.length; i++) {
+		var food = MAP[coordToIndex(block[i])].food;
+		if (food !== void(0)) {
+			food.amount++;
+		} else {
+			MAP[coordToIndex(block[i])].food = new Food(this.foodSystem, 1, block[i]);
+		}
+	}
+}

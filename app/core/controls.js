@@ -57,7 +57,8 @@ function updateValue(element, value) {
 	var queenFoodCost = CHARS.reproductionQueenFoodCost.value * FOOD_HEALTH_RATIO;
 	var soldierFoodCost = CHARS.reproductionSoldierFoodCost.value * FOOD_HEALTH_RATIO;
 	
-	if (workerFoodCost - specieCost < 0) {
+	if ((workerFoodCost - specieCost) < 0) {
+		console.log('YELL')
 		window.alert('Warning #1:\nThe speciesCost (' + specieCost.toFixed(0) + ') is greater then \
 		the worker\'s food cost (' + workerFoodCost + '. This means that worker ants \
 		will die immediatly when born.\n\n Try reduceing your values for characteristics to fix \
@@ -94,7 +95,13 @@ function updateValue(element, value) {
     setValue(characteristic.id, value);
 	
 	// Update the species cost
-    getElement('ant-health').innerHTML = specieCost.toFixed(0);
+    workerCostTotal = (workerFoodCost - specieCost).toFixed(0);
+	soldierCostTotal = (soldierFoodCost - specieCost).toFixed(0);
+	queenCostTotal = (queenFoodCost - specieCost).toFixed(0);
+
+    getElement('ant-health').innerHTML = 'Worker: ' + workerCostTotal +
+											'</br>Soldier: ' + soldierCostTotal +
+											'</br>Queen: ' + queenCostTotal
 }
 
 /**
@@ -281,8 +288,14 @@ function updateUserSpecies() {
 
         specieCost += CHARS[prop].healthModifier * value;
     }
+	
+	workerCostTotal = (CHARS.reproductionWorkerFoodCost.value * FOOD_HEALTH_RATIO - specieCost).toFixed(0);
+	soldierCostTotal = (CHARS.reproductionSoldierFoodCost.value * FOOD_HEALTH_RATIO - specieCost).toFixed(0);
+	queenCostTotal = (CHARS.reproductionQueenFoodCost.value * FOOD_HEALTH_RATIO - specieCost).toFixed(0);
 
-    getElement('ant-health').innerHTML = specieCost.toFixed(0);
+    getElement('ant-health').innerHTML = 'Worker: ' + workerCostTotal +
+											'</br>Soldier: ' + soldierCostTotal +
+											'</br>Queen: ' + queenCostTotal
 }
 
 /**
@@ -423,12 +436,14 @@ function updateSpeciesData() {
         nestNumDataElement.innerHTML = species.nests.length;
 
         // Update the amount of food however every AVERAGE_FOOD_SAMPLE_RATE ticks
-        if (TICK % AVERAGE_FOOD_SAMPLE_RATE === 0) {
+
+        if (CURRENT_TICK % AVERAGE_FOOD_SAMPLE_RATE === 0) {
             var foodAmountDataElement = getElement(id + '-foodAmount-data');
 
             var foodAmount = 0;
             for (var k = 0; k < species.nests.length; k++)
-            foodAmount += species.nests[k].health;
+				foodAmount += species.nests[k].health;
+			console.log(foodAmount)
 
             foodAmountDataElement.innerHTML = foodAmount.toFixed(NUMBER_OF_FIXED_PLACES);
         }

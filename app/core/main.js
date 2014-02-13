@@ -1,6 +1,7 @@
 // Define file scope variables
 var canvasDOM;
 var canvasCTX;
+var simulationFoodSystem;
 
 var lastLoop = new Date();
 
@@ -18,6 +19,7 @@ function tick() {
 
     setTimeout(tick, tickTime);
     getElement('fps').innerHTML = (1000 / (thisLoop - lastLoop)).toFixed(0);
+	CURRENT_TICK++;
     lastLoop = thisLoop;
 }
 
@@ -27,6 +29,9 @@ function tick() {
 function drawMap(ctx) {
     clearCanvas(canvasCTX);
     drawBackground(canvasCTX);
+	
+	// Grow food
+	simulationFoodSystem.growFood();
 
     // Update all of the ants in the sytem
     if (RUNNING) {
@@ -80,8 +85,7 @@ function createEnviroment() {
     createMap();
 
     // Create food system & add food
-    var simulationFoodSystem = new FoodSystem();
-
+    simulationFoodSystem = new FoodSystem();
     simulationFoodSystem.addFood();
 
     // Create the users species
@@ -119,6 +123,7 @@ function createEnviroment() {
         ant.species = USER_SPECIES;
         ant.colour = USER_SPECIES.colour.worker;
         ant.species.ants.push(ant);
+		ant.health = 3000;	// The starting ant health
         ANTS_LIST.push(ant);
 
         // Start centred with the ant
