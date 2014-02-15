@@ -36,7 +36,6 @@ MAP_BOUNDARY = {x : {min : 0, max : 50}, y : {min : 0, max : 50}}
 CELL_SIZE = {width : 10, height : 10};
 GRID_SIZE = {width : 50, height : 50};
 NUM_OF_CELLS = GRID_SIZE.width * GRID_SIZE.height;
-MAX_PHEROMONE_CONCENTRATION = 1;
 
 createMap();
 testAnt.secrete();
@@ -63,6 +62,6 @@ createMap();
 MAP[coordToIndex({x : 25, y : 25})].pheromone = [{species : testAntSpecies, concentration : 0.8}];
 testAnt.secrete();
 AntSecreteTest.createTest(MAP[coordToIndex({x : 25, y : 25})].pheromone.length, [], 'equal', 1);
-AntSecreteTest.createTest(MAP[coordToIndex({x : 25, y : 25})].pheromone[0].concentration, [], 'equal', 1);
+AntSecreteTest.createTest(MAP[coordToIndex({x : 25, y : 25})].pheromone[0].concentration, [], 'equal', MAX_PHEROMONE_CONCENTRATION);
 
 AntSecreteTest.summery();

@@ -2,15 +2,15 @@
 /**
 * Test case - Test that reproduce produces the correct probabilities
 *
-* Note : not testing Nest.viable function so is rediffined to always return true
+* Note : not testing Nest.viable function so is redefined to always return true
 *
 * Test data - Soldier probability = 1, worker and queen probabilities = 0
 * Expected - Only soldier ants produced after 1000 runs.
 * 
-* Test data - Soldier, Worker and Queen probabilites are all 1
+* Test data - Soldier, Worker and Queen probabilities are all 1
 * Expected - A 1/3 chance of each type of ant
 * 
-* Test data - Soldier, Worker and Queen probabilites are all 0
+* Test data - Soldier, Worker and Queen probabilities are all 0
 * Expected - No ants created
 */
 

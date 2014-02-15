@@ -199,17 +199,20 @@ function getSector(coord, radius, direction, angle) {
                 x: x,
                 y: y
             };
-
+			
+			var validDir = validateDirection(direction);
+			var theta = validateDirection(angleTo(coord, searchCoord));
+			var dist = distance(coord, searchCoord);
+			
+			var minSector = validateDirection(direction - angle / 2);
+			var maxSector = validateDirection(direction + angle / 2);
+			
             // Determine if the coordinate lies in the sector
-            if (validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle / 2) &&
-                validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle / 2) &&
-                distance(coord, searchCoord) <= radius) {
-					block.push(getCellCoord(searchCoord));
-            } else if ((validateDirection(direction) <= angle / 2 || validateDirection(direction) >= Math.PI * 2 - angle / 2) &&
-                (validateDirection(angleTo(coord, searchCoord)) <= validateDirection(direction + angle / 2) ||
-                validateDirection(angleTo(coord, searchCoord)) >= validateDirection(direction - angle / 2)) &&
-                distance(coord, searchCoord) <= radius) {
-					block.push(getCellCoord(searchCoord));
+            if (theta >= minSector && theta <= maxSector && dist <= radius) {
+				block.push(getCellCoord(searchCoord));
+            } else if ((validDir  <= angle / 2 || validDir >= Math.PI * 2 - angle / 2) &&
+                          (theta <= maxSector || theta >= minSector) && dist <= radius) {
+				block.push(getCellCoord(searchCoord));
             }
         }
     }
