@@ -1,9 +1,0 @@
-if (coordX < boundsXMmin)
-	coordX = boundsXMax - abs(coordX)
-else if (coordX >= boundsXMax)
-	coordX = coordX - boundsXMax
-
-if (coordY < boundsYMin) 
-	coordY = boundsYMax - abs(coordY)
-else if (coordY >= boundsYMax) 
-	coordY = coordY - boundsYMax

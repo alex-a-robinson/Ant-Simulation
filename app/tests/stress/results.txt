@@ -1,8 +1,0 @@
-## Stress testing
-* ants
- * 1 ant 200 frames a second - Chrome 32 - Windows 7
- * 10 ants 100 frames a second - Chrome 32 - Windows 7
- * 100 ants 40 frames a second - Chrome 32 - Windows 7
- * 1000 ants 8 frames a second - chrome 32 - Windows 7
- * 10000 ants 1 frames a second - chrome 32 - Windows 7
- * 100000 ants N/A frames a second - chrome 32 - Windows 7
