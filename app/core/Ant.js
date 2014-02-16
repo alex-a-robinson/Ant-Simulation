@@ -48,7 +48,6 @@ var Ant = function(id, coord) {
          */
         this.size = CELL_SIZE;
         this.coord = coord;
-        this.direction = randDir();
         this.id = id;
         this.species;
         this.type;
@@ -67,7 +66,7 @@ var Ant = function(id, coord) {
         this.pheromonesInRange = [];
         this.sleep = 0;
         this.followingPheromone = false;
-		this.direction = randDir();
+        this.direction = randDir();
 		this.prioritizeDirection = randDir();
     };
 /**
