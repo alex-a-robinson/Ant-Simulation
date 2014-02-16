@@ -1,0 +1,105 @@
+@import url(http://fonts.googleapis.com/css?family=Averia+Sans+Libre|Jolly+Lodger|The+Girl+Next+Door|Wendy+One|Hanalei|Medula+One|Loved+by+the+King);
+
+
+body {
+	margin: 0px;
+    padding: 0px;
+	
+	-webkit-user-select: none;
+	user-select: none;
+	background-color: #99E8BA;/*#5DE395;*/
+	font-family: Helvetica;
+}
+
+#header {
+    background-color: #4AB577;
+    width: 100%;
+    height: 64px;
+	font-size: 3em;
+	font-family: 'Averia Sans Libre', cursive;
+	color: #FFFFFF;
+	text-align: center;
+
+}
+
+#page-container {	/* Keeps the body of the page centred with a fixed width */
+	
+	padding : 6px;
+	width: 964px;
+	margin: auto;
+	margin-top: 16px;
+	margin-bottom: 16px;
+	background-color: #FFFFFF;
+	box-shadow:0px 4px 4px #000;
+}
+
+td {
+    border: 1px solid black;
+	vertical-align: top;
+}
+
+#fps {
+	position: absolute;
+	top : 69px;
+	right: 10px;
+	display : block;
+}
+
+canvas {	/* Styles the canvas the simulation runs on */
+	border: 1px solid black;
+	cursor: move;
+}
+
+.controls {
+	width: 170px;
+	height: 30px;
+	border: 1px solid black;
+	margin : auto;
+}
+
+td#data {
+	width: 200px;
+}
+
+table.species {	/* Keeps constant width of data for individual species */
+	width : 100%;
+}
+
+td.species {	/* Keeps constant width of rows for species data */
+	width: 50%;
+}
+
+.toggleVisibility {
+	text-align: right;
+	border: none;
+	cursor: pointer;
+}
+
+td#config {		
+	width: 250px;
+	cursor: help;
+}
+
+#input-container {	/* Keeps constant width of input */
+	width: 100%;
+}
+
+td.config {
+	width : 1px;
+}
+
+input.config {	/* Keeps constant width of config*/
+	display: block;
+	width: 100%;
+}
+
+div.ant-health {
+    display: inline;
+}
+#center {
+	width: 130px;
+	margin: auto;
+}
+#ant-health {
+	font-weight: bold;
+}

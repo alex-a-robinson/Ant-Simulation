@@ -1,0 +1,5 @@
+block = []
+
+for (y = coordY - sizeHeight; y <= coordY + sizeHeight; y++)
+    for (x = coordX - sizeWidth; x <= coordX + sizeWidth; x++)
+        block.push(getCellCoord(coordX, coordY))

@@ -1,8 +1,0 @@
-for pheromone in cell
-	if (pheromoneSpecies == thisSpecies)
-		pheromoneConcentration += thisPheromoneConcentration
-		if (pheromoneConcentration > MAX_PHEROMONE_CONCENTRATION)
-			pheromoneConcentration = MAX_PHEROMONE_CONCENTRATION
-
-pheromone = new Pheromone(this.species.chars.pheromoneConcentration, thisCoord)
-pheromone.addToMap()

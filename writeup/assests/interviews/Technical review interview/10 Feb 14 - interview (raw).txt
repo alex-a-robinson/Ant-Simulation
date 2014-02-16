@@ -1,0 +1,13 @@
+Dear SRS/ Alex,
+ 
+The simulation incorporates many relevant biological adaptations of an ant colony and it’s anatomy, physiology and behaviour.
+ 
+For instance, Alex has integrated jaw size and strength, speed of movement, visual field and pheromone detection into his ants, plus he has the colony reinforcing movement towards a food source based on pheromone trails.  Soldier ant have been programmed to follow and attack intruder ant from different species and also to stand guard around a nest or food source.
+ 
+Alex explained that different species have developed from an ancestral species and they all differed in characteristics.
+ 
+Visually the simulation was interesting, but there was a lot of activity and it was difficult to extract a result from the interactions between species easily.  It was recommended that Alex should work towards showing a biological outcome with respect to the competition between species, either showing new species mutating and evolving or a single species occupying a single niche as a result of competition between species.  Alex stated that this would require a lot of work optimising the subroutines and finding their ‘sweet spot’.  It is important that he documents this work as evidence of improving the programme.
+ 
+Overall, an impressive piece of software simulation with lots of relevant biology in it, although there is a danger of too much variation for a visual model.
+ 
+NMS

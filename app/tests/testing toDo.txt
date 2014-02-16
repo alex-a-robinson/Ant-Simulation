@@ -1,0 +1,20 @@
+# Testing
+
+## Black box unit tests
+Note: extreme values are biologically extreme
+
+## White box testing
+* Soldier
+ * guarding pheromones
+ * finding food
+* Queen
+ * finding a nest and creating a nest site
+* Main
+ * All Ants and pheromones update each tick
+ * update cycles for all objects updated each tick
+
+## Integration testing
+* Life cycle of a single worker ant
+* Life cycle of a single queen ant
+* Life cycle of a single soldier ant
+* Life cycle of a single nest
