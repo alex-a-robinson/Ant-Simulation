@@ -30,14 +30,15 @@ function drawMap(ctx) {
     clearCanvas(canvasCTX);
     drawBackground(canvasCTX);
 	
-	// Grow food
-	simulationFoodSystem.growFood();
 
     // Update all of the ants in the sytem
     if (RUNNING) {
         TICK += 1;
         for (var i = 0; i < ANTS_LIST.length; i++)
-        ANTS_LIST[i].update();
+			ANTS_LIST[i].update();
+			
+		// Grow food
+		simulationFoodSystem.growFood();
     }
 
     // Update each cell on the map
