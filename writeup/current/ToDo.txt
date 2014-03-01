@@ -5,7 +5,7 @@
   * comp4 project v2.11
   * maintainance v1.4
   * testing v1.4
-  * user manual v1.2
+  * user manual v1.2 (95%)
 
 ### Code
 Finsih value adjustment
