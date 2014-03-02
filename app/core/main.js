@@ -159,32 +159,32 @@ window.onload = function() {
         e = e || window.event;
         var charCode = e.keyCode || e.which;
         switch (charCode) {
-        case LEFT_ARROW_KEY:
+        case LEFT_ARROW_KEY: // Pan left
             CANVAS_OFFSET.x += PAN_AMOUNT;
             break;
-        case RIGHT_ARROW_KEY:
+        case RIGHT_ARROW_KEY: // Pan right
             CANVAS_OFFSET.x -= PAN_AMOUNT;
             break;
-        case UP_ARROW_KEY:
+        case UP_ARROW_KEY: // Pan up
             CANVAS_OFFSET.y += PAN_AMOUNT;
             break;
-        case DOWN_ARROW_KEY:
+        case DOWN_ARROW_KEY: // Pan down
             CANVAS_OFFSET.y -= PAN_AMOUNT;
             break;
-        case PLUS_KEY:
+        case PLUS_KEY: // Zoom in
             zoom(ZOOM_AMOUNT);
             break;
-        case MINUS_KEY:
+        case MINUS_KEY: // Zoom out
             zoom(-1 * ZOOM_AMOUNT);
             break;
-        case SPACE_BAR_KEY:
+        case SPACE_BAR_KEY: // Pause
             runPauseButton(getElement('button-run'));
             e.preventDefault();
             break;
-        case R_KEY:
+        case R_KEY: // restart
             createEnviroment();
             break;
-        case S_KEY:
+        case S_KEY: // step
             step(getElement('button-step'));
         }
     };

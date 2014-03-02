@@ -2,10 +2,10 @@
 ## To do for project documents
 ### Progess report
   * Apprrasial v1.0
-  * comp4 project v2.11
-  * maintainance v1.4
+  * comp4 project v2.12
+  * maintainance v1.5 (90%)
   * testing v1.4
-  * user manual v1.2 (95%)
+  * user manual v1.3 (95%)
 
 ### Code
 Finsih value adjustment

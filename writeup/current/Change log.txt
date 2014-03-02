@@ -1,5 +1,8 @@
+02/03/14
+  * Reviewed maintenance v1.5
+
 28/02/14
-  * Reviewd user manual v1.3
+  * Reviewed user manual v1.3
 
 24/02/14
   * Added comments to comp4 project v2.11
