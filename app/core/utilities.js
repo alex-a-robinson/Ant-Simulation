@@ -45,9 +45,7 @@ function randColour() {
  * @return {number}
  */
 function validateDirection(dir) {
-	var newAngle = dir - Math.PI * 2 * Math.floor(dir / (Math.PI * 2));
-
-    return newAngle;
+    return dir - Math.PI * 2 * Math.floor(dir / (Math.PI * 2));
 }
 
 /**
@@ -59,8 +57,9 @@ function randProperty(obj) {
     var result;
     var count = 0;
     for (var prop in obj)
-        if (Math.random() < 1 / ++count) result = prop;
-            return result;
+        if (Math.random() < 1 / ++count) 
+            result = prop;
+    return result;
 }
 
 /**
@@ -117,8 +116,8 @@ function indexToCoord(index) {
 }
 
 /**
- * Smiler to coordToIndex however returns the *neat* coordinate i.e. a coordinate 
- * which maps exactly to a single map index by finding the cell which the 
+ * Smiler to coordToIndex however returns the *neat* coordinate i.e. a coordinate
+ * which maps exactly to a single map index by finding the cell which the
  * coordinate lies in mostly
  * @param {x : number, y : number} coord - The coordinate
  * @return {x : number, y : number} - The coordinate which maps exactly to a single map index
@@ -141,15 +140,15 @@ function getCellCoord(coord) {
 function boundary(coord, bounds) {
 
     // Check x bounds
-    if (coord.x < bounds.x.min) 
+    if (coord.x < bounds.x.min)
         coord.x = bounds.x.max - Math.abs(coord.x); // x may be negative if x < 0
-    else if (coord.x >= bounds.x.max) 
+    else if (coord.x >= bounds.x.max)
         coord.x = coord.x - bounds.x.max; // x cannot be negative unless boundary is
 
     // Check y bounds
-    if (coord.y < bounds.y.min) 
+    if (coord.y < bounds.y.min)
         coord.y = bounds.y.max - Math.abs(coord.y);
-    else if (coord.y >= bounds.y.max) 
+    else if (coord.y >= bounds.y.max)
         coord.y = coord.y - bounds.y.max;
 
     return coord;
@@ -158,10 +157,10 @@ function boundary(coord, bounds) {
 /**
  * Returns an array of cells which lie a certain distance around a specific point
  * @param {x : number, y : number} coord - The coordinate to get the block around
- * @param {width : integer, height : integer} size - The size of the block i.e. 
- *          if width = 2, takes 2 block to the left, and two blocks to the 
+ * @param {width : integer, height : integer} size - The size of the block i.e.
+ *          if width = 2, takes 2 block to the left, and two blocks to the
  *          right of the coordinate
- * @return {[{x : number, y : number}]} - An array of coordinates which lie 
+ * @return {[{x : number, y : number}]} - An array of coordinates which lie
  *          around the coordinate
  */
 function getBlock(coord, size) {
@@ -180,7 +179,7 @@ function getBlock(coord, size) {
 }
 
 /**
- * Returns an array of cells which lie in the sector of a circle of a 
+ * Returns an array of cells which lie in the sector of a circle of a
  * particular radius around a specific point
  * @param {x : number, y : number} coord - The coordinate to get the block around
  * @param {integer} radius - The radius of the circle which a sector is being taken from
@@ -199,20 +198,20 @@ function getSector(coord, radius, direction, angle) {
                 x: x,
                 y: y
             };
-			
-			var validDir = validateDirection(direction);
-			var theta = validateDirection(angleTo(coord, searchCoord));
-			var dist = distance(coord, searchCoord);
-			
-			var minSector = validateDirection(direction - angle / 2);
-			var maxSector = validateDirection(direction + angle / 2);
-			
+
+            var validDir = validateDirection(direction);
+            var theta = validateDirection(angleTo(coord, searchCoord));
+            var dist = distance(coord, searchCoord);
+
+            var minSector = validateDirection(direction - angle / 2);
+            var maxSector = validateDirection(direction + angle / 2);
+
             // Determine if the coordinate lies in the sector
             if (theta >= minSector && theta <= maxSector && dist <= radius) {
-				block.push(getCellCoord(searchCoord));
-            } else if ((validDir  <= angle / 2 || validDir >= Math.PI * 2 - angle / 2) &&
-                          (theta <= maxSector || theta >= minSector) && dist <= radius) {
-				block.push(getCellCoord(searchCoord));
+                block.push(getCellCoord(searchCoord));
+            } else if ((validDir <= angle / 2 || validDir >= Math.PI * 2 - angle / 2) &&
+                (theta <= maxSector || theta >= minSector) && dist <= radius) {
+                block.push(getCellCoord(searchCoord));
             }
         }
     }
@@ -250,7 +249,7 @@ function angleTo(coord, target) {
     }
 
     return Math.atan2(dy, dx) + Math.PI / 2; // atan2 find the angle from the horizontal 
-                                                // however ants use angle from the vertical
+    // however ants use angle from the vertical
 }
 
 /**
@@ -314,11 +313,11 @@ function genID() {
  * http://stackoverflow.com/questions/7574054/javascript-how-to-pass-object-by-value
  */
 function clone(obj) {
-    if (obj === null || typeof(obj) !== 'object') return obj;
+    if (obj === null || typeof (obj) !== 'object') return obj;
 
     var temp = new obj.constructor();
     for (var key in obj)
-		temp[key] = clone(obj[key]);
+        temp[key] = clone(obj[key]);
 
     return temp;
 }

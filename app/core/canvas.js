@@ -13,7 +13,7 @@ function resizeElement(element, size) {
  * @param {x : number, y : number} coord - The coordinate of the top left corner
  * @param {width : number, height : number} size - The size of the rectangle
  * @param {string} fillColour - The colour of the rectangle
- * @param {string} strokeColour - The stroke colour of the rectangle 
+ * @param {string} strokeColour - The stroke colour of the rectangle
  * (defaults to '#000000')
  * @param {number} lineWidth - The width of the border (defaults to 0)
  */
@@ -62,7 +62,7 @@ function drawLine(ctx, coord1, coord2, strokeColour, lineWidth) {
  * @param {string} fillColour - The colour of the arc
  */
 function drawArc(ctx, coord, radius, startAngle, endAngle, strokeColour,
-                    lineWidth, fillColour) {
+    lineWidth, fillColour) {
     if (lineWidth > 0) {
         ctx.beginPath();
         ctx.arc(coord.x, coord.y, radius, startAngle, endAngle, false);

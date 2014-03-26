@@ -20,28 +20,28 @@ function Soldier(id, coord) {
     /**
      * @property {integer} this.id - The unique ant id
      * @property {x : number, y : number} this.coord - The coordinate of the ant
-     * @property {ANT_TYPE : integer} this.type - The type of ant i.e. Queen ant 
+     * @property {ANT_TYPE : integer} this.type - The type of ant i.e. Queen ant
      *              (default: ANT_TYPE.queen)
-     * @property {number} this.direction - The direction in radians from the 
+     * @property {number} this.direction - The direction in radians from the
      *              vertical axis clockwise (default: *random direction*)
-     * @property {number} this.prioritizeDirection - The direction the ant will 
-     *              general move, used to get straighter more realistic paths 
+     * @property {number} this.prioritizeDirection - The direction the ant will
+     *              general move, used to get straighter more realistic paths
      *              (default: *random direction*)
      * @property {integer} this.carrying - The amount of food the ant is carrying
-     *              (default: 0) 
-     * @property {integer} this.carryingThreshold - If an ant is carrying more 
-     *              food then this value and cannot see any food near it, ant 
+     *              (default: 0)
+     * @property {integer} this.carryingThreshold - If an ant is carrying more
+     *              food then this value and cannot see any food near it, ant
      *              will return to the nest to deposit the food (default: 4)
-     * @property {Ant object} this.targetAnt - The enemy ant which the soldier 
+     * @property {Ant object} this.targetAnt - The enemy ant which the soldier
      *              is targeting to attack (default: void(0))
-     * @property {boolean} this.moving - Used for determining when an ant is in 
+     * @property {boolean} this.moving - Used for determining when an ant is in
      *              a static position i.e. guarding the nest (default:false)
-     * @property {integer} this.steps - Used for moving an ant a certain number 
+     * @property {integer} this.steps - Used for moving an ant a certain number
      *              of steps away from an object. Used for spreading out closely
      *              spaced soldier ants (default: *random integer*)
-     * @property {boolean} this.nearNest - Determines if an ant is close to the 
+     * @property {boolean} this.nearNest - Determines if an ant is close to the
      *              nest (even if It cannot see it) (default: false)
-     * @property {boolean} this.nearFood - Determines if an ant is close to food 
+     * @property {boolean} this.nearFood - Determines if an ant is close to food
      *              (even if It cannot see it) (default: false)
      */
     this.id = id;
@@ -63,11 +63,11 @@ function Soldier(id, coord) {
  * Determines if there are other friendly soldiers in view
  * @return {boolean}
  */
-Soldier.prototype.soldiersInView = function() {
+Soldier.prototype.soldiersInView = function () {
     for (var i = 0; i < this.itemsInView.ants.length; i++) {
-	    if (this.itemsInView.ants[i].type === ANT_TYPE.soldier && 
-		            this.itemsInView.ants[i].species === this.species && 
-		        this.itemsInView.ants[i] !== this) {
+        if (this.itemsInView.ants[i].type === ANT_TYPE.soldier &&
+            this.itemsInView.ants[i].species === this.species &&
+            this.itemsInView.ants[i] !== this) {
             return true;
         }
     }
@@ -79,15 +79,17 @@ Soldier.prototype.soldiersInView = function() {
  * Determines if an ant can see food
  * @return {boolean}
  */
-Soldier.prototype.seeFood = function() {
-    if (this.itemsInView.food.length > 0) return true;
-    else return false;
+Soldier.prototype.seeFood = function () {
+    if (this.itemsInView.food.length > 0) 
+        return true;
+    else 
+        return false;
 };
 
 /**
  * Chooses which ant the soldier should target
  */
-Soldier.prototype.pickTarget = function() {
+Soldier.prototype.pickTarget = function () {
     if (this.targetAnt === void(0)) { // If don't already have a target
         this.targetAnt = void(0);
         for (var i = 0; i < this.itemsInView.ants.length; i++) {
@@ -102,10 +104,10 @@ Soldier.prototype.pickTarget = function() {
 };
 
 /**
- * Sets the ants direction to intercept the path of the target ant, so that 
+ * Sets the ants direction to intercept the path of the target ant, so that
  * it can attack
  */
-Soldier.prototype.follow = function() {
+Soldier.prototype.follow = function () {
     if (this.targetAnt !== void(0)) {
         this.direction = angleTo(this.coord, this.targetAnt.coord);
         this.prioritizeDirection = this.direction;
@@ -115,10 +117,10 @@ Soldier.prototype.follow = function() {
 /**
  * Attacks a specific ant
  */
-Soldier.prototype.attack = function() {
+Soldier.prototype.attack = function () {
     var dist = distance(this.coord, this.targetAnt.coord);
     if (dist <= this.species.chars.stingSize) { // If the ant is in range
-         // Do a damage (negative health) to the ant
+        // Do a damage (negative health) to the ant
         this.targetAnt.health -= this.species.chars.jawSize * DAMAGE_MULTIPLIER;
         if (this.targetAnt.health <= 0) { // If the ant has died
             this.targetAnt.removeFromMap();
@@ -133,26 +135,27 @@ Soldier.prototype.attack = function() {
 /**
  * Updates the soldiers ants health
  */
-Soldier.prototype.updateHealth = function() {
+Soldier.prototype.updateHealth = function () {
     this.health -= this.healthRate;
     if (this.isHungry()) {
         this.GOAL = GOAL.findFood;
     }
 
-    if (this.health <= 0) this.die();
+    if (this.health <= 0) 
+        this.die();
 };
 
 /**
  * Updates the this.steps variable
  */
-Soldier.prototype.updateSteps = function() {
+Soldier.prototype.updateSteps = function () {
     if (this.steps > 0) this.steps -= 1;
 };
 
 /**
  * Controls soldiers logic if assigned goal of guarding the nest
  */
-Soldier.prototype.guardNest = function() {
+Soldier.prototype.guardNest = function () {
     if (this.nearNest) { // If the ant is close to the nest
         if (this.steps <= 0 && !this.soldiersInView()) { // and no soldiers in view
             this.moving = false;
@@ -161,7 +164,7 @@ Soldier.prototype.guardNest = function() {
             this.nearNest = false;
         }
     } else if (this.seeNest() && !this.atNest()) { // If near the nest, move a
-                                                    // specific number of steps away
+        // specific number of steps away
         this.nearNest = true;
         this.steps = NEST_GUARD_RADIUS;
     } else { // Otherwise, keep looking for the nest
@@ -174,7 +177,7 @@ Soldier.prototype.guardNest = function() {
 /**
  * Controls soldiers logic if assigned goal of guarding the pheromone trials
  */
-Soldier.prototype.guardPheromone = function() {
+Soldier.prototype.guardPheromone = function () {
     this.wonder(); // wonder around following pheromone trials if found
     this.moving = true;
 };
@@ -182,9 +185,9 @@ Soldier.prototype.guardPheromone = function() {
 /**
  * Controls soldiers logic if assigned goal of guarding food
  */
-Soldier.prototype.guardFood = function() {
+Soldier.prototype.guardFood = function () {
     if (this.seeFood() && !this.soldiersInView()) { // If close to food and no other 
-                                                        // soldiers in view
+        // soldiers in view
         this.moving = false;
         this.direction += TURN_RATE; // slowly turn i.e. observing surroundings
     } else { // Otherwise, keep looking
@@ -196,7 +199,7 @@ Soldier.prototype.guardFood = function() {
 /**
  * Controls soldiers logic if it is looking for food
  */
-Soldier.prototype.findFood = function() {
+Soldier.prototype.findFood = function () {
     this.wonder();
     this.findFoodTarget();
     if (this.target !== void(0)) {
@@ -207,7 +210,7 @@ Soldier.prototype.findFood = function() {
 /**
  * Performs the actions required to complete a task
  */
-Soldier.prototype.doTask = function() {
+Soldier.prototype.doTask = function () {
 
     switch (this.goal) {
 
@@ -234,10 +237,10 @@ Soldier.prototype.doTask = function() {
 };
 
 /**
- * Determines if a goal has been completed or not and updates the next goal 
+ * Determines if a goal has been completed or not and updates the next goal
  * for the ant
  */
-Soldier.prototype.updateGoal = function() {
+Soldier.prototype.updateGoal = function () {
     switch (this.goal) {
     case GOAL.none:
         this.goal = randInt({
@@ -281,13 +284,13 @@ Soldier.prototype.updateGoal = function() {
 /**
  * Draw the ant onto the canvas context
  */
-Soldier.prototype.draw = function(ctx) {
+Soldier.prototype.draw = function (ctx) {
     var scaledCoord = scaleCoord(this.coord); // Scale the coordinates so they 
-                                                // map to pixels rather then cells
+    // map to pixels rather then cells
 
     ctx.save();
-	
-	var crossColour = (this.goal === GOAL.attack)?'#FF0000':'#FFFFFF';
+
+    var crossColour = (this.goal === GOAL.attack) ? '#FF0000' : '#FFFFFF';
 
     // Translate and rotate the canvas (done so can draw at an angle)
     ctx.translate(scaledCoord.x + this.size.width / 2, scaledCoord.y + this.size.height / 2);
@@ -321,13 +324,14 @@ Soldier.prototype.draw = function(ctx) {
 /**
  * Update the ant each tick
  */
-Soldier.prototype.update = function() {
+Soldier.prototype.update = function () {
     this.removeFromMap(); // Remove from map as ant may move
 
     this.updateHealth();
 
     // May have died during the updateHealth so no need to continue if dead
-    if (!this.alive) return void(0);
+    if (!this.alive) 
+        return void(0);
 
     this.scan();
     this.smell();
@@ -340,7 +344,8 @@ Soldier.prototype.update = function() {
     this.updateSleep();
     this.updateSteps();
 
-    if (this.moving) this.move();
+    if (this.moving) 
+        this.move();
 
     this.addToMap(); // Once moved add back to map
 };

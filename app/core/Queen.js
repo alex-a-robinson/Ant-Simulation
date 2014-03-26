@@ -19,12 +19,12 @@ Queen.prototype.parent = Ant;
 function Queen(id, coord) {
     /**
      * @property {x : number, y : number} this.coord - The coordinate of the ant
-     * @property {integer} this.steps - The number of steps the Queen will take 
+     * @property {integer} this.steps - The number of steps the Queen will take
      *              until reaching the nest site
      * @property {integer} this.id - The unique ant id
-     * @property {GOAL : integer} this.goal - The current goal the ant is trying 
+     * @property {GOAL : integer} this.goal - The current goal the ant is trying
      *              to accomplish (default: GOAL.none)
-     * @property {ANT_TYPE : integer} this.type - The type of ant i.e. Queen ant 
+     * @property {ANT_TYPE : integer} this.type - The type of ant i.e. Queen ant
      *              (default: ANT_TYPE.queen)
      */
     this.coord = coord;
@@ -37,7 +37,7 @@ function Queen(id, coord) {
 /**
  * Decide what actions need to be done to accomplish a task
  */
-Queen.prototype.doTask = function() {
+Queen.prototype.doTask = function () {
     switch (this.goal) {
     case GOAL.pickDirection:
         this.pickDirection();
@@ -57,7 +57,7 @@ Queen.prototype.doTask = function() {
 /**
  * Checks to see if the goal is accomplished and updates it if necessary
  */
-Queen.prototype.updateGoal = function() {
+Queen.prototype.updateGoal = function () {
     switch (this.goal) {
     case GOAL.none:
         this.goal = GOAL.pickDirection;
@@ -78,10 +78,10 @@ Queen.prototype.updateGoal = function() {
 };
 
 /**
- * Used to pick a direction in which the Queen will walk a specific number of 
+ * Used to pick a direction in which the Queen will walk a specific number of
  * steps in (this.steps) and then create a nest
  */
-Queen.prototype.pickDirection = function() {
+Queen.prototype.pickDirection = function () {
     this.direction = randDir();
     this.steps = randInt({
         min: this.species.chars.queenStepsMin,
@@ -92,12 +92,12 @@ Queen.prototype.pickDirection = function() {
 /**
  * Creates a nest object and deletes the queen
  */
-Queen.prototype.createNest = function() {
+Queen.prototype.createNest = function () {
     var nest = new Nest(genID(), this.coord);
     nest.species = this.species;
     nest.colour = nest.species.colour.nest;
     nest.createNest();
-	nest.health = this.health;
+    nest.health = this.health;
 
     var index = this.species.ants.indexOf(this);
     this.species.ants.splice(index, 1);
@@ -110,9 +110,9 @@ Queen.prototype.createNest = function() {
 /**
  * Draw the ant onto the canvas context
  */
-Queen.prototype.draw = function(ctx) {
+Queen.prototype.draw = function (ctx) {
     var scaledCoord = scaleCoord(this.coord); // Scale the coordinates so they 
-                                                // map to pixels rather then cells
+    // map to pixels rather then cells
 
     drawCircle(ctx, scaledCoord, this.size.width / 2, this.colour);
 };
@@ -120,7 +120,7 @@ Queen.prototype.draw = function(ctx) {
 /**
  * Update the Queen each tick
  */
-Queen.prototype.update = function() {
+Queen.prototype.update = function () {
     this.removeFromMap(); // As Queen may move, remove from the map
 
     this.doTask();

@@ -4,43 +4,43 @@
  * @param {integer} id - A unique identifier
  * @param {x : number, y : number} coord - The coordinate of the piece
  */
-var Nest = function(id, coord) {
-        /**
-         * @property {x : integer, y : integer} this.nestSize - The number of 
-         *              pieces the nest extends both in the x and y directions
-         * @property {x : number, y : number} this.coord - The coordinate of the nest
-         * @property {integer} this.id - A unique identifier
-         * @property {Species object} this.species - The species which the nest belongs to
-         * @property {[NestPiece object]} this.pieces - An array of the NestPiece 
-         *              objects belonging to the nest
-         * @property {number} this.health - The health the nest has
-         * @property {number} this.hungerThreshold - The threshold below which 
-         *              the nest is hungry and tries to preserve food
-         * @property {number} this.healthRate - The rate at which the nests health 
-         *              reduces each tick
-         * @property {boolean} this.alive - If the nest is alive or not, needed if nest
-         *              dies mid execution so does not keep acting as if it is alive
-         */
+var Nest = function (id, coord) {
+    /**
+     * @property {x : integer, y : integer} this.nestSize - The number of
+     *              pieces the nest extends both in the x and y directions
+     * @property {x : number, y : number} this.coord - The coordinate of the nest
+     * @property {integer} this.id - A unique identifier
+     * @property {Species object} this.species - The species which the nest belongs to
+     * @property {[NestPiece object]} this.pieces - An array of the NestPiece
+     *              objects belonging to the nest
+     * @property {number} this.health - The health the nest has
+     * @property {number} this.hungerThreshold - The threshold below which
+     *              the nest is hungry and tries to preserve food
+     * @property {number} this.healthRate - The rate at which the nests health
+     *              reduces each tick
+     * @property {boolean} this.alive - If the nest is alive or not, needed if nest
+     *              dies mid execution so does not keep acting as if it is alive
+     */
 
-        this.nestSize = NEST_SIZE;
-        this.coord = coord;
+    this.nestSize = NEST_SIZE;
+    this.coord = coord;
 
-        this.id = id;
-        this.species;
+    this.id = id;
+    this.species;
 
-        this.pieces = [];
+    this.pieces = [];
 
-        this.health = 3000;
-        this.hungerThreshold = 300;
-        this.healthRate = 1;
-        this.alive = true;
-    };
+    this.health = 3000;
+    this.hungerThreshold = 300;
+    this.healthRate = 1;
+    this.alive = true;
+};
 
 /**
  * Create a single nest piece
  * @param {x : number, y : number} coord - The coordinate of the nest piece to add
  */
-Nest.prototype.addNestPiece = function(coord) {
+Nest.prototype.addNestPiece = function (coord) {
     var nestPiece = new NestPiece(genID(), coord, this);
     this.pieces.push(nestPiece);
     nestPiece.addToMap();
@@ -49,18 +49,17 @@ Nest.prototype.addNestPiece = function(coord) {
 /**
  * Creates all the nest pieces
  */
-Nest.prototype.createNest = function() {
-    var block = getBlock(this.coord, this.nestSize); // Get block around
+Nest.prototype.createNest = function () {
+    var block = getBlock(this.coord, this.nestSize); // Get block around nest
     for (var i = 0; i < block.length; i++)
-    this.addNestPiece(block[i]);
+        this.addNestPiece(block[i]);
 };
 
 /**
- * Removing nest from the ants list, it will therefore not be 
+ * Removing nest from the ants list, it will therefore not be
  * updated and JavaScripts garbage collection should delete the object
  */
-Nest.prototype.die = function() {
-    console.log('Nest died');
+Nest.prototype.die = function () {
     // Remove from ants list
     var index = ANTS_LIST.indexOf(this);
     ANTS_LIST.splice(index, 1);
@@ -69,12 +68,14 @@ Nest.prototype.die = function() {
     index = this.species.nests.indexOf(this);
     this.species.nests.splice(index, 1);
 
+    // Remove from SPECIES_LIST
     if (this.species.nests.length <= 0) {
         removeSpeciesData(this.species.id);
         index = SPECIES_LIST.indexOf(this.species);
         SPECIES_LIST.splice(index, 1);
     }
 
+    // Remove all nest pieces from the map
     for (var i = 0; i < this.pieces.length; i++) {
         this.pieces[i].removeFromMap();
     }
@@ -87,7 +88,7 @@ Nest.prototype.die = function() {
  * @param {ANT_TYPE} type - Represents a specific type of ant
  * @return {number} - The health required
  */
-Nest.prototype.getCost = function(type) {
+Nest.prototype.getCost = function (type) {
     switch (type) {
 
     case ANT_TYPE.worker:
@@ -104,11 +105,11 @@ Nest.prototype.getCost = function(type) {
  * Calculates the cost of the characteristics due to the species
  * @return {number} - The health cost
  */
-Nest.prototype.calcSpeciesCost = function() {
-	var specieCost = 0;
-	for (prop in CHARS) {
-		specieCost += CHARS[prop].healthModifier * this.species.chars[prop];
-	}
+Nest.prototype.calcSpeciesCost = function () {
+    var specieCost = 0;
+    for (prop in CHARS) {
+        specieCost += CHARS[prop].healthModifier * this.species.chars[prop];
+    }
 
     return specieCost;
 };
@@ -118,7 +119,7 @@ Nest.prototype.calcSpeciesCost = function() {
  * @param {ANT_TYPE} type - Represents a specific type of ant
  * @return {boolean}
  */
-Nest.prototype.viable = function(type) {
+Nest.prototype.viable = function (type) {
     // If creating the ant will make the nest hungry then do not create the ant
     if (this.health - (this.getCost(type) + this.calcSpeciesCost()) >= this.hungerThreshold)
         return true;
@@ -130,7 +131,7 @@ Nest.prototype.viable = function(type) {
  * Creates a new ant
  * @param {ANT_TYPE} type - Represents a specific type of ant
  */
-Nest.prototype.createAnt = function(type) {
+Nest.prototype.createAnt = function (type) {
     var cost = this.getCost(type);
     createAnt(this.species, {
         x: this.coord.x,
@@ -142,19 +143,19 @@ Nest.prototype.createAnt = function(type) {
 /**
  * Determines what type of ant to create
  */
-Nest.prototype.reproduce = function() {
+Nest.prototype.reproduce = function () {
     var prob = Math.random();
 
     var chars = this.species.chars;
 
     // Normalize probabilities and then sort into ascending order
-    var sum = chars.reproductionQueenProb + chars.reproductionSoldierProb + 
-                chars.reproductionWorkerProb;
-	if (sum > 0) {
-		var queenProb = chars.reproductionQueenProb / sum;
-		var soldierProb = chars.reproductionSoldierProb / sum;
-		var workerProb = chars.reproductionWorkerProb / sum;
-	}
+    var sum = chars.reproductionQueenProb + chars.reproductionSoldierProb +
+        chars.reproductionWorkerProb;
+    if (sum > 0) {
+        var queenProb = chars.reproductionQueenProb / sum;
+        var soldierProb = chars.reproductionSoldierProb / sum;
+        var workerProb = chars.reproductionWorkerProb / sum;
+    }
 
     var ordered = [{
         prob: queenProb,
@@ -165,7 +166,7 @@ Nest.prototype.reproduce = function() {
     }, {
         prob: workerProb,
         type: ANT_TYPE.worker
-    }].sort(function(a, b) {
+    }].sort(function (a, b) {
         return a.prob - b.prob;
     }); // sort min to max
 
@@ -173,26 +174,31 @@ Nest.prototype.reproduce = function() {
     if (prob < ordered[0].prob && this.viable(ordered[0].type))
         this.createAnt(ordered[0].type);
     else if ((prob < ordered[1].prob + ordered[0].prob) && // cumulative probability
-                this.viable(ordered[1].type))
+        this.viable(ordered[1].type))
         this.createAnt(ordered[1].type);
-    else if (prob < ordered[2].prob + ordered[1].prob + ordered[0].prob && 
-                this.viable(ordered[2].type))
+    else if (prob < ordered[2].prob + ordered[1].prob + ordered[0].prob &&
+        this.viable(ordered[2].type))
         this.createAnt(ordered[2].type);
 };
 
-Nest.prototype.updateHealth = function() {
+/**
+ * Updates nests health
+ */
+Nest.prototype.updateHealth = function () {
     this.health -= this.healthRate;
 
-    if (this.health <= 0) this.die();
+    if (this.health <= 0) 
+        this.die();
 };
 
 /**
  * Updates the nest each tick
  */
-Nest.prototype.update = function() {
+Nest.prototype.update = function () {
     this.updateHealth();
 
-    if (!this.alive) return void(0);
+    if (!this.alive) 
+        return void(0);
 
     // Determines if a new ant should be created or not
     if (Math.random() < this.species.chars.reproductionRate) {

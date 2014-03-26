@@ -1,7 +1,7 @@
 /**
  * Misc
  */
-const VALUE_TYPE = {    // Used to signify if a variable is an integer or float
+const VALUE_TYPE = { // Used to signify if a variable is an integer or float
     integerValue: 0,
     floatValue: 1
 };
@@ -9,21 +9,21 @@ const VALUE_TYPE = {    // Used to signify if a variable is an integer or float
 /**
  * Main simulation loop configuration
  */
-const TICK = 10;        // The time between ticks
-var CURRENT_TICK = 0;	// The current tick number
-var CURRENT_ID = 0;     // Used to keep track of the latest unique ID
-var ANTS_LIST = [];     // Holds all ant objects
-var SPECIES_LIST = [];  // Holds all species objects
-var RUNNING = false;    // Determines whether the simulation is running or not
+const TICK = 10;       // The time between ticks
+var CURRENT_TICK = 0;  // The current tick number
+var CURRENT_ID = 0;    // Used to keep track of the latest unique ID
+var ANTS_LIST = [];    // Holds all ant objects
+var SPECIES_LIST = []; // Holds all species objects
+var RUNNING = false;   // Determines whether the simulation is running or not
 
 /**
  * Canvas configuration
  */
-const GRID_COLOUR = '#DDDDDD';              // The colour of the maps grid
-const GRID_LINE_WIDTH = 0.2;                // The width of the grid lines
-const BACKGROUND_COLOUR = '#E3DAB3';        // The canvas background colour;
-const OUT_OF_BOUNDS_COLOUR = '#FFFFFF';     // Used if panning around off map
-var CELL_SIZE = {                           // Size in pixels of a cell
+const GRID_COLOUR = '#DDDDDD';          // The colour of the maps grid
+const GRID_LINE_WIDTH = 0.2;            // The width of the grid lines
+const BACKGROUND_COLOUR = '#E3DAB3';    // The canvas background colour;
+const OUT_OF_BOUNDS_COLOUR = '#FFFFFF'; // Used if panning around off map
+var CELL_SIZE = {                       // Size in pixels of a cell
     width: 6,
     height: 6
 };
@@ -36,20 +36,20 @@ var CANVAS = { // Used to define characteristics about the simulations canvas
 /**
  * Input/Output configuration
  */
-const AVERAGE_FOOD_SAMPLE_RATE = 40;        // The number of ticks to wait between
-                                                // sampling for averages of food
-const NUMBER_OF_FIXED_PLACES = 2;           // The number of numbers after the 
-                                                // decimal place to display
-var SELECTED_SPECIES;                       // Holds the species whose
-                                                // characteristics can be changed
-const SELECTED_COLOUR = '#8AC1DE';            // The colour of a selected species
-const UNSELECTED_COLOUR = '#FFFFFF';          // default colour for unselected
-const BUTTON_UPDATE_COLOUR = '#FF0000';       // The colour of a button when settings 
-                                                // have changed and the update needs 
-                                                // to be pushed to the simulation
-const BUTTON_NO_UPDATE_COLOUR = '#000000';    // The normal colour of a button when 
-                                                // no settings have been altered
-// Char codes for various keys
+const AVERAGE_FOOD_SAMPLE_RATE = 40;       // The number of ticks to wait between
+                                           // sampling for averages of food
+const NUMBER_OF_FIXED_PLACES = 2;          // The number of numbers after the 
+                                           // decimal place to display
+var SELECTED_SPECIES;                      // Holds the species whose
+                                           // characteristics can be changed
+const SELECTED_COLOUR = '#8AC1DE';         // The colour of a selected species
+const UNSELECTED_COLOUR = '#FFFFFF';       // default colour for unselected
+const BUTTON_UPDATE_COLOUR = '#FF0000';    // The colour of a button when settings 
+                                           // have changed and the update needs 
+                                           // to be pushed to the simulation
+const BUTTON_NO_UPDATE_COLOUR = '#000000'; // The normal colour of a button when 
+                                           // no settings have been altered
+                                           // Char codes for various keys
 const LEFT_ARROW_KEY = 37;
 const RIGHT_ARROW_KEY = 39;
 const UP_ARROW_KEY = 38;
@@ -60,20 +60,20 @@ const SPACE_BAR_KEY = 32;
 const R_KEY = 82;
 const S_KEY = 83;
 
-const MIN_ZOOM = 1;         // The minimum zoom amount
-const MAX_ZOOM = 14;            // The maximum zoom amount
+const MIN_ZOOM = 1;      // The minimum zoom amount
+const MAX_ZOOM = 14;     // The maximum zoom amount
 
-const PAN_AMOUNT = 15;      // The number of pixels to pan by
-                                // each press of an arrow key
-const ZOOM_AMOUNT = 0.5;    // The amount to zoom each key press
+const PAN_AMOUNT = 15;   // The number of pixels to pan by
+                         // each press of an arrow key
+const ZOOM_AMOUNT = 0.5; // The amount to zoom each key press
 
-var CANVAS_OFFSET = {        // The amount of pixels the 
-                                // canvas is offset
+var CANVAS_OFFSET = {    // The amount of pixels the 
+                         // canvas is offset
     x: 0,
     y: 0
 };
-const INPUT_TYPE = {        // Used for creating custom inputs
-                                // i.e. sliders, buttons
+const INPUT_TYPE = { // Used for creating custom inputs
+                     // i.e. sliders, buttons
     slider: 0,
     button: 1,
     colour: 2
@@ -82,12 +82,12 @@ const INPUT_TYPE = {        // Used for creating custom inputs
 /**
  * Map configuration
  */
-var MAP = [];               // Holds all objects displayed on map
-var GRID_SIZE = {         // Size in number of cells
+var MAP = [];        // Holds all objects displayed on map
+var GRID_SIZE = {    // Size in number of cells
     width: 500,
     height: 500
 };
-var MAP_BOUNDARY = {      // Used to tell if ant is out of bounds
+var MAP_BOUNDARY = { // Used to tell if ant is out of bounds
     x: {
         min: 0,
         max: GRID_SIZE.width
@@ -102,51 +102,52 @@ var NUM_OF_CELLS = GRID_SIZE.width * GRID_SIZE.height; // The total number of ce
 /**
  * Food configuration
  */
-const FOOD_COLOUR = '#00FF00';          // The colour of food
-const FOOD_HEALTH_RATIO = 100;           // food : health i.e. 1 food worth 50 health
-const FOOD_CHANCE = 0.0004;             // The probability of a food source in a cell
-const FOOD_GROW_AMOUNT = 100;			// The 
-const FOOD_GROW_RATE = 0.01;
+const FOOD_COLOUR = '#00FF00'; // The colour of food
+const FOOD_HEALTH_RATIO = 100; // food : health i.e. 1 food worth 50 health
+const FOOD_CHANCE = 0.0004;    // The probability of a food source in a cell
+const FOOD_GROW_AMOUNT = 100;  // The rate at which food amount increases
+const FOOD_GROW_RATE = 0.01;   // The probability of each piece of food being 
+                               // grown
 
 /**
  * Ant configuration
  */
-var STARTING_QUEEN_ANT_NUMBER = 1;            // The number of queen ants at
-                                                    // the start of the simulation
-const ANT_FOOD_DROP_SPEED = 15;                    // The number of ticks for an ant
-                                                    // to drop a piece of food
-const ANT_FOOD_TAKE_SPEED = 30;                    // The number of ticks for an ant
-                                                    // to take a piece of food
-const DAMAGE_MULTIPLIER = 100;                    // DAMAGE_MULTIPLIER * species.chars.jawStrength
-                                                    // The amount of health a solider
-                                                    // ant takes from ants its attacking
-const NEST_GUARD_RADIUS = 100;                    // The number of steps ants take
-                                                    // once seeing the nest
-                                                    // i.e. the sentry radius
-const SOLDIER_ANT_MAX_TARGET_DISTANCE = 25;       // The maximum distance between
-                                                    // an ant and its target before
-                                                    // losing interest
-const TURN_RATE = 0.02;							  // The rate at which ants turn when
-                                                    // on guarding
+var STARTING_QUEEN_ANT_NUMBER = 1; // The number of queen ants at
+                                   // the start of the simulation
+const ANT_FOOD_DROP_SPEED = 15; // The number of ticks for an ant
+                                // to drop a piece of food
+const ANT_FOOD_TAKE_SPEED = 30; // The number of ticks for an ant
+                                // to take a piece of food
+const DAMAGE_MULTIPLIER = 100; // DAMAGE_MULTIPLIER * species.chars.jawStrength
+                               // The amount of health a solider
+                               // ant takes from ants its attacking
+const NEST_GUARD_RADIUS = 100; // The number of steps ants take
+                               // once seeing the nest
+                               // i.e. the sentry radius
+const SOLDIER_ANT_MAX_TARGET_DISTANCE = 25; // The maximum distance between
+                                            // an ant and its target before
+                                            // losing interest
+const TURN_RATE = 0.02; // The rate at which ants turn when
+                        // on guarding
 
-const GOAL = { // Ant goals used to determine ant actions
-    none: -1,           // No current goal, results to default for particular ant
-    findFood: 0,        // Make ant look for food
-    getFood: 1,         // Make ant go towards and pick up nearby food
-    dropFood: 2,        // Make ant look for nest and when can see nest 
-                            // deposit food at the nest
-    pickDirection: 3,   // Used by Queens to pick a direction to travel
-    gotoNestSite: 4,    // Used by Queens to head in the chosen direction
-                            // towards the nest site
-    createNest: 5,      // Used by Queens to create a nest
-    guardNest: 6,       // Used by Soldier ants to guard the nest
-    guardPheromone: 7,  // Used by Soldier ants to guard pheromone trials
-    guardFood: 8,       // Used by Soldier ants to guard food
-    attack: 9           // Used by Soldier ants attack other ants
+const GOAL = {         // Ant goals used to determine ant actions
+    none: -1,          // No current goal, results to default for particular ant
+    findFood: 0,       // Make ant look for food
+    getFood: 1,        // Make ant go towards and pick up nearby food
+    dropFood: 2,       // Make ant look for nest and when can see nest 
+                       // deposit food at the nest
+    pickDirection: 3,  // Used by Queens to pick a direction to travel
+    gotoNestSite: 4,   // Used by Queens to head in the chosen direction
+                       // towards the nest site
+    createNest: 5,     // Used by Queens to create a nest
+    guardNest: 6,      // Used by Soldier ants to guard the nest
+    guardPheromone: 7, // Used by Soldier ants to guard pheromone trials
+    guardFood: 8,      // Used by Soldier ants to guard food
+    attack: 9          // Used by Soldier ants attack other ants
 };
 const NEST_SIZE = { // The extra size of a nest in cells e.g. {width : 1, height : 1}
-                        // means go 1 extra cell in both sides and 1 extra cell 
-                        // both up and down.
+                    // means go 1 extra cell in both sides and 1 extra cell 
+                    // both up and down.
     width: 1,
     height: 1
 };
@@ -162,19 +163,20 @@ const ANT_TYPE = {  // Used to show the type of ant
  * Pheromone configuration
  */
 const PHEROMONE_EVAPERATION_RATE = 0.001; // The global amount all pheromone 
-                                            // concentrations reduce by each tick
-const MAX_PHEROMONE_CONCENTRATION = 1.2;  // The maximum concentration a pheromone can have
+                                          // concentrations reduce by each tick
+const MAX_PHEROMONE_CONCENTRATION = 1.2;  // The maximum concentration a
+                                          // pheromone can have
 
 /**
  * Species configuration
  */
-var USER_SPECIES;   // The species used on first run i.e. the first species 
-var CHARS = {       // Holds properties of all characteristics species
+var USER_SPECIES; // The species used on first run i.e. the first species 
+var CHARS = {     // Holds properties of all characteristics species
 
     /**
      * @property {number} min       - The minimum values a characteristic can be
      * @property {number} max       - The maximum values a characteristic can be
-     * @property {integer} type     - The type of value a characteristic is 
+     * @property {integer} type     - The type of value a characteristic is
      *                                  i.e. a float or integer
      * @property {string} id        - The HTML ID property of the characteristic
      *                                  (used when creating inputs)
@@ -182,18 +184,18 @@ var CHARS = {       // Holds properties of all characteristics species
      * @property {string} desc      - Describe what the characteristic does
      * @property {number} step      - The minimum change in the characteristics
      *                                  value (used for creating HTML inputs)
-     * @property {number} healthModifier   - The cost of the characteristic 
+     * @property {number} healthModifier   - The cost of the characteristic
      *                                          ( = healthModifier * value)
      * @property {number} defaultValue      - The default value
-     * @property {number} value     - The actual value of the HTML input 
+     * @property {number} value     - The actual value of the HTML input
      *                                  (differs from the value stored in species
      *                                   as this is formated for displaying)
      * @property {boolean} editable - Determines if a characteristic can be edited
      * @property {integer} inputType- The type of input requied i.e. button
-     * 
+     *
      * Note : see species class for descriptions on effects of individual characteristics
      */
-     
+
     speed: {
         min: 0,
         max: 0.2,

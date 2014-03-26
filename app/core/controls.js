@@ -27,8 +27,10 @@ function step() {
  */
 function runPauseButton() {
     toggleRunning();
-    if (RUNNING) getElement('button-run').innerHTML = 'pause';
-    else getElement('button-run').innerHTML = 'run';
+    if (RUNNING) 
+        getElement('button-run').innerHTML = 'pause';
+    else 
+        getElement('button-run').innerHTML = 'run';
 }
 
 /**
@@ -52,56 +54,56 @@ function updateValue(element, value) {
     for (prop in CHARS) {
         specieCost += CHARS[prop].healthModifier * CHARS[prop].value;
     }
-	
-	var workerFoodCost = CHARS.reproductionWorkerFoodCost.value * FOOD_HEALTH_RATIO;
-	var queenFoodCost = CHARS.reproductionQueenFoodCost.value * FOOD_HEALTH_RATIO;
-	var soldierFoodCost = CHARS.reproductionSoldierFoodCost.value * FOOD_HEALTH_RATIO;
-	
-	if ((workerFoodCost - specieCost) < 0) {
-		console.log('YELL')
-		window.alert('Warning #1:\nThe speciesCost (' + specieCost.toFixed(0) + ') is greater then \
+
+    var workerFoodCost = CHARS.reproductionWorkerFoodCost.value * FOOD_HEALTH_RATIO;
+    var queenFoodCost = CHARS.reproductionQueenFoodCost.value * FOOD_HEALTH_RATIO;
+    var soldierFoodCost = CHARS.reproductionSoldierFoodCost.value * FOOD_HEALTH_RATIO;
+
+    if ((workerFoodCost - specieCost) < 0) {
+        console.log('YELL')
+        window.alert('Warning #1:\nThe speciesCost (' + specieCost.toFixed(0) + ') is greater then \
 		the worker\'s food cost (' + workerFoodCost + '. This means that worker ants \
 		will die immediatly when born.\n\n Try reduceing your values for characteristics to fix \
 		the problem.');
-	}
-	
-	if (queenFoodCost - specieCost < 0) {
-		window.alert('Warning #2:\nThe speciesCost (' + specieCost.toFixed(0) + ') is greater then \
+    }
+
+    if (queenFoodCost - specieCost < 0) {
+        window.alert('Warning #2:\nThe speciesCost (' + specieCost.toFixed(0) + ') is greater then \
 		the queen\'s food cost (' + queenFoodCost + '. This means that queen ants \
 		will die immediatly when born.\n\n Try reduceing your values for characteristics to fix \
 		the problem.');
-	}
-	
-	if (soldierFoodCost - specieCost < 0) {
-		window.alert('Warning #3:\nThe speciesCost (' + specieCost.toFixed(0) + ') is greater then \
+    }
+
+    if (soldierFoodCost - specieCost < 0) {
+        window.alert('Warning #3:\nThe speciesCost (' + specieCost.toFixed(0) + ') is greater then \
 		the soldier\'s food cost (' + soldierFoodCost + '. This means that soldier ants \
 		will die immediatly when born.\n\n Try reduceing your values for characteristics to fix \
 		the problem.');
-	}
-	
-	var queenStepsMax = parseInt(CHARS.queenStepsMax.value);
-	var queenStepsMin = parseInt(CHARS.queenStepsMin.value);
-	
-	if (element.name === 'queenStepsMin' || element.name === 'queenStepsMax') {
-		if (queenStepsMin > queenStepsMax) {
-			window.alert('Error #1:\nThe minimum number of Queen steps (' +  queenStepsMin + ') is greater \
-			then the maximum (' +  queenStepsMax + '). \n\nPlease reduce the minimum number or increase the\
-			maximum to fix the problem.');
-		}
-	}
+    }
 
-	// Update the characteristics value in settings as well as the input 
+    var queenStepsMax = parseInt(CHARS.queenStepsMax.value);
+    var queenStepsMin = parseInt(CHARS.queenStepsMin.value);
+
+    if (element.name === 'queenStepsMin' || element.name === 'queenStepsMax') {
+        if (queenStepsMin > queenStepsMax) {
+            window.alert('Error #1:\nThe minimum number of Queen steps (' + queenStepsMin + ') is greater \
+			then the maximum (' + queenStepsMax + '). \n\nPlease reduce the minimum number or increase the\
+			maximum to fix the problem.');
+        }
+    }
+
+    // Update the characteristics value in settings as well as the input 
     getElement(characteristic.id + '-value').innerHTML = value;
     setValue(characteristic.id, value);
-	
-	// Update the species cost
+
+    // Update the species cost
     workerCostTotal = (workerFoodCost - specieCost).toFixed(0);
-	soldierCostTotal = (soldierFoodCost - specieCost).toFixed(0);
-	queenCostTotal = (queenFoodCost - specieCost).toFixed(0);
+    soldierCostTotal = (soldierFoodCost - specieCost).toFixed(0);
+    queenCostTotal = (queenFoodCost - specieCost).toFixed(0);
 
     getElement('ant-health').innerHTML = 'Worker: ' + workerCostTotal +
-											'</br>Soldier: ' + soldierCostTotal +
-											'</br>Queen: ' + queenCostTotal
+        '</br>Soldier: ' + soldierCostTotal +
+        '</br>Queen: ' + queenCostTotal
 }
 
 /**
@@ -124,6 +126,7 @@ function updateRandomValues() {
         if (!characteristic.editable)
             continue;
 
+        // Depending on type of value, use either randInt or randFloat
         if (characteristic.type === VALUE_TYPE.floatValue)
             var value = randFloat(characteristic);
         else if (characteristic.type === VALUE_TYPE.integerValue)
@@ -136,14 +139,14 @@ function updateRandomValues() {
 /**
  * Create a new HTML element
  * @param {string} tag - A HTML tag name e.g. 'div'
- * @param [{type : string, value : *}] attributes - A list of attributes to 
+ * @param [{type : string, value : *}] attributes - A list of attributes to
  *                                                      add to the new element
  * @return {HTML element}
  */
 function newElement(tag, attributes) {
-    var element = document.createElement(tag);
-    for (var i = 0; i < attributes.length; i++)
-    	element.setAttribute(attributes[i].type, attributes[i].value);
+    var element = document.createElement(tag); // create element object
+    for (var i = 0; i < attributes.length; i++) // give element attributes
+        element.setAttribute(attributes[i].type, attributes[i].value);
     return element;
 }
 
@@ -189,7 +192,7 @@ function createInputType(characteristic, prop) {
 }
 
 /**
- * Create a row containing a label, input and value elements used for 
+ * Create a row containing a label, input and value elements used for
  * creating dynamic inputs for characteristics
  * @param {*} characteristic - A single characteristic from CHARS variable
  * @param {string} prop - The property of CHARS which the characteristic refers to
@@ -230,9 +233,9 @@ function createInput(characteristic, prop) {
         type: 'id',
         value: characteristic.id + '-value'
     }]); // Append '-value' to the id of the elements which show the characteristics value
-    if (characteristic.type === VALUE_TYPE.floatValue) 
+    if (characteristic.type === VALUE_TYPE.floatValue)
         value.innerHTML = characteristic.value.toFixed(NUMBER_OF_FIXED_PLACES);
-    else 
+    else
         value.innerHTML = characteristic.value;
 
     // Add all the individual elements to the row
@@ -245,7 +248,7 @@ function createInput(characteristic, prop) {
 }
 
 /**
- * Creates inputs for all characteristics used for creating dynamic 
+ * Creates inputs for all characteristics used for creating dynamic
  * inputs for characteristics
  * And appends them to a table in the config panel
  */
@@ -256,6 +259,8 @@ function createCharacteristicInputs() {
         value: 'config'
     });
 
+    // For each characteristic in CHARS, create its input row and add to the
+    // configuration table.
     for (var prop in CHARS) {
         var inputRow = createInput(CHARS[prop], prop);
         table.appendChild(inputRow);
@@ -274,6 +279,8 @@ function updateUserSpecies() {
 
     var specieCost = 0;
 
+    // For each characteristic in CHARS set its input rows, value field to its
+    // value
     for (var prop in CHARS) {
         var characteristic = CHARS[prop];
 
@@ -288,18 +295,19 @@ function updateUserSpecies() {
 
         specieCost += CHARS[prop].healthModifier * value;
     }
-	
-	workerCostTotal = (CHARS.reproductionWorkerFoodCost.value * FOOD_HEALTH_RATIO - specieCost).toFixed(0);
-	soldierCostTotal = (CHARS.reproductionSoldierFoodCost.value * FOOD_HEALTH_RATIO - specieCost).toFixed(0);
-	queenCostTotal = (CHARS.reproductionQueenFoodCost.value * FOOD_HEALTH_RATIO - specieCost).toFixed(0);
+    
+    // Recalculate the cost for workers, soldiers and queens.
+    workerCostTotal = (CHARS.reproductionWorkerFoodCost.value * FOOD_HEALTH_RATIO - specieCost).toFixed(0);
+    soldierCostTotal = (CHARS.reproductionSoldierFoodCost.value * FOOD_HEALTH_RATIO - specieCost).toFixed(0);
+    queenCostTotal = (CHARS.reproductionQueenFoodCost.value * FOOD_HEALTH_RATIO - specieCost).toFixed(0);
 
     getElement('ant-health').innerHTML = 'Worker: ' + workerCostTotal +
-											'</br>Soldier: ' + soldierCostTotal +
-											'</br>Queen: ' + queenCostTotal
+        '</br>Soldier: ' + soldierCostTotal +
+        '</br>Queen: ' + queenCostTotal
 }
 
 /**
- * Create a row containing a label and data elements used for displaying 
+ * Create a row containing a label and data elements used for displaying
  * information about species
  * @param {string} className - The name of the class for the species
  * @param {string} id - The ID which will be used to access and update the species
@@ -335,7 +343,7 @@ function createDataRow(className, id, labelValue, dataValue) {
 
 /**
  * Crate all elements to display information about a species
- * @param {species object} species - The species whose data you want to create 
+ * @param {species object} species - The species whose data you want to create
  *                                      a data display for
  */
 function createSpeciesData(species) {
@@ -383,18 +391,18 @@ function createSpeciesData(species) {
 
     // Create a data row for number of ants
     var antNumRow = createDataRow(className, id + '-antNum', 'Number of ants',
-                                    species.ants.length);
+        species.ants.length);
 
     // Create a data row for number of nests
     var nestNumRow = createDataRow(className, id + '-nestNum', 'Number of Nests',
-                                    species.nests.length);
+        species.nests.length);
 
     // Create a data row for amount of food
     var foodAmount = 0;
     for (var i = 0; i < species.nests.length; i++)
         foodAmount += species.nests[i].health;
     var foodAmountRow = createDataRow(className, id + '-foodAmount', 'Amount of food',
-                                        foodAmount);
+        foodAmount);
 
     // Append all of the rows to the table
     titleRow.appendChild(title);
@@ -442,8 +450,8 @@ function updateSpeciesData() {
 
             var foodAmount = 0;
             for (var k = 0; k < species.nests.length; k++)
-				foodAmount += species.nests[k].health;
-			console.log(foodAmount)
+                foodAmount += species.nests[k].health;
+            console.log(foodAmount)
 
             foodAmountDataElement.innerHTML = foodAmount.toFixed(NUMBER_OF_FIXED_PLACES);
         }
@@ -487,7 +495,7 @@ function toggleClassVisibility(button) {
     var id = button.className.split(' ')[1]; // The second class name is the species id
 
     // Get all other elements with the same class name i.e. all elements relating to that species data
-    var listOfClassElements = document.getElementsByClassName(id)[0].getElementsByTagName('TR'); 
+    var listOfClassElements = document.getElementsByClassName(id)[0].getElementsByTagName('TR');
 
     // For each element in the list
     for (var i = 0; i < listOfClassElements.length; i++) {
@@ -533,4 +541,3 @@ function select(title) {
         CANVAS_OFFSET.y = -SELECTED_SPECIES.nests[0].coord.y * CELL_SIZE.width + CANVAS.width / 2;
     }
 }
-		

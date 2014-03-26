@@ -14,13 +14,13 @@ function tick() {
 
     updateSpeciesData();
 
+    // Calculate frame rate
     var tickTime = TICK - (thisLoop - lastLoop);
     tickTime = (tickTime <= 0) ? 0 : tickTime;
 
     setTimeout(tick, tickTime);
-    getElement('fps').innerHTML = (1000 / (thisLoop - lastLoop)).toFixed(0);
-	CURRENT_TICK++;
-    lastLoop = thisLoop;
+    CURRENT_TICK++;
+    lastLoop = thisLoop; // used for calculating frame rate
 }
 
 /**
@@ -29,16 +29,16 @@ function tick() {
 function drawMap(ctx) {
     clearCanvas(canvasCTX);
     drawBackground(canvasCTX);
-	
+
 
     // Update all of the ants in the sytem
     if (RUNNING) {
         TICK += 1;
         for (var i = 0; i < ANTS_LIST.length; i++)
-			ANTS_LIST[i].update();
-			
-		// Grow food
-		simulationFoodSystem.growFood();
+            ANTS_LIST[i].update();
+
+        // Grow food
+        simulationFoodSystem.growFood();
     }
 
     // Update each cell on the map
@@ -59,7 +59,7 @@ function drawMap(ctx) {
         } else if (MAP[i].pheromone.length > 0) {
             var pheromone = MAP[i].pheromone[0];
             pheromone.draw(ctx);
-        } else if (MAP[i].food !== void(0)) { // Don't want to draw food on top of ants
+        } else if (MAP[i].food !== void(0)) { // Don't draw food on top of ants
             var food = MAP[i].food;
             food.draw(ctx);
         }
@@ -106,13 +106,13 @@ function createEnviroment() {
 
     updateUserSpecies();
 
-    // Add some starting queen ants
+    // Add starting queen ants
     for (var i = 0; i < STARTING_QUEEN_ANT_NUMBER; i++) {
-        var x = randInt({
+        var x = randInt({ // random x-coordinate
             min: 0,
             max: GRID_SIZE.width - 1
         }); // -1 as randInt is inclusive
-        var y = randInt({
+        var y = randInt({ // random y-coordinate
             min: 0,
             max: GRID_SIZE.height - 1
         });
@@ -120,11 +120,12 @@ function createEnviroment() {
             x: x,
             y: y
         });
+        
         ant.addToMap();
         ant.species = USER_SPECIES;
         ant.colour = USER_SPECIES.colour.worker;
         ant.species.ants.push(ant);
-		ant.health = 3000;	// The starting ant health
+        ant.health = 3000; // The starting ant health
         ANTS_LIST.push(ant);
 
         // Start centred with the ant
@@ -133,7 +134,7 @@ function createEnviroment() {
     }
 }
 
-// Obj holding the functions each button performs
+// Object holding the functions each button performs
 var BUTTONS = {
     reset: updateDefaultValues,
     random: updateRandomValues,
@@ -143,10 +144,10 @@ var BUTTONS = {
     restart: createEnviroment
 };
 
-var draging = false;
+var draging = false; // Holds state of map being draged or not
 
 // Once the HTML is loaded
-window.onload = function() {
+window.onload = function () {
 
     // Get canvas DOM & canvas context
     canvasDOM = getElement(CANVAS.name);
@@ -155,7 +156,7 @@ window.onload = function() {
     resizeElement(canvasDOM, CANVAS);
 
     // Add event listeners for key press
-    window.onkeydown = function(e) {
+    window.onkeydown = function (e) {
         e = e || window.event;
         var charCode = e.keyCode || e.which;
         switch (charCode) {
@@ -189,8 +190,11 @@ window.onload = function() {
         }
     };
 
+    // The following are two event listeners which watch the mouse wheel they
+    // calculate the amount the wheel is scrolled to determine amount to zoom.
+
     // Chrome, IE
-    canvasDOM.addEventListener('mousewheel', function(e) {
+    canvasDOM.addEventListener('mousewheel', function (e) {
         // cross-browser wheel delta
         var e = window.event || e; // old IE support
         var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
@@ -199,7 +203,7 @@ window.onload = function() {
     }, false);
 
     // FireFox
-    canvasDOM.addEventListener('DOMMouseScroll', function(e) {
+    canvasDOM.addEventListener('DOMMouseScroll', function (e) {
         // cross-browser wheel delta
         var e = window.event || e; // old IE support
         var delta = Math.max(-1, Math.min(1, (e.wheelDelta || -e.detail)));
@@ -207,8 +211,8 @@ window.onload = function() {
         e.preventDefault(); // prevent scrolling the page while zooming
     }, false);
 
-
-    canvasDOM.onmousedown = function(e) {
+    // Event listener to watch primary mouse button down
+    canvasDOM.onmousedown = function (e) {
         draging = true;
         start = {
             x: e.pageX,
@@ -216,7 +220,8 @@ window.onload = function() {
         };
     };
 
-    canvasDOM.touchstart = function(e) {
+    // Event listener to watch primary touch event
+    canvasDOM.touchstart = function (e) {
         draging = true;
         start = {
             x: e.pageX,
@@ -224,16 +229,21 @@ window.onload = function() {
         };
     };
 
+    // The starting top left corner of the simulation
     var start = {
         x: 250,
         y: 310
     };
+    
+    // The end coordinate of the mouse on the simulation
     var end = {
         x: 0,
         y: 0
     };
 
-    canvasDOM.onmousemove = function(e) {
+    // Event listener watching when mouse moves. Updates position of simulation
+    // when the mouse is moved
+    canvasDOM.onmousemove = function (e) {
         if (draging) {
             end = {
                 x: e.pageX,
@@ -247,8 +257,10 @@ window.onload = function() {
             };
         }
     };
-
-    canvasDOM.touchmove = function(e) {
+    
+    // Event listener watching when touch movement events. Updates position of 
+    // simulation when a finger is moved across the simulation
+    canvasDOM.touchmove = function (e) {
         if (draging) {
             end = {
                 x: e.pageX,
@@ -262,12 +274,14 @@ window.onload = function() {
             };
         }
     };
-
-    window.onmouseup = function(e) {
+    
+    // Event listener watching mouse up event
+    window.onmouseup = function (e) {
         draging = false;
     };
 
-    window.touchend = function(e) {
+    // Event listener watching finger up event
+    window.touchend = function (e) {
         draging = false;
     };
 
