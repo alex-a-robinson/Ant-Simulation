@@ -30,8 +30,8 @@ var Nest = function(id, coord) {
 
         this.pieces = [];
 
-        this.health = 3000;
-        this.hungerThreshold = 300;
+        this.health = 10000;
+        this.hungerThreshold = 500;
         this.healthRate = 1;
         this.alive = true;
     };
