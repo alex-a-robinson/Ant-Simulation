@@ -103,7 +103,7 @@ var NUM_OF_CELLS = GRID_SIZE.width * GRID_SIZE.height; // The total number of ce
  * Food configuration
  */
 const FOOD_COLOUR = '#00FF00';          // The colour of food
-const FOOD_HEALTH_RATIO = 100;           // food : health i.e. 1 food worth 50 health
+const FOOD_HEALTH_RATIO = 500;           // food : health i.e. 1 food worth 50 health
 const FOOD_CHANCE = 0.0004;             // The probability of a food source in a cell
 const FOOD_GROW_AMOUNT = 100;			// The 
 const FOOD_GROW_RATE = 0.01;
@@ -196,15 +196,15 @@ var CHARS = {       // Holds properties of all characteristics species
      
     speed: {
         min: 0,
-        max: 0.2,
+        max: 0.5,
         type: VALUE_TYPE.floatValue,
         id: 'char-speed',
         neatName: 'Speed',
         desc: 'The speed that an ant can move',
         step: 0.01,
         healthModifier: 100,
-        defaultValue: 0.1,
-        value: 0.1,
+        defaultValue: 0.3,
+        value: 0.3,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
