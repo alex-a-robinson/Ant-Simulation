@@ -84,8 +84,8 @@ const INPUT_TYPE = {        // Used for creating custom inputs
  */
 var MAP = [];               // Holds all objects displayed on map
 var GRID_SIZE = {         // Size in number of cells
-    width: 500,
-    height: 500
+    width: 250,
+    height: 250
 };
 var MAP_BOUNDARY = {      // Used to tell if ant is out of bounds
     x: {
@@ -103,8 +103,8 @@ var NUM_OF_CELLS = GRID_SIZE.width * GRID_SIZE.height; // The total number of ce
  * Food configuration
  */
 const FOOD_COLOUR = '#00FF00';          // The colour of food
-const FOOD_HEALTH_RATIO = 500;           // food : health i.e. 1 food worth 50 health
-const FOOD_CHANCE = 0.0004;             // The probability of a food source in a cell
+const FOOD_HEALTH_RATIO = 50;           // food : health i.e. 1 food worth 50 health
+const FOOD_CHANCE = 0.001;             // The probability of a food source in a cell
 const FOOD_GROW_AMOUNT = 100;			// The 
 const FOOD_GROW_RATE = 0.01;
 
@@ -202,9 +202,9 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Speed',
         desc: 'The speed that an ant can move',
         step: 0.01,
-        healthModifier: 100,
-        defaultValue: 0.3,
-        value: 0.3,
+        healthModifier: 50,
+        defaultValue: 0.2,
+        value: 0.2,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -216,9 +216,9 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Jaw Strength',
         desc: 'The stength of the ants jaw (determins how much food the ant can carry)',
         step: 1,
-        healthModifier: 2,
-        defaultValue: 15,
-        value: 15,
+        healthModifier: 4,
+        defaultValue: 10,
+        value: 10,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -230,7 +230,7 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Jaw Size',
         desc: 'The amount of damage a soldier ant does when attack',
         step: 1,
-        healthModifier: 7,
+        healthModifier: 5,
         defaultValue: 1,
         value: 1,
         editable: true,
@@ -244,7 +244,7 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Sting Size',
         desc: 'The range which a soldier ant can attack',
         step: 1,
-        healthModifier: 3,
+        healthModifier: 5,
         defaultValue: 1,
         value: 1,
         editable: true,
@@ -258,9 +258,9 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Eye Sight',
         desc: 'The range of cells an ant can see around it',
         step: 1,
-        healthModifier: 4,
-        defaultValue: 3,
-        value: 3,
+        healthModifier: 10,
+        defaultValue: 5,
+        value: 5,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -287,7 +287,7 @@ var CHARS = {       // Holds properties of all characteristics species
         desc: 'The angle at which an ant can detect pheromones',
         step: 1,
         healthModifier: 2,
-        defaultValue: 3,
+        defaultValue: 5,
         value: 5,
         editable: true,
         inputType: INPUT_TYPE.slider
@@ -300,7 +300,7 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Antenna Angle',
         desc: 'The range of cells an ant can detect pheromones',
         step: 0.01,
-        healthModifier: 3,
+        healthModifier: 10,
         defaultValue: Math.PI / 3,
         value: Math.PI / 3,
         editable: true,
@@ -314,7 +314,7 @@ var CHARS = {       // Holds properties of all characteristics species
         neatName: 'Pheromone Concentration',
         desc: 'The concentration of pheromones an ant can secrete',
         step: 0.01,
-        healthModifier: 6,
+        healthModifier: 15,
         defaultValue: 0.4,
         value: 0.4,
         editable: true,
@@ -330,8 +330,8 @@ var CHARS = {       // Holds properties of all characteristics species
 				to the nest, represents memory of familiarly landmarks near the nest',
         step: 0.01,
         healthModifier: 50,
-        defaultValue: 0.05,
-        value: 0.05,
+        defaultValue: 0.1,
+        value: 0.1,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -345,8 +345,8 @@ var CHARS = {       // Holds properties of all characteristics species
 				direction its facing',
         step: 0.001,
         healthModifier: 0,
-        defaultValue: 0.005,
-        value: 0.005,
+        defaultValue: 0.05,
+        value: 0.05,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -359,8 +359,8 @@ var CHARS = {       // Holds properties of all characteristics species
         desc: 'How likely it is that an ant will follow a pheromones',
         step: 0.01,
         healthModifier: 0,
-        defaultValue: 0.1,
-        value: 0.1,
+        defaultValue: 0.9,
+        value: 0.9,
         editable: true,
         inputType: INPUT_TYPE.slider
     },
@@ -488,8 +488,8 @@ var CHARS = {       // Holds properties of all characteristics species
         desc: 'The chance each tick of a new ant being born',
         step: 0.0001,
         healthModifier: 0,
-        defaultValue: 0.01,
-        value: 0.01,
+        defaultValue: 0.05,
+        value: 0.05,
         editable: true,
         inputType: INPUT_TYPE.slider
     }

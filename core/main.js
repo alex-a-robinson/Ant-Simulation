@@ -18,7 +18,6 @@ function tick() {
     tickTime = (tickTime <= 0) ? 0 : tickTime;
 
     setTimeout(tick, tickTime);
-    getElement('fps').innerHTML = (1000 / (thisLoop - lastLoop)).toFixed(0);
 	CURRENT_TICK++;
     lastLoop = thisLoop;
 }

@@ -121,7 +121,7 @@ function updateRandomValues() {
     for (var prop in CHARS) {
         var characteristic = CHARS[prop];
 
-        if (!characteristic.editable)
+        if (!characteristic.editable || characteristic.id === 'char-queenStepsMin' || characteristic.id === 'char-queenStepsMax')
             continue;
 
         if (characteristic.type === VALUE_TYPE.floatValue)
