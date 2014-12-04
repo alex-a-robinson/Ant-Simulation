@@ -1,1 +1,0 @@
-Open index.html in webbrowser to run (Chrome recommended). To see most up to date version of project visit http://begly.github.io/Ant-Simulation
